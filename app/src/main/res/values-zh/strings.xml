@@ -1,0 +1,725 @@
+<resources>
+
+
+    <string name="nav_info">状态</string>
+    <string name="nav_detail">功能</string>
+    <string name="nav_settings">设置</string>
+
+    <!-- App icon options (proper names, not translated) -->
+    <string name="app_icon_section">外观</string>
+    <string name="app_icon_title">应用图标</string>
+
+    <!-- Indicators -->
+
+
+    <string name="indicator_scope_title">作用域</string>
+    <string name="indicator_telegram_title" translatable="false">Telegram</string>
+    <string name="indicator_telegram_subtitle" translatable="false">@Ra1nify</string>
+
+    <string name="indicator_active">已激活</string>
+    <string name="indicator_inactive">未激活</string>
+
+    <string name="indicator_root_granted">已授权</string>
+    <string name="indicator_root_not_granted">未授权</string>
+    <string name="indicator_root_checking">正在检测...</string>
+
+    <string name="scope_service_not_connected">Xposed 框架服务未连接</string>
+    <string name="scope_all_granted">所有作用域均已激活</string>
+    <string name="scope_requesting">申请中...</string>
+    <string name="scope_request_approved">作用域申请已批准</string>
+    <string name="scope_request_failed">作用域申请未通过: %s</string>
+
+    <!-- Breeno Keyboard -->
+    <string name="oplus_input_section_title">小布输入法</string>
+    <string name="oplus_input_liquid_glass_title">液态玻璃</string>
+    <string name="oplus_input_liquid_glass_desc">需要应用默认皮肤并跟随系统浅暗切换，基于 ColorOS 17。</string>
+    <string name="oplus_input_keyboard_effects_title">键盘光效</string>
+    <string name="oplus_input_keyboard_effects_desc">视觉光效引擎</string>
+    <string name="oplus_input_keyboard_sounds_title">键盘音效</string>
+    <string name="oplus_input_keyboard_sounds_desc">机械按键音效引擎</string>
+    <string name="oplus_input_workshop_title">皮肤工坊</string>
+    <string name="oplus_input_workshop_desc">需要应用默认皮肤并跟随系统浅暗切换，基于 ColorOS 17。</string>
+    <string name="oplus_input_enhancements_title">功能增强</string>
+    <string name="oplus_input_enhancements_desc">在输入法设置中增加功能增强面板，提供内联自动填充等功能</string>
+
+    <!-- Breeno Keyboard in-host UI -->
+    <string name="oplus_input_liquid_glass_pref_title">液态玻璃效果设置</string>
+    <string name="oplus_input_keyboard_effects_pref_title">键盘光效设置</string>
+    <string name="oplus_input_keyboard_sounds_pref_title">键盘音效设置</string>
+    <string name="oplus_input_enhancements_pref_title">功能增强</string>
+    <string name="oplus_input_powered_by_realos">由 realOS 驱动</string>
+    <string name="oplus_input_hello_world_title">占位页面</string>
+    <string name="oplus_input_hello_world_desc">动效引擎移植</string>
+
+    <string name="oplus_input_sound_retro_title">复古打字机</string>
+    <string name="oplus_input_sound_retro_summary">清脆段落机械打字机音效，带浑厚回车与退格阻尼</string>
+    <string name="oplus_input_sound_calm_title">静音微声轴</string>
+    <string name="oplus_input_sound_calm_summary">绵密低沉的微声静音轴体，温润不扰人</string>
+    <string name="oplus_input_sound_fun_title">趣味玩具音</string>
+    <string name="oplus_input_sound_fun_summary">活泼解压的卡通啵啵气泡音与玩具电音</string>
+    <string name="oplus_input_sound_space_title">科幻太空</string>
+    <string name="oplus_input_sound_space_summary">未来感电子脉冲机械声，科技感十足</string>
+    <string name="oplus_input_sound_pink_title">清脆少女粉</string>
+    <string name="oplus_input_sound_pink_summary">高音调爽脆清透的段落质感，节奏明朗</string>
+    <string name="oplus_input_sound_water_drop_title">灵动水滴</string>
+    <string name="oplus_input_sound_water_drop_summary">空灵通透的清脆水滴音，灵动清澈</string>
+    <string name="oplus_input_sound_switch_title">键盘音效开关</string>
+    <string name="oplus_input_sound_switch_summary">按键按下时播放仿真机械轴体与打字机音效</string>
+    <string name="oplus_input_sound_style_title">音效包风格</string>
+    <string name="oplus_input_sound_volume_title">按键音量</string>
+    <string name="oplus_input_sound_test_pad_title">即时试听体验区</string>
+    <string name="oplus_input_sound_test_standard">字母数字键</string>
+    <string name="oplus_input_sound_test_delete">退格键</string>
+    <string name="oplus_input_sound_test_function">空格 / 回车</string>
+
+    <string name="oplus_input_section_features">功能设置</string>
+    <string name="oplus_input_section_material">材质参数</string>
+    <string name="oplus_input_section_keyboard_effects">动效引擎</string>
+    <string name="oplus_input_section_advanced">高级选项</string>
+
+    <string name="oplus_input_toolbar_title">液态玻璃</string>
+    <string name="oplus_input_official_skin_btn">官方皮肤</string>
+    <string name="oplus_input_autofill_switch_title">内联自动填充</string>
+    <string name="oplus_input_autofill_switch_summary">在键盘候选条上方显示系统或密码管理器的内联建议（需 Android 11+）</string>
+    <string name="oplus_input_autofill_switch_native_summary">输入法已原生声明支持内联建议，系统已自动启用（无需额外覆盖）</string>
+    <string name="oplus_input_autofill_button_switch_title">控件栏自动填充按钮</string>
+    <string name="oplus_input_autofill_button_switch_summary">在输入法顶栏常驻快捷钥匙图标，点击主动拉起系统自动填充服务</string>
+
+    <string name="oplus_input_banner_restriction_warn">当前环境限制：检测到非官方默认主题或未跟随系统。液态玻璃仅在系统默认主题下生效。</string>
+    <string name="oplus_input_banner_reset_button">一键应用官方默认主题并跟随系统</string>
+
+    <string name="oplus_input_toolbar_preview_keyboard_desc">键盘效果预览</string>
+    <string name="oplus_input_bot_hint">实时对比基准</string>
+
+    <string name="oplus_input_preview_title">材质实时预览</string>
+    <string name="oplus_input_switch_force_blur_title">全场景液态玻璃模糊</string>
+    <string name="oplus_input_switch_force_blur_summary">突破白名单限制，在所有应用中启用玻璃拟态模糊</string>
+    <string name="oplus_input_switch_bypass_dark_title">解除深色模式跟随系统限制</string>
+    <string name="oplus_input_switch_bypass_dark_summary">手动开启深色模式时，依然保持暗夜液态玻璃渲染</string>
+    <string name="oplus_input_switch_bypass_all_limits_title">突破液态玻璃限制</string>
+    <string name="oplus_input_switch_bypass_all_limits_summary">同时绕过应用白名单与深色跟随系统限制，在所有应用中启用玻璃拟态模糊</string>
+
+    <string name="oplus_input_group_material_sliders">材质浓度调节</string>
+    <string name="oplus_input_slider_light_alpha">浅色遮罩浓度</string>
+    <string name="oplus_input_slider_dark_alpha">深色遮罩浓度</string>
+    <string name="oplus_input_slider_blur_radius">模糊扩散半径</string>
+    <string name="oplus_input_slider_key_opacity">按键磨砂透度</string>
+    <string name="oplus_input_slider_corner_radius">键盘圆角</string>
+
+    <string name="oplus_input_section_core_material">基础与核心参数</string>
+    <string name="oplus_input_section_light_custom">浅色模式定制</string>
+    <string name="oplus_input_section_dark_custom">深色模式定制</string>
+    <string name="oplus_input_light_mask_color">浅色遮罩颜色</string>
+    <string name="oplus_input_dark_mask_color">深色遮罩颜色</string>
+    <string name="oplus_input_color_picker_title">选择遮罩颜色</string>
+    <string name="oplus_input_color_hex_hint">十六进制颜色 (例: #E1E1E1)</string>
+    <string name="oplus_input_saturation_contrast_title">饱和度 / 对比度</string>
+    <string name="oplus_input_bg_overlay_switch_title">自定义背景叠加层</string>
+    <string name="oplus_input_bg_overlay_switch_summary">在液态玻璃与按键之间添加一层图片壁纸</string>
+    <string name="oplus_input_bg_image_title">背景图片</string>
+    <string name="oplus_input_bg_image_not_set">未设置 (点击选取图片)</string>
+    <string name="oplus_input_bg_image_is_set">已设置图片 (点击更换 / 清除)</string>
+    <string name="oplus_input_bg_overlay_alpha_title">背景叠加不透明度</string>
+    <string name="oplus_input_clear_bg_image_dialog_title">背景图片管理</string>
+    <string name="oplus_input_clear_bg_image_dialog_msg">管理当前模式下的自定义背景图片。</string>
+    <string name="oplus_input_dialog_clear">清除图片</string>
+    <string name="oplus_input_dialog_replace">更换图片</string>
+    <string name="oplus_input_dialog_cancel">取消</string>
+    <string name="oplus_input_dialog_ok">确定</string>
+
+    <string name="oplus_input_keys_cafe_title">按键动效</string>
+    <string name="oplus_input_keys_cafe_desc">视觉动效引擎移植，支持实时击键光效与背景粒子渲染。</string>
+    <string name="oplus_input_switch_effects_master_title">按键动效引擎</string>
+    <string name="oplus_input_switch_effects_master_summary">开启后在键盘击键时渲染光效、背景涟漪与物理弹性形变</string>
+
+    <string name="oplus_input_section_effects_board">键盘背景光效</string>
+    <string name="oplus_input_section_effects_key">按键击键光效</string>
+    <string name="oplus_input_section_effects_foot_print">脚印图标</string>
+    <string name="oplus_input_section_effects_motion">按键物理形变</string>
+    <string name="oplus_input_section_effects_color">动效调色板</string>
+    <string name="oplus_input_section_effects_params">动效参数调节</string>
+    <string name="oplus_input_slider_effects_alpha">光效透明度</string>
+    <string name="oplus_input_slider_effects_range">扩散范围比率</string>
+    <string name="oplus_input_slider_effects_speed">扩散速度比率</string>
+
+    <string name="oplus_input_effect_board_ring_spread_title">光环涟漪</string>
+    <string name="oplus_input_effect_board_ring_spread_summary">从按压点向外发射多重柔和径向渐变光晕扩散</string>
+    <string name="oplus_input_effect_board_blob_spread_title">水滴扩散</string>
+    <string name="oplus_input_effect_board_blob_spread_summary">多颗彩色流体光斑呈布朗运动散开并渐隐</string>
+    <string name="oplus_input_effect_board_spark_title">星芒微粒</string>
+    <string name="oplus_input_effect_board_spark_summary">五角星芒粒子旋转发散飞出</string>
+    <string name="oplus_input_effect_board_outline_title">轮廓描边扩散</string>
+    <string name="oplus_input_effect_board_outline_summary">按键外边框向外扩张放大消退</string>
+    <string name="oplus_input_effect_board_blob_title">气泡呼吸</string>
+    <string name="oplus_input_effect_board_blob_summary">多颗彩色光斑绕按压点缓缓呼吸漂浮并淡出</string>
+    <string name="oplus_input_effect_board_spark_spin_title">星芒旋舞</string>
+    <string name="oplus_input_effect_board_spark_spin_summary">两组星芒粒子反向旋转盘旋飞出</string>
+    <string name="oplus_input_effect_board_paint_gun_title">颜料飞溅</string>
+    <string name="oplus_input_effect_board_paint_gun_summary">从按压点喷溅出彩色颜料斑块</string>
+    <string name="oplus_input_effect_board_fire_cracker_title">鞭炮绽放</string>
+    <string name="oplus_input_effect_board_fire_cracker_summary">先闪现引信火花，再朝八个方向迸出彩色烟花</string>
+    <string name="oplus_input_effect_board_none_title">无背景动效</string>
+    <string name="oplus_input_effect_board_none_summary">不渲染键盘背景层光效</string>
+
+    <string name="oplus_input_effect_key_color_flash_title">击键闪光</string>
+    <string name="oplus_input_effect_key_color_flash_summary">按下键位产生平滑纯色光效并迅速消退</string>
+    <string name="oplus_input_effect_key_outline_title">按键描边</string>
+    <string name="oplus_input_effect_key_outline_summary">按键四周边框高亮描边并平滑淡出</string>
+    <string name="oplus_input_effect_key_blob_title">气泡消散</string>
+    <string name="oplus_input_effect_key_blob_summary">键位中心生成柔和圆形气泡光晕消散</string>
+    <string name="oplus_input_effect_key_blob_spread_title">气泡扩散</string>
+    <string name="oplus_input_effect_key_blob_spread_summary">从键心向四周散开彩色微光点</string>
+    <string name="oplus_input_effect_key_spark_spin_title">星芒旋舞</string>
+    <string name="oplus_input_effect_key_spark_spin_summary">星芒粒子绕按压键盘旋飞出并淡去</string>
+    <string name="oplus_input_effect_key_foot_print_title">脚印印记</string>
+    <string name="oplus_input_effect_key_foot_print_summary">在按下的键上印下一枚彩色爪印并渐渐隐去</string>
+    <string name="oplus_input_effect_key_none_title">无按键光效</string>
+    <string name="oplus_input_effect_key_none_summary">不渲染键面高亮光效</string>
+
+    <string name="oplus_input_foot_print_cat">猫咪爪印</string>
+    <string name="oplus_input_foot_print_dog">狗狗爪印</string>
+    <string name="oplus_input_foot_print_bear">熊熊爪印</string>
+    <string name="oplus_input_foot_print_duck">鸭子脚掌</string>
+    <string name="oplus_input_foot_print_frog">青蛙脚掌</string>
+    <string name="oplus_input_foot_print_horse">马蹄印</string>
+    <string name="oplus_input_foot_print_pig">猪蹄印</string>
+    <string name="oplus_input_foot_print_man">男士脚印</string>
+    <string name="oplus_input_foot_print_woman">女士脚印</string>
+    <string name="oplus_input_foot_print_custom">自定义图片</string>
+    <string name="oplus_input_foot_print_custom_pick">选择图片…</string>
+    <string name="oplus_input_foot_print_custom_none">尚未导入自定义图片</string>
+    <string name="oplus_input_foot_print_custom_clear">移除自定义图片</string>
+
+    <string name="oplus_input_effect_motion_spring_down_title">按下微缩</string>
+    <string name="oplus_input_effect_motion_spring_down_summary">按下时键位弹性缩进至0.7x，释放时回弹恢复</string>
+    <string name="oplus_input_effect_motion_spring_up_title">按下放大</string>
+    <string name="oplus_input_effect_motion_spring_up_summary">按下时键位弹性放大至1.3x，释放时回弹恢复</string>
+    <string name="oplus_input_effect_motion_bounce_up_title">向上弹起</string>
+    <string name="oplus_input_effect_motion_bounce_up_summary">按下时键位向上弹起20px，释放时回弹恢复</string>
+    <string name="oplus_input_effect_motion_bounce_touch_title">触点弹开</string>
+    <string name="oplus_input_effect_motion_bounce_touch_summary">键位从触摸点方向弹开并在释放时回弹</string>
+    <string name="oplus_input_effect_motion_tilt_title">倾斜摇摆</string>
+    <string name="oplus_input_effect_motion_tilt_summary">按下时产生-9px垂直位移与+9°倾斜弹力反馈</string>
+    <string name="oplus_input_effect_motion_none_title">无按键形变</string>
+    <string name="oplus_input_effect_motion_none_summary">保持按键原生静止渲染</string>
+
+    <string name="oplus_input_effect_color_popsicle">冰棒</string>
+    <string name="oplus_input_effect_color_kermit">科米蛙</string>
+    <string name="oplus_input_effect_color_pastel">粉彩</string>
+    <string name="oplus_input_effect_color_sunrise">晨曦</string>
+    <string name="oplus_input_effect_color_four_seasons">四季</string>
+    <string name="oplus_input_effect_color_ocean">大洋</string>
+    <string name="oplus_input_effect_color_embers">余烬</string>
+    <string name="oplus_input_effect_color_random">全彩随机</string>
+    <string name="oplus_input_effect_color_custom">自定义</string>
+    <string name="oplus_input_effect_custom_palette_title">自定义调色板</string>
+    <string name="oplus_input_effect_custom_palette_add">添加颜色</string>
+    <string name="oplus_input_effect_custom_palette_edit">修改颜色</string>
+    <string name="oplus_input_effect_custom_palette_delete">删除颜色</string>
+
+    <!-- System framework (Android System) -->
+    <string name="system_framework_section_title">系统框架</string>
+    <string name="system_oplus_autofill_inline_title">小布输入法内联建议声明</string>
+    <string name="system_oplus_autofill_inline_desc">允许密码管理器向小布输入法下发内联填充建议。</string>
+    <string name="system_oplus_autofill_inline_native_desc">已检测到 %1$s 原生声明支持内联建议，无需系统框架强制覆盖</string>
+    <string name="system_oplus_autofill_inline_not_installed">未检测到已安装的小布或真我输入法</string>
+    <string name="oplus_input_page_load_failed_title">页面加载失败</string>
+    <string name="oplus_input_page_load_failed_hint">请返回后重新进入；若持续出现请反馈日志</string>
+
+    <string name="settings_nav_gesture_entry_title">全面屏手势设置</string>
+    <string name="settings_nav_button_entry_title">虚拟按键设置</string>
+    <string name="settings_nav_button_icon_title">图标设置</string>
+    <string name="settings_nav_button_glass_title">外观设置</string>
+    <string name="settings_nav_button_glass_spotlight_title">触控光效</string>
+    <string name="settings_nav_button_glass_spotlight_summary">按键按下或滑动时投射跟手光效</string>
+    <string name="settings_nav_button_glass_capsule_section">背景胶囊形态</string>
+    <string name="settings_nav_button_glass_capsule_summary">以悬浮圆角矩形胶囊包裹虚拟按键，并适配原生触控光效</string>
+    <string name="settings_nav_button_glass_capsule_mode_none">不包裹（仅按键）</string>
+    <string name="settings_nav_button_glass_capsule_mode_single">长岛全包（3 键合并为一）</string>
+    <string name="settings_nav_button_glass_capsule_mode_triple">独立药丸（3 键各自独立）</string>
+    <string name="settings_nav_button_glass_capsule_mode_pair_back_home">双键连体 A（返回 + 主页）</string>
+    <string name="settings_nav_button_glass_capsule_mode_pair_home_recent">双键连体 B（主页 + 多任务）</string>
+    <string name="settings_nav_powered_by">由 realOS 驱动</string>
+    <string name="settings_nav_page_section_features">功能</string>
+    <string name="settings_nav_ui_section_title">系统导航方式</string>
+    <string name="settings_nav_ui_gesture_title">全面屏手势</string>
+    <string name="settings_nav_ui_gesture_desc">在系统设置的「系统导航方式」页注入「全面屏手势设置」入口</string>
+    <string name="settings_nav_ui_button_title">虚拟按键</string>
+    <string name="settings_nav_ui_button_desc">在系统设置的「系统导航方式」页注入「虚拟按键设置」入口</string>
+    <string name="settings_nav_button_custom_switch_title">自定义按键图标</string>
+    <string name="settings_nav_button_custom_switch_summary">替换虚拟按键为三星 NavStar 风格图标方案</string>
+    <string name="settings_nav_button_tint_switch_title">自定义遮罩色</string>
+    <string name="settings_nav_button_tint_switch_summary">关闭时不进行遮罩取色。开启时进行遮罩取色。</string>
+    <string name="settings_nav_button_tint_color_title">遮罩颜色</string>
+    <string name="settings_nav_button_section_light_tint">浅色场景按键颜色</string>
+    <string name="settings_nav_button_tint_light_color_title">浅色场景颜色</string>
+    <string name="settings_nav_button_section_dark_tint">深色场景按键颜色</string>
+    <string name="settings_nav_button_tint_dark_color_title">深色场景颜色</string>
+    <string name="settings_nav_button_preset_category_title">图标方案</string>
+    <string name="settings_nav_button_preset_item_title">方案 %1$d</string>
+    <string name="settings_nav_button_preset_custom_title">自定义</string>
+    <string name="settings_nav_button_custom_section_title">自定义按键设置</string>
+    <string name="settings_nav_button_custom_back_title">返回键</string>
+    <string name="settings_nav_button_custom_home_title">主页键</string>
+    <string name="settings_nav_button_custom_recent_title">多任务键</string>
+    <string name="settings_nav_button_custom_hint_empty">点击导入本地图片</string>
+    <string name="settings_nav_button_custom_hint_set">已使用自定义图片</string>
+    <string name="settings_nav_button_custom_reset">重置</string>
+    <string name="settings_nav_page_vibrate_title">返回手势震动</string>
+    <string name="settings_nav_page_vibrate_summary">未达返回阈值时，随手指横向滑动持续轻震动</string>
+    <string name="settings_nav_sub_vibration_title">震动设置</string>
+    <string name="settings_nav_sub_feedback_title">反馈设置</string>
+    <string name="settings_nav_sub_appearance_title">外观设置</string>
+    <string name="settings_nav_sub_visual_title">视觉设置</string>
+    <string name="settings_nav_sub_glass_title">外观设置</string>
+    <string name="settings_nav_sub_advanced_title">高级设置</string>
+    <string name="settings_nav_sub_wip">功能开发中，敬请期待</string>
+    <string name="settings_nav_appear_reverse_left">左箭头反向</string>
+    <string name="settings_nav_appear_reverse_left_summary">左侧滑返回的箭头改为与手指同向</string>
+    <string name="settings_nav_appear_material_mode">材质设置</string>
+    <string name="settings_nav_appear_material_stock">原厂</string>
+    <string name="settings_nav_appear_material_glass">液态玻璃</string>
+    <string name="settings_nav_appear_glass_matrix_diy">基质自定义</string>
+    <string name="settings_nav_appear_glass_matrix_diy_summary">自定义水滴微光遮罩浓度、颜色与模糊轮廓</string>
+    <string name="settings_nav_appear_glass_stroke">启用高光轮廓</string>
+    <string name="settings_nav_appear_glass_stroke_summary">呈现发丝级微光高光描边</string>
+    <string name="settings_nav_appear_glass_blur">液态玻璃模糊半径</string>
+    <string name="settings_nav_appear_mask_alpha">遮罩浓度</string>
+    <string name="settings_nav_appear_mask_color">遮罩颜色</string>
+    <string name="settings_nav_handle_section_title">全面屏小白条</string>
+    <string name="settings_nav_handle_length_title">小白条长度</string>
+    <string name="settings_nav_handle_length_summary">缩放小白条显示宽度（50% ~ 200%）</string>
+    <string name="settings_nav_handle_glass_title">小白条液态微光</string>
+    <string name="settings_nav_handle_glass_summary">将小白条本体化为晶莹通透的纯白发光体液态玻璃</string>
+    <string name="settings_nav_handle_stroke_title">高光微光描边</string>
+    <string name="settings_nav_handle_stroke_summary">为小白条边缘注入微光高光质感</string>
+    <string name="settings_nav_appear_shadow_color">阴影颜色</string>
+    <string name="settings_nav_appear_shadow_alpha">阴影不透明度</string>
+    <string name="settings_nav_appear_stroke_color">描边颜色</string>
+    <string name="settings_nav_appear_stroke_alpha">描边不透明度</string>
+    <string name="settings_nav_appear_stroke_width">描边宽度</string>
+    <string name="settings_nav_appear_arrow_color">箭头颜色</string>
+    <string name="settings_nav_appear_arrow_alpha">箭头不透明度</string>
+    <string name="settings_nav_appear_arrow_size">箭头大小</string>
+    <string name="settings_nav_appear_conflict_title">检测到主题包覆盖</string>
+    <string name="settings_nav_appear_conflict_color">阴影底色</string>
+    <string name="settings_nav_appear_conflict_drawable">返回箭头图</string>
+    <string name="settings_nav_appear_card_base">基准设置</string>
+    <string name="settings_nav_appear_card_light">浅色</string>
+    <string name="settings_nav_appear_card_dark">深色</string>
+    <string name="settings_nav_appear_base_placeholder">暂无基准项</string>
+    <string name="settings_nav_appear_arrow_experience">体验设置</string>
+    <string name="settings_nav_appear_arrow_experience_stock">经典静态</string>
+    <string name="settings_nav_appear_arrow_experience_dynamic">动态算法</string>
+    <string name="settings_nav_appear_dynamic_style">指针样式</string>
+    <string name="settings_nav_appear_style_dot_matrix_5">5 像素点阵</string>
+    <string name="settings_nav_appear_style_dot_flow">渐变流线点阵 (彗尾)</string>
+    <string name="settings_nav_appear_style_elastic_chevron">弹性折角光刃 (矢量)</string>
+    <string name="settings_nav_appear_style_pulse_bars">脉冲音波刻度 (机械)</string>
+    <string name="settings_nav_appear_style_bowstring">张力弓弦 (弧线)</string>
+    <string name="settings_nav_appear_arrow_icon">箭头图标</string>
+    <string name="settings_nav_appear_icon_system">不做修改（系统默认）</string>
+    <string name="settings_nav_appear_icon_round">圆角箭头（无根茎）</string>
+    <string name="settings_nav_appear_icon_round_stem">圆角箭头（有根茎）</string>
+    <string name="settings_nav_appear_icon_dot">点阵箭头（无根茎）</string>
+    <string name="settings_nav_appear_icon_dot_stem">点阵箭头（有根茎）</string>
+    <string name="settings_nav_appear_icon_triangle">三角形箭头</string>
+    <string name="settings_nav_appear_icon_triangle_outline">三角形箭头（镂空）</string>
+    <string name="settings_nav_appear_icon_custom">自定义导入…</string>
+    <string name="settings_nav_appear_arrow_diy">箭头自定义</string>
+    <string name="settings_nav_appear_arrow_diy_summary">开启后覆盖箭头颜色与大小；关闭则保留主题包原样</string>
+    <string name="settings_nav_appear_shadow_diy">阴影自定义</string>
+    <string name="settings_nav_appear_shadow_diy_summary">覆盖水滴阴影的颜色与不透明度</string>
+    <string name="settings_nav_appear_stroke_diy">描边自定义</string>
+    <string name="settings_nav_appear_stroke_diy_summary">覆盖描边的颜色、不透明度与宽度</string>
+    <string name="settings_nav_appear_handle_diy">小白条自定义</string>
+    <string name="settings_nav_appear_handle_diy_summary">开启后覆盖小白条长度缩放、颜色与不透明度；关闭则恢复原厂默认</string>
+    <string name="settings_nav_button_conflict_back">返回键</string>
+    <string name="settings_nav_button_conflict_home">主页键</string>
+    <string name="settings_nav_button_conflict_recent">多任务键</string>
+    <string name="settings_nav_button_conflict_override">realOS 设置将在运行时覆盖生效</string>
+    <string name="settings_nav_vib_state1">取消区（未达返回阈值）</string>
+    <string name="settings_nav_vib_state2">过阈值（松手返回）</string>
+    <string name="settings_nav_vib_weak_strength">弱震强度</string>
+    <string name="settings_nav_vib_step">触发步长</string>
+    <string name="settings_nav_vib_interval">最小间隔</string>
+    <string name="settings_nav_vib_strong_strength">强震强度</string>
+    <string name="settings_nav_vib_takeover">接管系统强震</string>
+    <string name="settings_nav_vib_takeover_summary">关闭系统自己的过阈值震动，避免双震</string>
+    <string name="settings_nav_button_section_light_mask">浅色模式遮罩</string>
+    <string name="settings_nav_button_light_mask_color">浅色遮罩颜色</string>
+    <string name="settings_nav_button_light_mask_alpha">浅色遮罩浓度</string>
+    <string name="settings_nav_button_section_dark_mask">深色模式遮罩</string>
+    <string name="settings_nav_button_dark_mask_color">深色遮罩颜色</string>
+    <string name="settings_nav_button_dark_mask_alpha">深色遮罩浓度</string>
+
+    <!-- Gesture navigation liquid glass -->
+    <string name="settings_nav_gesture_glass_section_handle">全面屏小白条</string>
+    <string name="settings_nav_gesture_handle_glass_title">小白条液态玻璃</string>
+    <string name="settings_nav_gesture_handle_glass_summary">将手势小白条本体化为晶莹通透的纯白发光体液态玻璃</string>
+    <string name="settings_nav_gesture_glass_caustic_title">焦散微光投影</string>
+    <string name="settings_nav_gesture_glass_caustic_summary">物理下偏 4.9dp 与 9.23dp 纯白柔光投影</string>
+    <string name="settings_nav_gesture_glass_spotlight_title">跟手光斑光效</string>
+    <string name="settings_nav_gesture_glass_spotlight_summary">原厂 3D 点光源阻尼手势跟踪光晕</string>
+    <string name="settings_nav_gesture_glass_section_side">侧滑返回手势（水滴与箭头）</string>
+    <string name="settings_nav_gesture_side_glass_title">侧滑手势液态水滴</string>
+    <string name="settings_nav_gesture_side_glass_summary">为侧滑返回贝塞尔水滴引入纯净微光与发丝掠影</string>
+    <string name="settings_nav_gesture_glass_stroke_title">发丝掠影外轮廓</string>
+    <string name="settings_nav_gesture_glass_stroke_summary">系统级 2.2dp 超细微光外边缘轮廓</string>
+    <string name="settings_nav_gesture_glass_inner_shadow_title">体积折射内阴影</string>
+    <string name="settings_nav_gesture_glass_inner_shadow_summary">为水滴轮廓赋予水漾折射厚度与立体感</string>
+    <string name="settings_nav_gesture_glass_chevron_preserve_title">水晶箭头纯净保护</string>
+    <string name="settings_nav_gesture_glass_chevron_preserve_summary">保持返回箭头在水滴上方清晰锐利，拒绝浑浊灰暗</string>
+    <string name="settings_nav_gesture_glass_section_light">浅色模式专属微光</string>
+    <string name="settings_nav_gesture_glass_light_alpha_title">浅色微光浓度</string>
+    <string name="settings_nav_gesture_glass_section_dark">深色模式专属微光</string>
+    <string name="settings_nav_gesture_glass_dark_alpha_title">深色微光浓度</string>
+
+    <string name="settings_nav_section_visual_tuning">视觉调谐</string>
+    <string name="settings_nav_section_haptic_tuning">触感调谐</string>
+    <string name="settings_nav_section_logic_tuning">逻辑调谐</string>
+    <string name="settings_nav_section_advanced_tuning">杂项调谐</string>
+    <string name="settings_nav_gesture_handle_mask_title">自定义小白条遮罩</string>
+    <string name="settings_nav_gesture_handle_mask_summary">开启后允许自定义浅色与深色模式下小白条的遮罩颜色与透明度</string>
+    <string name="settings_nav_gesture_section_light_mask">浅色模式专属遮罩</string>
+    <string name="settings_nav_gesture_section_dark_mask">深色模式专属遮罩</string>
+    <string name="settings_nav_gesture_mask_color">遮罩颜色</string>
+    <string name="settings_nav_gesture_mask_alpha">遮罩浓度</string>
+    <string name="settings_nav_gesture_top_exclusion_title">顶部避让死区</string>
+    <string name="settings_nav_gesture_top_exclusion_summary">设置屏幕顶部不响应侧滑返回的比例，避免与应用侧边抽屉菜单冲突</string>
+    <string name="settings_nav_gesture_bottom_exclusion_title">底部避让死区</string>
+    <string name="settings_nav_gesture_bottom_exclusion_summary">设置屏幕底部不响应侧滑返回的比例</string>
+    <string name="settings_nav_gesture_range_title">手势上下区间</string>
+    <string name="settings_nav_gesture_range_item_title">有效区间修改</string>
+    <string name="settings_nav_gesture_range_footer">设置全面屏手势在屏幕垂直方向的有效响应范围。拖动滑块时屏幕将显示上下死区预览遮罩；未选中的遮罩区域不响应侧滑，原样交给应用。</string>
+    <string name="settings_nav_button_glass_capsule_summary_special">特化按键背景胶囊形态，为按键赋予极简底衬与水滴质感；支持独立药丸包裹与跟手光斑脉冲效果。</string>
+    <string name="settings_nav_button_glass_mask_title">自定义胶囊遮罩色</string>
+    <string name="settings_nav_button_glass_mask_summary">开启后允许自定义浅色与深色模式下虚拟按键背景胶囊的遮罩颜色与不透明度</string>
+
+    <!-- ColorOS Camera Assistant -->
+    <string name="camera_tips_title">关于相机助手</string>
+    <string name="camera_tips_message">当前仅在相机设置顶栏注入 realOS 分页。</string>
+    <string name="camera_section_injection_title">相机设置注入</string>
+    <string name="camera_shortcut_realos_tab_title">realOS 分页</string>
+    <string name="camera_shortcut_realos_tab_summary">在「通用 / 照片 / 视频」之后追加 realOS 分页，当前展示占位内容</string>
+    <string name="camera_shortcut_realos_tab_hint">前往 realOS 分页</string>
+    <string name="camera_open_settings_failed">打开相机设置失败</string>
+
+    <!-- Launcher -->
+    <string name="launcher_app_name">系统桌面</string>
+    <string name="launcher_section_features_title">功能</string>
+    <string name="launcher_features_footer">修改后需重启桌面生效。</string>
+    <string name="launcher_memory_hooks_title">后台内存展示与增强</string>
+    <string name="launcher_memory_hooks_summary">解锁桌面原生内存展示，并在桌面设置页提供真实内存增强开关</string>
+    <string name="launcher_recents_extra_styles_title">后台UI增强</string>
+    <string name="launcher_recents_extra_styles_summary">在桌面设置页的最近任务样式中添加额外样式</string>
+    <string name="launcher_color_filter_title">按颜色分类支持更多图标包</string>
+    <string name="launcher_color_filter_summary">让抽屉按颜色分类兼容更多第三方图标包</string>
+
+    <!-- Process restart actions -->
+    <string name="action_restart">重启</string>
+    <string name="restart_success_camera">已重启系统相机</string>
+    <string name="restart_success_systemui">已重启系统界面</string>
+    <string name="restart_success_launcher">已重启系统桌面</string>
+    <string name="restart_success_media_provider">已重启媒体存储</string>
+    <string name="restart_failed_need_root">重启失败（需要 Root 权限）</string>
+
+    <!-- Media Provider -->
+    <string name="media_provider_app_name">媒体存储</string>
+    <string name="media_provider_tips_title">关于媒体选择器刷新</string>
+    <string name="media_provider_tips_message">系统媒体存储通常要等待相册的节流同步，才会通知照片选择器媒体已变化。开启后，图片或视频新增、修改、删除时会立即触发一次本地选择器同步。</string>
+    <string name="media_provider_section_features_title">照片选择器</string>
+    <string name="media_provider_picker_refresh_title">媒体变更实时刷新</string>
+    <string name="media_provider_picker_refresh_summary">图片或视频变化后立即刷新系统照片选择器</string>
+
+    <!-- Wallet (Finshell Wallet) -->
+    <string name="wallet_app_name">钱包</string>
+    <string name="wallet_tips_title">关于非 NFC 卡片自定义</string>
+    <string name="wallet_tips_message">官方仅针对模拟门禁卡开放了自定义卡面与名称控制。开启此功能以便为更多卡种添加自定义封面支持。</string>
+    <string name="wallet_section_features_title">卡面个性化</string>
+    <string name="wallet_non_nfc_diy_title">非 NFC 卡片自定义</string>
+    <string name="wallet_non_nfc_diy_summary">允许对交通卡、银行卡等非模拟卡片自定义封面与名称</string>
+    <string name="wallet_shortcut_hint">点击打开钱包</string>
+    <string name="wallet_open_app_failed">无法打开钱包应用</string>
+    <string name="wallet_custom_card_title">全场景自定义卡面</string>
+    <string name="wallet_stock_card_name">官方原厂封面</string>
+    <string name="wallet_stock_card_scenario">原厂封面</string>
+    <string name="wallet_edit_name_title">编辑卡片名称</string>
+    <string name="wallet_edit_name_hint">请输入自定义卡片名称</string>
+    <string name="wallet_show_name_title">显示名称</string>
+    <string name="wallet_change_cover_title">卡片封面</string>
+    <string name="wallet_change_cover_summary">卡面，卡片名称个性化设置</string>
+    <string name="wallet_change_cover_btn">更换</string>
+    <string name="restart_success_wallet">已重启钱包</string>
+    <!-- Wallet in-host page texts -->
+    <string name="wallet_custom_page_title">卡片自定义</string>
+    <string name="wallet_custom_page_save">保存</string>
+    <string name="wallet_custom_page_cover_label">卡片封面</string>
+    <string name="wallet_custom_page_cover_add">添加</string>
+    <string name="wallet_custom_page_cover_delete_title">删除封面</string>
+    <string name="wallet_custom_page_cover_delete_message">将从本地图池中移除该图片。</string>
+    <string name="wallet_crop_title">裁切卡面</string>
+    <string name="wallet_crop_confirm">完成</string>
+    <string name="wallet_crop_saving">保存中…</string>
+    <string name="wallet_crop_cancel">取消</string>
+    <string name="wallet_crop_failed">裁剪失败</string>
+    <string name="wallet_crop_save_failed">保存图片失败</string>
+    <string name="wallet_toast_save_success">保存成功</string>
+    <string name="wallet_toast_name_updated">卡片名称已更新</string>
+    <string name="wallet_toast_cover_ready">封面裁切完成</string>
+    <string name="wallet_toast_unavailable">当前版本不可用</string>
+    <string name="wallet_toast_picker_failed">无法打开相册选择器</string>
+    <string name="wallet_toast_theme_saved">卡面与名称已更新</string>
+    <string name="wallet_dialog_title">卡面设置</string>
+    <string name="wallet_dialog_hide_name">隐藏卡面名称与图标</string>
+    <string name="wallet_dialog_name_hint">自定义卡片名称</string>
+    <string name="wallet_dialog_save_name">保存名称</string>
+    <string name="wallet_dialog_change_cover">更换封面</string>
+    <string name="wallet_dialog_cancel">取消</string>
+    <string name="wallet_custom_page_cover_long_press_hint">（长按可删除自定义封面）</string>
+    <string name="wallet_toast_cover_deleted">卡面已删除</string>
+    <string name="wallet_dialog_confirm_delete">删除</string>
+
+    <!-- Feature switches -->
+    <string name="settings_feature_switch_app_name">系统设置</string>
+    <string name="settings_detail_title">系统设置</string>
+    <string name="settings_tips_title">特性开关</string>
+    <string name="settings_tips_message">这些纯软件特性完全运行于 Android 框架用户态，免除特定硬件芯片与内核驱动依赖。修改开关后，点击右上角重启按钮结束设置进程即可生效。</string>
+    <string name="restart_success_settings">已重启系统设置</string>
+    <string name="restart_success_clock_font">已重启时钟字体宿主</string>
+
+    <string name="settings_sec_oneplus">一加特色与品牌特性</string>
+    <string name="feat_oneplus_brand_title">一加设备标识符</string>
+    <string name="feat_oneplus_brand_summary">将设备识别为一加机型</string>
+    <string name="feat_oneplus_red_one_title">一加红 “1” 时钟</string>
+    <string name="feat_oneplus_red_one_summary">在「壁纸与个性化 -> 更多」中解锁一加红 “1” 时钟入口</string>
+
+    <string name="settings_sec_perf">系统效能与调度</string>
+    <string name="feat_gt_mode_title">GT 模式</string>
+    <string name="feat_gt_mode_summary">开启 GT 极致性能调度开关与状态卡片</string>
+    <string name="feat_app_frozen_title">应用速冻</string>
+    <string name="feat_app_frozen_summary">开启系统级后台应用休眠冷冻与保活管控</string>
+    <string name="feat_pure_mode_title">系统纯净模式</string>
+    <string name="feat_pure_mode_summary">启用应用安装安全检测防捆绑防护开关</string>
+    <string name="feat_fluid_cloud_title">流体云胶囊</string>
+    <string name="feat_fluid_cloud_summary">开启状态栏与通知中心胶囊服务</string>
+    <string name="feat_mini_capsule_title">迷你胶囊</string>
+    <string name="feat_mini_capsule_summary">开启前摄挖孔区域迷你胶囊状态展示</string>
+    <string name="feat_custom_hide_app_title">隐私应用隐藏</string>
+    <string name="feat_custom_hide_app_summary">解禁隐私设置中的应用图标隐藏功能</string>
+    <string name="feat_taskbar_title">底部任务栏</string>
+    <string name="feat_taskbar_summary">大屏及多任务底栏调度开关</string>
+
+    <string name="settings_sec_display">屏幕画质与算法护眼</string>
+    <string name="feat_video_color_enhance_title">视频色彩增强</string>
+    <string name="feat_video_color_enhance_summary">色彩引擎算法动态扩展对比度与画质</string>
+    <string name="feat_video_osie_title">OSIE 超清视效</string>
+    <string name="feat_video_osie_summary">纯软件画质与插帧对比度增强</string>
+    <string name="feat_video_sr_title">视频超分辨率</string>
+    <string name="feat_video_sr_summary">低清视频实时 AI 算法超分锐化</string>
+    <string name="feat_app_high_refresh_title">应用高刷自定义名单</string>
+    <string name="feat_app_high_refresh_summary">允许为单个应用指定 120Hz 刷新率</string>
+    <string name="feat_pwm_reboot_close_title">高频 PWM 调光常驻</string>
+    <string name="feat_pwm_reboot_close_summary">防止重启后系统重置护眼调光配置</string>
+    <string name="feat_comfort_color_temp_title">舒眠色温调节</string>
+    <string name="feat_comfort_color_temp_summary">根据昼夜时间自动平滑调节屏幕色温</string>
+    <string name="feat_single_pulse_refresh_title">单脉冲高频护眼</string>
+    <string name="feat_single_pulse_refresh_summary">解除单脉冲高频护眼开关的屏蔽隐藏</string>
+    <string name="feat_dc_min_2nit_title">类 DC 调光开关</string>
+    <string name="feat_dc_min_2nit_summary">低亮度防频闪模式软件开关</string>
+
+    <string name="settings_sec_audio">音频路由与媒体增强</string>
+    <string name="feat_dual_headphone_title">双耳机音频共享</string>
+    <string name="feat_dual_headphone_summary">有线耳机与蓝牙耳机同时输出同一音源</string>
+    <string name="feat_multi_sounds_play_title">多应用音量单独调节</string>
+    <string name="feat_multi_sounds_play_summary">允许多音源同时发声并在侧边弹出分应用音量条</string>
+    <string name="feat_super_volume_title">超级音量模式</string>
+    <string name="feat_super_volume_summary">解锁 200% 与 300% 音频倍率增益</string>
+    <string name="feat_karaoke_title">K 歌实时耳返</string>
+    <string name="feat_karaoke_summary">耳机低延迟实时声音返听通道</string>
+    <string name="feat_dolby_title">杜比全景声调节面板</string>
+    <string name="feat_dolby_summary">解禁杜比音效调节与均衡器界面</string>
+    <string name="feat_dirac_title">Dirac 音质调节</string>
+    <string name="feat_dirac_summary">解禁 Dirac 音质优化界面</string>
+
+    <string name="settings_sec_permission">权限受限与定制解除</string>
+    <string name="feat_oem_unlock_bypass_title">解除 OEM 解锁灰色禁用</string>
+    <string name="feat_oem_unlock_bypass_summary">强制显示并允许点击开发者选项中的 OEM 解锁开关</string>
+    <string name="feat_disallow_disable_bypass_title">允许停用系统应用</string>
+    <string name="feat_disallow_disable_bypass_summary">在系统预装应用详情页解除「停用」按钮锁定</string>
+    <string name="feat_clear_cache_bypass_title">允许清除应用缓存</string>
+    <string name="feat_clear_cache_bypass_summary">存储管理页解除「清除缓存」按钮限制</string>
+    <string name="feat_volte_bypass_title">强制显示 VoLTE 开关</string>
+    <string name="feat_volte_bypass_summary">在移动网络 SIM 卡设置中常驻展示 VoLTE 高清通话选项</string>
+    <string name="feat_vowifi_bypass_title">强制显示 Wi-Fi 通话开关</string>
+    <string name="feat_vowifi_bypass_summary">在移动网络设置中常驻展示 Wi-Fi 通话选项</string>
+    <string name="feat_video_wallpaper_title">视频动态壁纸支持</string>
+    <string name="feat_video_wallpaper_summary">支持将本地视频设置为动态锁屏与桌面壁纸</string>
+    <string name="feat_switch_prev_app_bypass_title">解除快速切换应用限制</string>
+    <string name="feat_switch_prev_app_bypass_summary">允许全屏手势横滑指示条快速切换上一应用</string>
+
+    <!-- App UI: module list / detail pages -->
+    <string name="oplus_input_app_name">小布输入法</string>
+    <string name="systemui_app_name">系统界面</string>
+    <string name="system_framework_app_name">Android 系统</string>
+    <string name="camera_app_name">系统相机</string>
+
+    <string name="detail_section_ready">已就绪</string>
+    <string name="detail_section_unsupported">尚不支持</string>
+    <string name="detail_open_details">进入详情</string>
+
+    <string name="module_state_active">已激活</string>
+    <string name="module_state_stale">待重载</string>
+    <string name="module_state_reloading">重载中</string>
+    <string name="module_state_failed">异常</string>
+    <string name="module_state_not_running">未运行</string>
+
+    <!-- Breeno Keyboard detail page -->
+    <string name="oplus_input_restart_action">强制重启输入法</string>
+    <string name="oplus_input_restart_success">已强制重启小布输入法</string>
+    <string name="oplus_input_tips_title">设置入口提示</string>
+    <string name="oplus_input_tips_message">开启后点击条目可直接打开输入法内的设置页。若调起受阻，请授予 Root 权限。</string>
+    <string name="oplus_input_section_core_features">核心特性</string>
+    <string name="oplus_input_host_app_footer">光效/音效灵感来源于 三星键盘&amp;KeysCafe</string>
+    <string name="oplus_input_liquid_glass_summary">ColorOS 17 原生动态磨砂液态玻璃工坊</string>
+    <string name="oplus_input_liquid_glass_hint">点击进入皮肤工坊设置</string>
+    <string name="oplus_input_keyboard_effects_summary">多重粒子动效与物理弹簧下沉</string>
+    <string name="oplus_input_keyboard_effects_hint">点击进入键盘光效设置</string>
+    <string name="oplus_input_keyboard_sounds_summary">仿真机械按键与打字机音效</string>
+    <string name="oplus_input_keyboard_sounds_hint">点击进入键盘音效设置</string>
+    <string name="oplus_input_enhancements_summary">内联自动填充候选与输入法增强</string>
+    <string name="oplus_input_enhancements_hint">点击进入功能增强设置</string>
+    <string name="oplus_input_launch_failed_title">调起宿主页面失败</string>
+    <string name="dialog_got_it">我知道了</string>
+    <string name="oplus_input_close_content_desc">关闭</string>
+
+    <!-- Breeno Keyboard launch failures (dialogs) -->
+    <string name="oplus_input_launch_root_failed">Root 穿透拉起失败 (%1$d)：%2$s</string>
+    <string name="oplus_input_launch_root_error">Root 执行异常：%1$s</string>
+    <string name="oplus_input_launch_not_exported">宿主页面未开放，需授予 realOS Root 权限后跨应用调起。</string>
+    <string name="oplus_input_launch_activity_missing">输入法宿主版本不匹配：未找到容器组件 (%1$s)</string>
+    <string name="oplus_input_launch_failed">调起失败：%1$s</string>
+    <string name="oplus_input_unknown_error">未知错误</string>
+    <string name="oplus_input_unknown_exception">未知异常</string>
+
+    <!-- System framework detail page -->
+    <string name="system_framework_autofill_section">内联自动填充</string>
+    <string name="system_framework_fido_section">FIDO2 扫码</string>
+    <string name="system_framework_fido_redirect_title">FIDO2 扫码跳转系统认证</string>
+    <string name="system_framework_fido_redirect_summary">扫描到 FIDO:/ 二维码时直接打开系统密钥认证，而不是浏览器搜索</string>
+    <string name="system_framework_intent_section">Intent 解析</string>
+    <string name="system_framework_intent_align_title">链接解析对齐（扫一扫/流体云）</string>
+    <string name="system_framework_intent_align_summary">仅对 OPPO 扫一扫和流体云生效：忽略其硬编码目标，按默认应用、声明支持的应用、默认浏览器的顺序重新解析</string>
+
+    <!-- SystemUI navigation detail page -->
+    <string name="system_nav_section_title">系统导航方式</string>
+    <string name="system_nav_current_mode">当前系统导航方式</string>
+    <string name="system_nav_mode_gesture">全面屏手势</string>
+    <string name="system_nav_mode_buttons">虚拟按键</string>
+    <string name="system_nav_open_settings_failed">无法打开系统设置</string>
+    <string name="system_nav_visual_summary_gesture">自定义小白条外观、遮罩与动态箭头</string>
+    <string name="system_nav_visual_summary_buttons">自定义虚拟按键图标包与第三方素材方案</string>
+    <string name="system_nav_visual_hint">点击进入「视觉调谐」二级设置</string>
+    <string name="system_nav_haptic_summary_gesture">侧滑返回触感波形与震动强度</string>
+    <string name="system_nav_haptic_summary_buttons">虚拟按键点击触感反馈与震动强度</string>
+    <string name="system_nav_haptic_hint">点击进入「触感调谐」二级设置</string>
+    <string name="system_nav_logic_summary_gesture">侧滑返回顶部/底部避让盲区死区</string>
+    <string name="system_nav_logic_summary_buttons">虚拟按键胶囊形态与布局结构</string>
+    <string name="system_nav_logic_hint">点击进入「逻辑调谐」二级设置</string>
+    <string name="system_nav_advanced_summary">全屏冲突处理与扩展杂项配置</string>
+    <string name="system_nav_advanced_hint">点击进入「杂项调谐」二级设置</string>
+
+    <!-- Settings tab -->
+    <string name="settings_section_behavior">模块行为</string>
+    <string name="settings_section_logging">日志</string>
+    <string name="settings_log_level_title">日志等级</string>
+    <string name="log_level_none">关闭</string>
+    <string name="log_level_error">仅错误</string>
+    <string name="log_level_warn">警告及以上</string>
+    <string name="log_level_info">信息及以上</string>
+    <string name="log_level_debug">调试及以上</string>
+    <string name="log_level_verbose">全部</string>
+    <string name="settings_hide_launcher_icon_title">隐藏桌面图标</string>
+    <string name="settings_hide_launcher_icon_summary">在桌面抽屉中隐藏模块入口，可通过 LSPosed 管理器进入</string>
+    <string name="settings_section_about">关于与技术支持</string>
+    <string name="settings_version_title">版本号</string>
+    <string name="settings_ui_system_title">控件库</string>
+
+    <!-- Clock fonts -->
+    <string name="clock_font_app_name">时钟字体</string>
+    <string name="clock_font_app_summary">AOD、锁屏和桌面小组件</string>
+    <string name="clock_font_title">时钟字体</string>
+    <string name="clock_font_section_imported">已导入字体</string>
+    <string name="clock_font_import_action">导入 TTF</string>
+    <string name="clock_font_importing">正在校验并导入…</string>
+    <string name="clock_font_empty">还没有导入时钟字体</string>
+    <string name="clock_font_footer">字体保存在 realOS 内部。移除只会从列表隐藏，文件会保留，避免正在使用的时钟失效。</string>
+    <string name="clock_font_type_fixed">固定</string>
+    <string name="clock_font_type_flex">Flex</string>
+    <string name="clock_font_summary">%1$s · %2$s</string>
+    <string name="clock_font_size_kb">%1$.1f KB</string>
+    <string name="clock_font_hidden">已隐藏</string>
+    <string name="clock_font_remove">移除</string>
+    <string name="clock_font_restore">恢复</string>
+    <string name="clock_font_remove_title">移除这个字体？</string>
+    <string name="clock_font_remove_message">字体会从时钟字体列表消失，但文件会保留，正在使用它的时钟仍然可以加载。</string>
+    <string name="clock_font_remove_confirm">移除</string>
+    <string name="clock_font_cancel">取消</string>
+    <string name="clock_font_import_success">已导入 %1$s</string>
+    <string name="clock_font_duplicate">已经导入过：%1$s</string>
+    <string name="clock_font_import_failed_title">导入失败</string>
+    <string name="clock_font_error_not_ttf">选中的文件不是 TrueType 字体。</string>
+    <string name="clock_font_error_too_small">字体文件太小。</string>
+    <string name="clock_font_error_too_large">字体文件太大，上限为 16 MB。</string>
+    <string name="clock_font_error_malformed">字体结构损坏或被截断。</string>
+    <string name="clock_font_error_unsupported_format">只支持带 glyf 轮廓的 TrueType .ttf 字体。</string>
+    <string name="clock_font_error_missing_glyphs">字体必须包含数字 0-9 和冒号。</string>
+    <string name="clock_font_error_no_variation">字体没有可用的可变字重轴。</string>
+    <string name="clock_font_error_weight_range">固定字体的字重轴必须覆盖 100 到 700，Flex 字体必须覆盖 100 到 1000。</string>
+    <string name="clock_font_error_height_range">Flex 字体的 HGHT 轴必须覆盖 1 到 1000。</string>
+    <string name="clock_font_error_avar_unsupported">暂不支持带 avar 表的 Flex 字体。</string>
+    <string name="clock_font_error_io">字体读取或写入失败。</string>
+    <string name="clock_font_error_duplicate">这个字体已经导入过。</string>
+    <string name="clock_font_tips_title">时钟字体说明</string>
+    <string name="clock_font_tips_message">固定字体使用连续字重轴；Flex 字体还需要 HGHT 1-1000 轴来实现纵向拉伸。导入后请重新打开时钟字体面板。</string>
+    <string name="clock_font_restart_action">重启时钟字体宿主</string>
+
+    <!-- realOS 系统字体管理 -->
+    <string name="system_font_title">字体管理</string>
+    <string name="system_font_section_current">当前字体</string>
+    <string name="system_font_current_default">系统默认</string>
+    <string name="system_font_apply_hint">在设置字体页选择字体卡片即可应用；这里只负责导入和删除。</string>
+    <string name="system_font_entry_title">在设置字体页显示 realOS 入口</string>
+    <string name="system_font_entry_summary">添加已导入字体卡片，并替换设置里的“更多字体”卡片；修改后重新进入字体页生效。</string>
+    <string name="system_font_section_imported">已导入字体</string>
+    <string name="system_font_import">导入字体</string>
+    <string name="system_font_empty">还没有导入字体</string>
+    <string name="system_font_delete">删除</string>
+    <string name="system_font_in_use">使用中</string>
+    <string name="system_font_in_use_delete">请先在设置字体页切换到其他字体</string>
+    <string name="system_font_preview_sample">Aa 字体预览 天地玄黄</string>
+    <string name="system_font_import_success">已导入 %1$s</string>
+    <string name="system_font_duplicate">已经导入过：%1$s</string>
+    <string name="system_font_error_size">字体文件大小不受支持</string>
+    <string name="system_font_error_format">不支持 TTC/WOFF，请使用 TTF 或 OTF</string>
+    <string name="system_font_error_invalid">字体文件损坏或不完整</string>
+    <string name="system_font_error_io">读取字体文件失败</string>
+    <string name="system_font_footer">字体保存在 realOS 内部。在设置字体页选择对应卡片即可通过系统字体管理器应用。</string>
+    <string name="system_font_tips_title">关于字体侧载</string>
+    <string name="system_font_tips_message">请使用支持系统语言的字体。若文字显示异常，可在设置字体页切换到其他字体。</string>
+    <string name="camera_realos_tab_appearance">外观</string>
+    <string name="camera_realos_tab_appearance_footer">仅作用于相机设置页，取景器保持原样</string>
+    <string name="camera_realos_tab_theme_follow_title">跟随系统深浅与强调色</string>
+    <string name="camera_realos_tab_theme_follow_summary">设置页按系统当前深浅模式切换，并按系统强调色匹配最接近的配色</string>
+    <string name="launcher_real_memory_title">真实内存信息</string>
+    <string name="launcher_real_memory_summary">用内核真实数据替换官方虚标文本：物理 RAM 占用、zRAM 压缩比与 Swap 使用量</string>
+    <string name="launcher_memory_available_suffix">" 可用"</string>
+    <string name="launcher_recents_style_stacked">堆叠</string>
+    <string name="launcher_recents_style_tiled">平铺</string>
+    <string name="launcher_recents_style_list">列表</string>
+    <string name="wallet_card_custom_menu_title">卡片自定义</string>
+    <string name="system_font_applied">已应用字体</string>
+    <string name="system_font_apply_failed">应用字体失败</string>
+    <string name="system_font_manager_label">realOS 字体管理</string>
+    <string name="oplus_input_autofill_tool_title">自动填充</string>
+</resources>

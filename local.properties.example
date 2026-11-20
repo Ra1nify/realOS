@@ -1,0 +1,57 @@
+## realOS local.properties example template
+# Copy or merge these keys into your local.properties:
+
+# Android SDK Path
+# sdk.dir=/path/to/Android/Sdk
+
+# ---------------------------------------------------------------
+# realOS Build-time Scope & Version Controller
+# ---------------------------------------------------------------
+# 1. Feature packaging gate (0 = excluded and removed by R8, 1 = packaged)
+#
+# Only single-line `realos.scope.<key>` properties are read; the scope block
+# syntax is no longer supported.
+# Only 1/0/true/false are accepted; anything else warns at build time and is
+# ignored. A key that is not written counts as disabled, so every scope you
+# want to keep must be listed explicitly.
+# Precedence: command line -P > environment ORG_GRADLE_PROJECT_ > this file
+#
+# Scope keys are per business, not per host package:
+#   opluskeyboard  keyboard (com.oplus.keyboard / com.realme.keyboard)
+#   navigation     gestures and navigation bar (com.android.systemui plus the
+#                  com.android.settings config page)
+#   featureswitch  feature switches (com.android.settings + com.oplus.wallpapers)
+#   font           system fonts (com.android.settings)
+#   camera         camera
+#   launcher       launcher
+#   wallet         wallet
+#   mediaprovider  media picker
+#   fido           FIDO (system)
+#   intentroute    intent route normalization (system)
+#   clockfont      clock fonts (also requires realos.clockfont.stage)
+realos.scope.opluskeyboard=1
+realos.scope.navigation=0
+realos.scope.featureswitch=0
+realos.scope.font=0
+realos.scope.camera=0
+realos.scope.launcher=0
+realos.scope.wallet=0
+realos.scope.mediaprovider=0
+realos.scope.fido=0
+realos.scope.intentroute=0
+realos.scope.clockfont=0
+realos.clockfont.stage=0
+
+# 2. Version controller
+#
+# versionName = 17.<a>.<b>.<c>
+#   realos.ver.a / realos.ver.b / realos.ver.c use the same lookup chain as the
+#   scope flags (-P > env > local.properties). Each part must be a single int
+#   digit 0..9; anything else warns and falls back to 0.
+#
+# versionCode:
+#   release = <yyMM><a><b><c>
+#   debug   = epoch seconds
+realos.ver.a=0
+realos.ver.b=0
+realos.ver.c=1

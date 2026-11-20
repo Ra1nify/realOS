@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" tools:ignore="QueryAllPackagesPermission" />
+
+    <queries>
+        <package android:name="com.oplus.keyboard" />
+        <package android:name="com.android.systemui" />
+        <package android:name="com.android.settings" />
+    </queries>
+
+    <application
+        android:name="io.github.ra1nify.realos.RealOSApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/stencil"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/stencil_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.RealOS">
+    <!-- Launch host only. Every launcher entry is an activity-alias below so the icon can be
+         switched at runtime. Uses the default (Stencil) theme, which also covers the splash
+         colour when the activity is started directly from recents or an old shortcut. -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.RealOS.LauncherStencil"
+            android:windowSoftInputMode="adjustResize" />
+
+        <!-- Settings -> Personalization -> Fonts -> realOS font entry. -->
+        <activity
+            android:name=".font.SystemFontManagerActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:label="@string/system_font_title" />
+
+    <!-- Selectable app icons: one alias per icon, switched at runtime with
+         setComponentEnabledSetting. To add an icon, add an alias here (icon and roundIcon are
+         required, enabled=false, no label so the app name is inherited) and one AppIcon enum
+         entry. Exactly one alias may be enabled at any time. -->
+        <activity-alias
+            android:name=".icon.LauncherStencil"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/stencil"
+            android:roundIcon="@mipmap/stencil_round"
+            android:targetActivity=".MainActivity"
+            android:theme="@style/Theme.RealOS.LauncherStencil">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+        <activity-alias
+            android:name=".icon.LauncherDotmatrix"
+            android:enabled="false"
+            android:exported="true"
+            android:icon="@mipmap/dotmatrix"
+            android:roundIcon="@mipmap/dotmatrix_round"
+            android:targetActivity=".MainActivity"
+            android:theme="@style/Theme.RealOS.LauncherDotmatrix">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity-alias>
+
+    <!-- Entry point the launcher uses to read zram stats: the launcher cannot read sysfs_zram
+         under SELinux, so this module reads it with root on its behalf. Read-only memory stats
+         only, cached internally. -->
+        <provider
+            android:name=".root.LauncherStatsProvider"
+            android:authorities="${applicationId}.launcher_stats"
+            android:exported="true" />
+
+        <provider
+            android:name=".clockfont.ClockFontProvider"
+            android:authorities="${applicationId}.clockfonts"
+            android:exported="true" />
+
+        <!-- Read-only font files consumed by the Settings-process font hook. -->
+        <provider
+            android:name=".font.SystemFontProvider"
+            android:authorities="${applicationId}.systemfonts"
+            android:exported="true" />
+    </application>
+
+</manifest>

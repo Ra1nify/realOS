@@ -1,0 +1,727 @@
+<resources>
+    <string name="app_name" translatable="false">realOS</string>
+    <string name="app_slogan" translatable="false">Polishing ColorOS into a realOS</string>
+    <string name="nav_info">Info</string>
+    <string name="nav_detail">Detail</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- App icon options (proper names, not translated) -->
+    <string name="app_icon_section">Appearance</string>
+    <string name="app_icon_title">App icon</string>
+    <string name="app_icon_stencil" translatable="false">Stencil</string>
+    <string name="app_icon_dotmatrix" translatable="false">Dot Matrix</string>
+
+    <!-- Indicators -->
+    <string name="indicator_scope_title">Scope</string>
+    <string name="indicator_telegram_title" translatable="false">Telegram</string>
+    <string name="indicator_telegram_subtitle" translatable="false">@Ra1nify</string>
+    <string name="indicator_xposed_title" translatable="false">Xposed</string>
+    <string name="indicator_lsposed_title" translatable="false">LSPosed</string>
+    <string name="indicator_active">Active</string>
+    <string name="indicator_inactive">Inactive</string>
+    <string name="indicator_root_title" translatable="false">Root</string>
+    <string name="indicator_root_granted">Granted</string>
+    <string name="indicator_root_not_granted">Not Granted</string>
+    <string name="indicator_root_checking">Checking...</string>
+
+    <string name="scope_service_not_connected">Xposed service not connected</string>
+    <string name="scope_all_granted">All scopes are active</string>
+    <string name="scope_requesting">Requesting...</string>
+    <string name="scope_request_approved">Scope request approved</string>
+    <string name="scope_request_failed">Scope request failed: %s</string>
+
+    <!-- Breeno Keyboard -->
+    <string name="oplus_input_section_title">Breeno Keyboard</string>
+    <string name="oplus_input_liquid_glass_title">Liquid Glass</string>
+    <string name="oplus_input_liquid_glass_desc">Requires the default skin and automatic light/dark switching. Built for ColorOS 17.</string>
+    <string name="oplus_input_keyboard_effects_title">Keyboard Effects</string>
+    <string name="oplus_input_keyboard_effects_desc">Keys Cafe visual motion engine</string>
+    <string name="oplus_input_keyboard_sounds_title">Keyboard Sounds</string>
+    <string name="oplus_input_keyboard_sounds_desc">Keys Cafe mechanical key sound engine</string>
+    <string name="oplus_input_workshop_title">Skin Workshop</string>
+    <string name="oplus_input_workshop_desc">Requires the default skin and automatic light/dark switching. Built for ColorOS 17.</string>
+    <string name="oplus_input_enhancements_title">Feature Enhancements</string>
+    <string name="oplus_input_enhancements_desc">Adds enhancements panel in keyboard settings, offering inline autofill and more</string>
+
+    <!-- Breeno Keyboard in-host UI -->
+    <string name="oplus_input_liquid_glass_pref_title">Liquid Glass Settings</string>
+    <string name="oplus_input_keyboard_effects_pref_title">Keyboard Effects Settings</string>
+    <string name="oplus_input_keyboard_sounds_pref_title">Keyboard Sound Settings</string>
+    <string name="oplus_input_enhancements_pref_title">Feature Enhancements</string>
+    <string name="oplus_input_powered_by_realos">Powered by realOS</string>
+    <string name="oplus_input_hello_world_title">Placeholder</string>
+    <string name="oplus_input_hello_world_desc">Keys Cafe Motion Engine Port</string>
+
+    <string name="oplus_input_sound_retro_title">Retro Typewriter</string>
+    <string name="oplus_input_sound_retro_summary">Crisp mechanical tactile typewriter typing with heavy carriage return</string>
+    <string name="oplus_input_sound_calm_title">Calm Silent Switch</string>
+    <string name="oplus_input_sound_calm_summary">Muffled low-frequency tactile sound suitable for office and library</string>
+    <string name="oplus_input_sound_fun_title">Fun Pop</string>
+    <string name="oplus_input_sound_fun_summary">Bouncy bubble pop and retro arcade sound effects</string>
+    <string name="oplus_input_sound_space_title">Sci-Fi Space</string>
+    <string name="oplus_input_sound_space_summary">Futuristic synthesized electronic pulse mechanical tones</string>
+    <string name="oplus_input_sound_pink_title">Pink Clicky</string>
+    <string name="oplus_input_sound_pink_summary">High-pitched crisp clicky blue-switch texture</string>
+    <string name="oplus_input_sound_water_drop_title">Water Drop</string>
+    <string name="oplus_input_sound_water_drop_summary">Ethereal translucent water droplet sound</string>
+    <string name="oplus_input_sound_switch_title">Keyboard Sound Switch</string>
+    <string name="oplus_input_sound_switch_summary">Play authentic mechanical keyboard sounds when keys are pressed</string>
+    <string name="oplus_input_sound_style_title">Sound Set Style</string>
+    <string name="oplus_input_sound_volume_title">Sound Volume</string>
+    <string name="oplus_input_sound_test_pad_title">Live Audition Pad</string>
+    <string name="oplus_input_sound_test_standard">Standard Key</string>
+    <string name="oplus_input_sound_test_delete">Backspace</string>
+    <string name="oplus_input_sound_test_function">Space / Enter</string>
+
+    <string name="oplus_input_section_features">Features</string>
+    <string name="oplus_input_section_material">Material Settings</string>
+    <string name="oplus_input_section_keyboard_effects">Motion Engine</string>
+    <string name="oplus_input_section_advanced">Advanced</string>
+
+    <string name="oplus_input_toolbar_title">Liquid Glass</string>
+    <string name="oplus_input_official_skin_btn">Official Skin</string>
+    <string name="oplus_input_autofill_switch_title">Inline Autofill</string>
+    <string name="oplus_input_autofill_switch_summary">Display inline autofill suggestions from password managers above keyboard candidates (Android 11+)</string>
+    <string name="oplus_input_autofill_switch_native_summary">Keyboard natively declares inline suggestions support; automatically enabled</string>
+    <string name="oplus_input_autofill_button_switch_title">Toolbar Autofill Button</string>
+    <string name="oplus_input_autofill_button_switch_summary">Show a shortcut key icon on the keyboard toolbar to manually trigger system autofill</string>
+
+    <string name="oplus_input_banner_restriction_warn">Environment Restriction: Non-official skin or system theme auto-switch not following system detected. Liquid Glass only works under system default skin.</string>
+    <string name="oplus_input_banner_reset_button">Apply Official Default Theme &amp; Follow System</string>
+
+    <string name="oplus_input_toolbar_preview_keyboard_desc">Keyboard Effects Preview</string>
+    <string name="oplus_input_bot_hint">Real-time comparison baseline</string>
+
+    <string name="oplus_input_preview_title">Material Live Preview</string>
+    <string name="oplus_input_switch_force_blur_title">Global Liquid Glass Blur</string>
+    <string name="oplus_input_switch_force_blur_summary">Bypass whitelist limit and enable glass blur in all apps</string>
+    <string name="oplus_input_switch_bypass_dark_title">Bypass System Dark Mode Limit</string>
+    <string name="oplus_input_switch_bypass_dark_summary">Maintain dark liquid glass rendering even when dark mode is forced on</string>
+    <string name="oplus_input_switch_bypass_all_limits_title">Bypass Liquid Glass limits</string>
+    <string name="oplus_input_switch_bypass_all_limits_summary">Bypass both the app whitelist and the follow-system dark-mode limit, enabling glass blur everywhere</string>
+
+    <string name="oplus_input_group_material_sliders">Material Sliders</string>
+    <string name="oplus_input_slider_light_alpha">Light Mask Opacity</string>
+    <string name="oplus_input_slider_dark_alpha">Dark Mask Opacity</string>
+    <string name="oplus_input_slider_blur_radius">Blur Diffusion Radius</string>
+    <string name="oplus_input_slider_key_opacity">Key Frost Opacity</string>
+    <string name="oplus_input_slider_corner_radius">Keyboard Corner Radius</string>
+
+    <string name="oplus_input_section_core_material">Core &amp; Material</string>
+    <string name="oplus_input_section_light_custom">Light Mode Customization</string>
+    <string name="oplus_input_section_dark_custom">Dark Mode Customization</string>
+    <string name="oplus_input_light_mask_color">Light Mask Color</string>
+    <string name="oplus_input_dark_mask_color">Dark Mask Color</string>
+    <string name="oplus_input_color_picker_title">Select Mask Color</string>
+    <string name="oplus_input_color_hex_hint">Hex Color (e.g. #E1E1E1)</string>
+    <string name="oplus_input_saturation_contrast_title">Saturation / Contrast</string>
+    <string name="oplus_input_bg_overlay_switch_title">Custom Background Overlay</string>
+    <string name="oplus_input_bg_overlay_switch_summary">Add a custom image overlay between liquid glass and keys</string>
+    <string name="oplus_input_bg_image_title">Background Image</string>
+    <string name="oplus_input_bg_image_not_set">Not set (Tap to pick image)</string>
+    <string name="oplus_input_bg_image_is_set">Image set (Tap to change / clear)</string>
+    <string name="oplus_input_bg_overlay_alpha_title">Background Overlay Opacity</string>
+    <string name="oplus_input_clear_bg_image_dialog_title">Background Image Options</string>
+    <string name="oplus_input_clear_bg_image_dialog_msg">Manage the custom background image for this mode.</string>
+    <string name="oplus_input_dialog_clear">Clear Image</string>
+    <string name="oplus_input_dialog_replace">Replace Image</string>
+    <string name="oplus_input_dialog_cancel">Cancel</string>
+    <string name="oplus_input_dialog_ok">OK</string>
+
+    <string name="oplus_input_keys_cafe_title">Samsung Keys Cafe Motion</string>
+    <string name="oplus_input_keys_cafe_desc">Ported from Samsung Honeyboard motion engine, supporting real-time key lighting and background particle rendering.</string>
+    <string name="oplus_input_switch_effects_master_title">Key Motion Engine</string>
+    <string name="oplus_input_switch_effects_master_summary">Render light flashes, background ripples, and elastic key deform when typing</string>
+
+    <string name="oplus_input_section_effects_board">Board Blending Effects</string>
+    <string name="oplus_input_section_effects_key">Key Blending Effects</string>
+    <string name="oplus_input_section_effects_foot_print">Foot Print Icon</string>
+    <string name="oplus_input_section_effects_motion">Key Motion Effects</string>
+    <string name="oplus_input_section_effects_color">Color Palette</string>
+    <string name="oplus_input_section_effects_params">Effect Parameters</string>
+    <string name="oplus_input_slider_effects_alpha">Effect Transparency</string>
+    <string name="oplus_input_slider_effects_range">Spread Range</string>
+    <string name="oplus_input_slider_effects_speed">Spread Speed</string>
+
+    <string name="oplus_input_effect_board_ring_spread_title">Ring Spread</string>
+    <string name="oplus_input_effect_board_ring_spread_summary">Soft multi-ring radial glow expanding outwards from touch point</string>
+    <string name="oplus_input_effect_board_blob_spread_title">Blob Spread</string>
+    <string name="oplus_input_effect_board_blob_spread_summary">Fluid colorful particles scattering outward with smooth fade out</string>
+    <string name="oplus_input_effect_board_spark_title">Spark Particles</string>
+    <string name="oplus_input_effect_board_spark_summary">Rotating star sparks bursting outward on press</string>
+    <string name="oplus_input_effect_board_outline_title">Outline Expansion</string>
+    <string name="oplus_input_effect_board_outline_summary">Key outline expanding outward and fading away</string>
+    <string name="oplus_input_effect_board_blob_title">Blob Breath</string>
+    <string name="oplus_input_effect_board_blob_summary">Soft colorful blobs breathing and drifting around the touch point</string>
+    <string name="oplus_input_effect_board_spark_spin_title">Spark Spin</string>
+    <string name="oplus_input_effect_board_spark_spin_summary">Counter-rotating star sparks swirling outward on press</string>
+    <string name="oplus_input_effect_board_paint_gun_title">Paint Splash</string>
+    <string name="oplus_input_effect_board_paint_gun_summary">Colorful paint splashing out from the touch point</string>
+    <string name="oplus_input_effect_board_fire_cracker_title">Firecracker</string>
+    <string name="oplus_input_effect_board_fire_cracker_summary">A spark flashes then bursts into eight colorful fireworks</string>
+    <string name="oplus_input_effect_board_none_title">No Board Effect</string>
+    <string name="oplus_input_effect_board_none_summary">Disable background board effects</string>
+
+    <string name="oplus_input_effect_key_color_flash_title">Color Flash</string>
+    <string name="oplus_input_effect_key_color_flash_summary">Key press generates a smooth color flash that rapidly fades</string>
+    <string name="oplus_input_effect_key_outline_title">Key Outline</string>
+    <string name="oplus_input_effect_key_outline_summary">Key border highlights and smoothly fades out</string>
+    <string name="oplus_input_effect_key_blob_title">Bubble Disperse</string>
+    <string name="oplus_input_effect_key_blob_summary">Soft circular bubble glow dissipates from key center</string>
+    <string name="oplus_input_effect_key_blob_spread_title">Bubble Spread</string>
+    <string name="oplus_input_effect_key_blob_spread_summary">Colorful micro-light dots spread outward from key center</string>
+    <string name="oplus_input_effect_key_spark_spin_title">Spark Spin</string>
+    <string name="oplus_input_effect_key_spark_spin_summary">Star sparks swirl outward across the pressed key</string>
+    <string name="oplus_input_effect_key_foot_print_title">Foot Print</string>
+    <string name="oplus_input_effect_key_foot_print_summary">A paw print is stamped on the pressed key and fades away</string>
+    <string name="oplus_input_effect_key_none_title">No Key Effect</string>
+    <string name="oplus_input_effect_key_none_summary">Disable key surface lighting effects</string>
+
+    <string name="oplus_input_foot_print_cat">Cat Paw</string>
+    <string name="oplus_input_foot_print_dog">Dog Paw</string>
+    <string name="oplus_input_foot_print_bear">Bear Paw</string>
+    <string name="oplus_input_foot_print_duck">Duck Foot</string>
+    <string name="oplus_input_foot_print_frog">Frog Foot</string>
+    <string name="oplus_input_foot_print_horse">Horse Hoof</string>
+    <string name="oplus_input_foot_print_pig">Pig Hoof</string>
+    <string name="oplus_input_foot_print_man">Man Footprint</string>
+    <string name="oplus_input_foot_print_woman">Woman Footprint</string>
+    <string name="oplus_input_foot_print_custom">Custom Image</string>
+    <string name="oplus_input_foot_print_custom_pick">Choose image…</string>
+    <string name="oplus_input_foot_print_custom_none">No custom image imported</string>
+    <string name="oplus_input_foot_print_custom_clear">Remove custom image</string>
+
+    <string name="oplus_input_effect_motion_spring_down_title">Spring Compress</string>
+    <string name="oplus_input_effect_motion_spring_down_summary">Key elastically shrinks to 0.7x on press and springs back on release</string>
+    <string name="oplus_input_effect_motion_spring_up_title">Spring Expand</string>
+    <string name="oplus_input_effect_motion_spring_up_summary">Key elastically expands to 1.3x on press and springs back on release</string>
+    <string name="oplus_input_effect_motion_bounce_up_title">Bounce Up</string>
+    <string name="oplus_input_effect_motion_bounce_up_summary">Key springs upward by 20px on press and returns on release</string>
+    <string name="oplus_input_effect_motion_bounce_touch_title">Bounce From Touch</string>
+    <string name="oplus_input_effect_motion_bounce_touch_summary">Key springs away from the touch point and returns on release</string>
+    <string name="oplus_input_effect_motion_tilt_title">Tilt &amp; Sway</string>
+    <string name="oplus_input_effect_motion_tilt_summary">Generates -9px vertical displacement with +9° tilt elastic feedback</string>
+    <string name="oplus_input_effect_motion_none_title">No Key Motion</string>
+    <string name="oplus_input_effect_motion_none_summary">Keep standard key static rendering</string>
+
+    <string name="oplus_input_effect_color_popsicle">Popsicle</string>
+    <string name="oplus_input_effect_color_kermit">Kermit</string>
+    <string name="oplus_input_effect_color_pastel">Pastel</string>
+    <string name="oplus_input_effect_color_sunrise">Sunrise</string>
+    <string name="oplus_input_effect_color_four_seasons">Four Seasons</string>
+    <string name="oplus_input_effect_color_ocean">Ocean</string>
+    <string name="oplus_input_effect_color_embers">Embers</string>
+    <string name="oplus_input_effect_color_random">Rainbow</string>
+    <string name="oplus_input_effect_color_custom">Custom</string>
+    <string name="oplus_input_effect_custom_palette_title">Custom Color Palette</string>
+    <string name="oplus_input_effect_custom_palette_add">Add Color</string>
+    <string name="oplus_input_effect_custom_palette_edit">Edit Color</string>
+    <string name="oplus_input_effect_custom_palette_delete">Delete Color</string>
+
+    <!-- System framework (Android System) -->
+    <string name="system_framework_section_title">System Framework (system_server)</string>
+    <string name="system_oplus_autofill_inline_title">Breeno Keyboard Inline Suggestions Declaration</string>
+    <string name="system_oplus_autofill_inline_desc">Lets password managers send inline autofill suggestions to Breeno Keyboard.</string>
+    <string name="system_oplus_autofill_inline_native_desc">Detected that %1$s natively supports inline suggestions; system framework override is not required</string>
+    <string name="system_oplus_autofill_inline_not_installed">Compatible Breeno or Realme Keyboard is not installed on this device</string>
+    <string name="oplus_input_page_load_failed_title">Failed to load page</string>
+    <string name="oplus_input_page_load_failed_hint">Go back and re-open. If it keeps happening, please report the logs.</string>
+
+    <string name="settings_nav_gesture_entry_title">Gesture Navigation Settings</string>
+    <string name="settings_nav_button_entry_title">Button Navigation Settings</string>
+    <string name="settings_nav_button_icon_title">Icon Settings</string>
+    <string name="settings_nav_button_glass_title">Appearance</string>
+    <string name="settings_nav_button_glass_spotlight_title">Touch Light Effect</string>
+    <string name="settings_nav_button_glass_spotlight_summary">Project the official touch light effect when buttons are pressed or swiped</string>
+    <string name="settings_nav_button_glass_capsule_section">Capsule Background</string>
+    <string name="settings_nav_button_glass_capsule_summary">Wrap navigation buttons in floating rounded capsules with native touch light effects</string>
+    <string name="settings_nav_button_glass_capsule_mode_none">None (Buttons only)</string>
+    <string name="settings_nav_button_glass_capsule_mode_single">Single Island (All 3 buttons merged)</string>
+    <string name="settings_nav_button_glass_capsule_mode_triple">Triple Pills (3 independent pills)</string>
+    <string name="settings_nav_button_glass_capsule_mode_pair_back_home">Dual Capsule A (Back + Home merged)</string>
+    <string name="settings_nav_button_glass_capsule_mode_pair_home_recent">Dual Capsule B (Home + Recent merged)</string>
+    <string name="settings_nav_powered_by">Powered by realOS</string>
+    <string name="settings_nav_page_section_features">Features</string>
+    <string name="settings_nav_ui_section_title">Navigation</string>
+    <string name="settings_nav_ui_gesture_title">Gesture navigation</string>
+    <string name="settings_nav_ui_gesture_desc">Add a Gesture Navigation Settings entry to the system navigation page</string>
+    <string name="settings_nav_ui_button_title">Button navigation</string>
+    <string name="settings_nav_ui_button_desc">Add a Button Navigation Settings entry to the system navigation page</string>
+    <string name="settings_nav_button_custom_switch_title">Custom Button Icons</string>
+    <string name="settings_nav_button_custom_switch_summary">Replace virtual navigation buttons with Samsung NavStar presets</string>
+    <string name="settings_nav_button_tint_switch_title">Custom Mask Color</string>
+    <string name="settings_nav_button_tint_switch_summary">Do not sample mask color when off. Sample mask color when on.</string>
+    <string name="settings_nav_button_tint_color_title">Mask Color</string>
+    <string name="settings_nav_button_section_light_tint">Light Scene Button Color</string>
+    <string name="settings_nav_button_tint_light_color_title">Light Scene Color</string>
+    <string name="settings_nav_button_section_dark_tint">Dark Scene Button Color</string>
+    <string name="settings_nav_button_tint_dark_color_title">Dark Scene Color</string>
+    <string name="settings_nav_button_preset_category_title">Icon Theme</string>
+    <string name="settings_nav_button_preset_item_title">Preset %1$d</string>
+    <string name="settings_nav_button_preset_custom_title">Custom</string>
+    <string name="settings_nav_button_custom_section_title">Custom Button Settings</string>
+    <string name="settings_nav_button_custom_back_title">Back button</string>
+    <string name="settings_nav_button_custom_home_title">Home button</string>
+    <string name="settings_nav_button_custom_recent_title">Recents button</string>
+    <string name="settings_nav_button_custom_hint_empty">Tap to choose image</string>
+    <string name="settings_nav_button_custom_hint_set">Custom image applied</string>
+    <string name="settings_nav_button_custom_reset">Reset</string>
+    <string name="settings_nav_page_vibrate_title">Back gesture vibration</string>
+    <string name="settings_nav_page_vibrate_summary">Light ticks while swiping horizontally below the back threshold</string>
+    <string name="settings_nav_sub_vibration_title">Vibration</string>
+    <string name="settings_nav_sub_feedback_title">Feedback</string>
+    <string name="settings_nav_sub_appearance_title">Appearance</string>
+    <string name="settings_nav_sub_visual_title">Visual</string>
+    <string name="settings_nav_sub_glass_title">Appearance</string>
+    <string name="settings_nav_sub_advanced_title">Advanced</string>
+    <string name="settings_nav_sub_wip">Work in progress</string>
+    <string name="settings_nav_appear_reverse_left">Reverse left arrow</string>
+    <string name="settings_nav_appear_reverse_left_summary">Make the left-swipe arrow point the same way as the finger</string>
+    <string name="settings_nav_appear_material_mode">Material Mode</string>
+    <string name="settings_nav_appear_material_stock">Stock Default</string>
+    <string name="settings_nav_appear_material_glass">Liquid Glass</string>
+    <string name="settings_nav_appear_glass_matrix_diy">Matrix DIY</string>
+    <string name="settings_nav_appear_glass_matrix_diy_summary">Customize droplet mask opacity, color and blur rim</string>
+    <string name="settings_nav_appear_glass_stroke">Highlight Rim</string>
+    <string name="settings_nav_appear_glass_stroke_summary">Show hairline specular glow outline</string>
+    <string name="settings_nav_appear_glass_blur">Liquid Glass Blur Radius</string>
+    <string name="settings_nav_appear_mask_alpha">Mask Opacity</string>
+    <string name="settings_nav_appear_mask_color">Mask Color</string>
+    <string name="settings_nav_handle_section_title">Navigation Handle</string>
+    <string name="settings_nav_handle_length_title">Handle Length</string>
+    <string name="settings_nav_handle_length_summary">Scale handle width (50% ~ 200%)</string>
+    <string name="settings_nav_handle_glass_title">Handle Liquid Luminescence</string>
+    <string name="settings_nav_handle_glass_summary">Transform handle into pure white translucent liquid glass</string>
+    <string name="settings_nav_handle_stroke_title">Specular Edge Stroke</string>
+    <string name="settings_nav_handle_stroke_summary">Infuse edge with hairline specular highlight</string>
+    <string name="settings_nav_appear_shadow_color">Shadow color</string>
+    <string name="settings_nav_appear_shadow_alpha">Shadow opacity</string>
+    <string name="settings_nav_appear_stroke_color">Outline color</string>
+    <string name="settings_nav_appear_stroke_alpha">Outline opacity</string>
+    <string name="settings_nav_appear_stroke_width">Outline width</string>
+    <string name="settings_nav_appear_arrow_color">Arrow color</string>
+    <string name="settings_nav_appear_arrow_alpha">Arrow opacity</string>
+    <string name="settings_nav_appear_arrow_size">Arrow size</string>
+    <string name="settings_nav_appear_conflict_title">Theme overlay detected</string>
+    <string name="settings_nav_appear_conflict_color">Shadow background</string>
+    <string name="settings_nav_appear_conflict_drawable">Back arrow image</string>
+    <string name="settings_nav_appear_card_base">Basics</string>
+    <string name="settings_nav_appear_card_light">Light</string>
+    <string name="settings_nav_appear_card_dark">Dark</string>
+    <string name="settings_nav_appear_base_placeholder">No base options yet</string>
+    <string name="settings_nav_appear_arrow_experience">Experience Mode</string>
+    <string name="settings_nav_appear_arrow_experience_stock">Classic Stock</string>
+    <string name="settings_nav_appear_arrow_experience_dynamic">Dynamic Algorithm</string>
+    <string name="settings_nav_appear_dynamic_style">Pointer Style</string>
+    <string name="settings_nav_appear_style_dot_matrix_5">5-Dot Matrix</string>
+    <string name="settings_nav_appear_style_dot_flow">Flowing Dot Stream (Comet)</string>
+    <string name="settings_nav_appear_style_elastic_chevron">Elastic Chevron (Vector)</string>
+    <string name="settings_nav_appear_style_pulse_bars">Pulse Equalizer (Bars)</string>
+    <string name="settings_nav_appear_style_bowstring">Tension Bowstring (Arc)</string>
+    <string name="settings_nav_appear_arrow_icon">Arrow icon</string>
+    <string name="settings_nav_appear_icon_system">No change (system default)</string>
+    <string name="settings_nav_appear_icon_round">Round arrow (no stem)</string>
+    <string name="settings_nav_appear_icon_round_stem">Round arrow (with stem)</string>
+    <string name="settings_nav_appear_icon_dot">Dot arrow (no stem)</string>
+    <string name="settings_nav_appear_icon_dot_stem">Dot arrow (with stem)</string>
+    <string name="settings_nav_appear_icon_triangle">Triangle arrow</string>
+    <string name="settings_nav_appear_icon_triangle_outline">Triangle arrow (outline)</string>
+    <string name="settings_nav_appear_icon_custom">Custom import…</string>
+    <string name="settings_nav_appear_arrow_diy">Arrow DIY</string>
+    <string name="settings_nav_appear_arrow_diy_summary">Override the arrow colour and size; off keeps the theme default</string>
+    <string name="settings_nav_appear_shadow_diy">Shadow DIY</string>
+    <string name="settings_nav_appear_shadow_diy_summary">Override the droplet shadow colour and opacity</string>
+    <string name="settings_nav_appear_stroke_diy">Outline DIY</string>
+    <string name="settings_nav_appear_stroke_diy_summary">Override the outline colour, opacity and width</string>
+    <string name="settings_nav_appear_handle_diy">Handle DIY</string>
+    <string name="settings_nav_appear_handle_diy_summary">Enable to override handle length, color, and opacity; disable for stock defaults</string>
+    <string name="settings_nav_button_conflict_back">Back button</string>
+    <string name="settings_nav_button_conflict_home">Home button</string>
+    <string name="settings_nav_button_conflict_recent">Recents button</string>
+    <string name="settings_nav_button_conflict_override">realOS settings will override them at runtime</string>
+    <string name="settings_nav_vib_state1">Cancel zone (below the back threshold)</string>
+    <string name="settings_nav_vib_state2">Threshold crossed (release goes back)</string>
+    <string name="settings_nav_vib_weak_strength">Weak strength</string>
+    <string name="settings_nav_vib_step">Trigger step</string>
+    <string name="settings_nav_vib_interval">Min interval</string>
+    <string name="settings_nav_vib_strong_strength">Strong strength</string>
+    <string name="settings_nav_vib_takeover">Take over system strong vibration</string>
+    <string name="settings_nav_vib_takeover_summary">Suppress the system\'s own threshold vibration to avoid double feedback</string>
+    <string name="settings_nav_button_section_light_mask">Light mode mask</string>
+    <string name="settings_nav_button_light_mask_color">Light mask color</string>
+    <string name="settings_nav_button_light_mask_alpha">Light mask opacity</string>
+    <string name="settings_nav_button_section_dark_mask">Dark mode mask</string>
+    <string name="settings_nav_button_dark_mask_color">Dark mask color</string>
+    <string name="settings_nav_button_dark_mask_alpha">Dark mask opacity</string>
+
+    <!-- Gesture navigation liquid glass -->
+    <string name="settings_nav_gesture_glass_section_handle">Gesture Pill (Home Handle)</string>
+    <string name="settings_nav_gesture_handle_glass_title">Gesture Pill Liquid Glass</string>
+    <string name="settings_nav_gesture_handle_glass_summary">Transform gesture pill into crystalline luminescent liquid glass</string>
+    <string name="settings_nav_gesture_glass_caustic_title">Caustic Shadow</string>
+    <string name="settings_nav_gesture_glass_caustic_summary">Physical 4.9dp downward shadow with 9.23dp soft glow</string>
+    <string name="settings_nav_gesture_glass_spotlight_title">SpotLight Effect</string>
+    <string name="settings_nav_gesture_glass_spotlight_summary">Native 3D point-light follow-finger glow</string>
+    <string name="settings_nav_gesture_glass_section_side">Side Back Gesture (Droplet &amp; Chevron)</string>
+    <string name="settings_nav_gesture_side_glass_title">Side Gesture Liquid Droplet</string>
+    <string name="settings_nav_gesture_side_glass_summary">Introduce luminescent liquid glow and hairline strokes to side gestures</string>
+    <string name="settings_nav_gesture_glass_stroke_title">Hairline Glancing Stroke</string>
+    <string name="settings_nav_gesture_glass_stroke_summary">Framework capsule 2.2dp ultra-fine light stroke</string>
+    <string name="settings_nav_gesture_glass_inner_shadow_title">Refractive Inner Shadow</string>
+    <string name="settings_nav_gesture_glass_inner_shadow_summary">Subtle droplet volume refraction for spatial depth</string>
+    <string name="settings_nav_gesture_glass_chevron_preserve_title">Sharp Chevron Protection</string>
+    <string name="settings_nav_gesture_glass_chevron_preserve_summary">Keep arrow icon razor sharp above droplet without muddiness</string>
+    <string name="settings_nav_gesture_glass_section_light">Light Mode Luminescence</string>
+    <string name="settings_nav_gesture_glass_light_alpha_title">Light Luminescence Opacity</string>
+    <string name="settings_nav_gesture_glass_section_dark">Dark Mode Luminescence</string>
+    <string name="settings_nav_gesture_glass_dark_alpha_title">Dark Luminescence Opacity</string>
+
+    <string name="settings_nav_section_visual_tuning">Visual Tuning</string>
+    <string name="settings_nav_section_haptic_tuning">Haptic Tuning</string>
+    <string name="settings_nav_section_logic_tuning">Logic Tuning</string>
+    <string name="settings_nav_section_advanced_tuning">Misc Tuning</string>
+    <string name="settings_nav_gesture_handle_mask_title">Custom Handle Mask</string>
+    <string name="settings_nav_gesture_handle_mask_summary">Enable to customize handle mask color and transparency for light and dark modes</string>
+    <string name="settings_nav_gesture_section_light_mask">Light Mode Mask</string>
+    <string name="settings_nav_gesture_section_dark_mask">Dark Mode Mask</string>
+    <string name="settings_nav_gesture_mask_color">Mask Color</string>
+    <string name="settings_nav_gesture_mask_alpha">Mask Opacity</string>
+    <string name="settings_nav_gesture_top_exclusion_title">Top Exclusion Zone</string>
+    <string name="settings_nav_gesture_top_exclusion_summary">Percentage of top screen area that ignores back gesture to prevent conflict with app drawers</string>
+    <string name="settings_nav_gesture_bottom_exclusion_title">Bottom Exclusion Zone</string>
+    <string name="settings_nav_gesture_bottom_exclusion_summary">Percentage of bottom screen area that ignores back gesture</string>
+    <string name="settings_nav_gesture_range_title">Gesture Vertical Range</string>
+    <string name="settings_nav_gesture_range_item_title">Active Range Customization</string>
+    <string name="settings_nav_gesture_range_footer">Adjust the vertical active back gesture region. Mask overlays preview the dead zones during drag; areas inside masks ignore back gestures.</string>
+    <string name="settings_nav_button_glass_capsule_summary_special">Specialized navbar background capsule shapes providing minimal backing and droplet feel, supporting isolated pill wrapping and touch spotlight effects.</string>
+    <string name="settings_nav_button_glass_mask_title">Custom Capsule Mask Color</string>
+    <string name="settings_nav_button_glass_mask_summary">Enable to customize handle and capsule mask color and opacity for light and dark modes</string>
+
+    <!-- ColorOS Camera Assistant -->
+    <string name="camera_tips_title">About Camera Assistant</string>
+    <string name="camera_tips_message">Only the realOS tab is injected into the camera settings tab bar for now.</string>
+    <string name="camera_section_injection_title">Camera Settings Injection</string>
+    <string name="camera_shortcut_realos_tab_title">realOS Tab</string>
+    <string name="camera_shortcut_realos_tab_summary">Append a realOS tab after General, Photo and Video; the page currently shows placeholder content</string>
+    <string name="camera_shortcut_realos_tab_hint">Open the realOS tab</string>
+    <string name="camera_open_settings_failed">Failed to open camera settings</string>
+
+    <!-- Launcher -->
+    <string name="launcher_app_name">System Launcher</string>
+    <string name="launcher_section_features_title">Features</string>
+    <string name="launcher_features_footer">Restart the launcher to apply changes.</string>
+    <string name="launcher_memory_hooks_title">Recents Memory Display</string>
+    <string name="launcher_memory_hooks_summary">Unlock the stock memory display and add the real-memory switch in launcher settings</string>
+    <string name="launcher_recents_extra_styles_title">Recents UI Enhancement</string>
+    <string name="launcher_recents_extra_styles_summary">Add extra styles to the recents style picker in launcher settings</string>
+    <string name="launcher_color_filter_title">Color Filter for More Icon Packs</string>
+    <string name="launcher_color_filter_summary">Enable drawer color filtering for more third-party icon packs</string>
+
+    <!-- Process restart actions -->
+    <string name="action_restart">Restart</string>
+    <string name="restart_success_camera">Camera restarted</string>
+    <string name="restart_success_systemui">System UI restarted</string>
+    <string name="restart_success_launcher">Launcher restarted</string>
+    <string name="restart_success_media_provider">Media Provider restarted</string>
+    <string name="restart_failed_need_root">Restart failed (root permission required)</string>
+
+    <!-- Media Provider -->
+    <string name="media_provider_app_name">Media Provider</string>
+    <string name="media_provider_tips_title">About Media Picker Refresh</string>
+    <string name="media_provider_tips_message">Media Provider normally waits for Gallery\'s throttled sync before telling the system photo picker that media changed. This switch triggers a local picker sync as soon as a photo or video is added, updated, or removed.</string>
+    <string name="media_provider_section_features_title">Photo Picker</string>
+    <string name="media_provider_picker_refresh_title">Real-time Media Refresh</string>
+    <string name="media_provider_picker_refresh_summary">Refresh the system photo picker immediately after media changes</string>
+
+    <!-- Wallet -->
+    <string name="wallet_app_name">Wallet</string>
+    <string name="wallet_tips_title">About Non-NFC Card Customization</string>
+    <string name="wallet_tips_message">Official customization is limited to simulated NFC door cards. Enable this feature to add custom cover support for more card types.</string>
+    <string name="wallet_section_features_title">Card Personalization</string>
+    <string name="wallet_non_nfc_diy_title">Non-NFC Card Customization</string>
+    <string name="wallet_non_nfc_diy_summary">Allow customizing cover and name for transit and bank cards</string>
+    <string name="wallet_shortcut_hint">Tap to open Wallet</string>
+    <string name="wallet_open_app_failed">Failed to open Wallet app</string>
+    <string name="wallet_custom_card_title">All-Scenario Custom Card Face</string>
+    <string name="wallet_stock_card_name">Official Stock Cover</string>
+    <string name="wallet_stock_card_scenario">Original Cover</string>
+    <string name="wallet_edit_name_title">Edit Card Name</string>
+    <string name="wallet_edit_name_hint">Enter custom card name</string>
+    <string name="wallet_show_name_title">Show Name</string>
+    <string name="wallet_change_cover_title">Card Cover</string>
+    <string name="wallet_change_cover_summary">Customize card face and card name</string>
+    <string name="wallet_change_cover_btn">Change</string>
+    <string name="restart_success_wallet">Wallet restarted</string>
+    <!-- Wallet in-host pages -->
+    <string name="wallet_custom_page_title">Card Customization</string>
+    <string name="wallet_custom_page_save">Save</string>
+    <string name="wallet_custom_page_cover_label">Card Cover</string>
+    <string name="wallet_custom_page_cover_add">Add</string>
+    <string name="wallet_custom_page_cover_delete_title">Delete cover</string>
+    <string name="wallet_custom_page_cover_delete_message">The image will be removed from the local pool.</string>
+    <string name="wallet_crop_title">Crop Cover</string>
+    <string name="wallet_crop_confirm">Done</string>
+    <string name="wallet_crop_saving">Saving...</string>
+    <string name="wallet_crop_cancel">Cancel</string>
+    <string name="wallet_crop_failed">Crop failed</string>
+    <string name="wallet_crop_save_failed">Failed to save image</string>
+    <string name="wallet_toast_save_success">Saved</string>
+    <string name="wallet_toast_name_updated">Card name updated</string>
+    <string name="wallet_toast_cover_ready">Cover ready</string>
+    <string name="wallet_toast_unavailable">Feature unavailable on this version</string>
+    <string name="wallet_toast_picker_failed">Cannot open image picker</string>
+    <string name="wallet_toast_theme_saved">Cover and name updated</string>
+    <string name="wallet_dialog_title">Card Settings</string>
+    <string name="wallet_dialog_hide_name">Hide card name and icon</string>
+    <string name="wallet_dialog_name_hint">Custom card name</string>
+    <string name="wallet_dialog_save_name">Save name</string>
+    <string name="wallet_dialog_change_cover">Change cover</string>
+    <string name="wallet_dialog_cancel">Cancel</string>
+    <string name="wallet_custom_page_cover_long_press_hint"> (long press to delete a custom cover)</string>
+    <string name="wallet_toast_cover_deleted">Cover deleted</string>
+    <string name="wallet_dialog_confirm_delete">Delete</string>
+
+    <!-- Feature switches -->
+    <string name="settings_feature_switch_app_name">System Settings</string>
+    <string name="settings_detail_title">System Settings</string>
+    <string name="settings_tips_title">Staging Feature Switches</string>
+    <string name="settings_tips_message">These software features run entirely in the Android framework user space without hardware chips or custom kernel drivers. Toggling a feature modifies system feature queries in Settings and related apps. Tap the restart icon on the top right to restart Settings for changes to take effect.</string>
+    <string name="restart_success_settings">Settings restarted</string>
+    <string name="restart_success_clock_font">Clock font hosts restarted</string>
+
+    <string name="settings_sec_oneplus">OnePlus Brand and Aesthetics</string>
+    <string name="feat_oneplus_brand_title">OnePlus Device Identifier</string>
+    <string name="feat_oneplus_brand_summary">Identify device as OnePlus (isOHCommonDevice)</string>
+    <string name="feat_oneplus_red_one_title">OnePlus Red 1 Clock</string>
+    <string name="feat_oneplus_red_one_summary">Show Red 1 setting in Wallpapers &amp; Personalization More</string>
+
+    <string name="settings_sec_perf">Performance and Scheduling</string>
+    <string name="feat_gt_mode_title">GT Mode</string>
+    <string name="feat_gt_mode_summary">Enable GT performance mode toggles and UI</string>
+    <string name="feat_app_frozen_title">App Freezer</string>
+    <string name="feat_app_frozen_summary">Enable system background app freeze and hibernation</string>
+    <string name="feat_pure_mode_title">Pure Install Mode</string>
+    <string name="feat_pure_mode_summary">Enable safety verification and bundle install protection</string>
+    <string name="feat_fluid_cloud_title">Fluid Cloud</string>
+    <string name="feat_fluid_cloud_summary">Enable status bar fluid cloud notification service</string>
+    <string name="feat_mini_capsule_title">Mini Capsule</string>
+    <string name="feat_mini_capsule_summary">Enable status bar cutout mini capsule UI</string>
+    <string name="feat_custom_hide_app_title">Hide Apps</string>
+    <string name="feat_custom_hide_app_summary">Enable privacy app hide in settings</string>
+    <string name="feat_taskbar_title">Taskbar / Dock</string>
+    <string name="feat_taskbar_summary">Enable desktop and large screen taskbar switch</string>
+
+    <string name="settings_sec_display">Display and Picture Quality</string>
+    <string name="feat_video_color_enhance_title">Video Color Enhance (SDR to HDR)</string>
+    <string name="feat_video_color_enhance_summary">Software dynamic contrast and color gamut mapping</string>
+    <string name="feat_video_osie_title">OSIE Ultra-Clear Visual Effect</string>
+    <string name="feat_video_osie_summary">Software video frame enhancement and contrast boost</string>
+    <string name="feat_video_sr_title">Video Super-Resolution</string>
+    <string name="feat_video_sr_summary">AI super-resolution sharpening for low-res videos</string>
+    <string name="feat_app_high_refresh_title">App High Refresh Rate List</string>
+    <string name="feat_app_high_refresh_summary">Set a 120Hz refresh rate per app</string>
+    <string name="feat_pwm_reboot_close_title">PWM Protection Persistence</string>
+    <string name="feat_pwm_reboot_close_summary">Prevent eye protection PWM dimming from resetting on reboot</string>
+    <string name="feat_comfort_color_temp_title">Comfort Sleep Color Temperature</string>
+    <string name="feat_comfort_color_temp_summary">Smooth day and night screen color temperature adaptation</string>
+    <string name="feat_single_pulse_refresh_title">Single Pulse Eye Care</string>
+    <string name="feat_single_pulse_refresh_summary">Reveal single pulse high frequency refresh rate switch</string>
+    <string name="feat_dc_min_2nit_title">DC Dimming Switch</string>
+    <string name="feat_dc_min_2nit_summary">Low brightness anti-flicker dimming toggle</string>
+
+    <string name="settings_sec_audio">Audio and Multimedia</string>
+    <string name="feat_dual_headphone_title">Dual Headphone Sharing</string>
+    <string name="feat_dual_headphone_summary">Simultaneous audio output to wired and Bluetooth headphones</string>
+    <string name="feat_multi_sounds_play_title">Multi-App Volume Adjustment</string>
+    <string name="feat_multi_sounds_play_summary">Play multiple audio sources and adjust per-app volume sliders</string>
+    <string name="feat_super_volume_title">Super Volume Mode</string>
+    <string name="feat_super_volume_summary">Unlock 200% and 300% volume boost multipliers</string>
+    <string name="feat_karaoke_title">Karaoke Ear Return</string>
+    <string name="feat_karaoke_summary">Low-latency earphone voice return channel</string>
+    <string name="feat_dolby_title">Dolby Atmos Panel</string>
+    <string name="feat_dolby_summary">Unlock Dolby Atmos sound profile and equalizer UI</string>
+    <string name="feat_dirac_title">Dirac Sound Effect</string>
+    <string name="feat_dirac_summary">Unlock Dirac audio enhancement UI</string>
+
+    <string name="settings_sec_permission">Permission and Restriction Bypass</string>
+    <string name="feat_oem_unlock_bypass_title">Unlock OEM Unlock Toggle</string>
+    <string name="feat_oem_unlock_bypass_summary">Force show and enable OEM unlock in Developer Options</string>
+    <string name="feat_disallow_disable_bypass_title">Allow Disabling System Apps</string>
+    <string name="feat_disallow_disable_bypass_summary">Unlock Disable button in App Info for pre-installed apps</string>
+    <string name="feat_clear_cache_bypass_title">Allow Clearing App Cache</string>
+    <string name="feat_clear_cache_bypass_summary">Unlock Clear Cache button in storage settings</string>
+    <string name="feat_volte_bypass_title">Force Show VoLTE Switch</string>
+    <string name="feat_volte_bypass_summary">Always show VoLTE toggle in mobile network settings</string>
+    <string name="feat_vowifi_bypass_title">Force Show VoWiFi Switch</string>
+    <string name="feat_vowifi_bypass_summary">Always show Wi-Fi calling toggle in mobile network settings</string>
+    <string name="feat_video_wallpaper_title">Video Dynamic Wallpaper</string>
+    <string name="feat_video_wallpaper_summary">Allow setting local video files as lockscreen or desktop wallpaper</string>
+    <string name="feat_switch_prev_app_bypass_title">Unlock Switch to Previous App</string>
+    <string name="feat_switch_prev_app_bypass_summary">Allow swipe horizontal bottom bar to switch previous apps</string>
+
+    <!-- App UI: module list / detail pages -->
+    <string name="oplus_input_app_name">Breeno Keyboard</string>
+    <string name="systemui_app_name">System UI</string>
+    <string name="system_framework_app_name">Android System</string>
+    <string name="camera_app_name">Camera</string>
+
+    <string name="detail_section_ready">Ready</string>
+    <string name="detail_section_unsupported">Not supported yet</string>
+    <string name="detail_open_details">Open details</string>
+
+    <string name="module_state_active">Active</string>
+    <string name="module_state_stale">Reload needed</string>
+    <string name="module_state_reloading">Reloading</string>
+    <string name="module_state_failed">Error</string>
+    <string name="module_state_not_running">Not running</string>
+
+    <!-- Breeno Keyboard detail page -->
+    <string name="oplus_input_restart_action">Force restart keyboard</string>
+    <string name="oplus_input_restart_success">Keyboard restarted</string>
+    <string name="oplus_input_tips_title">Settings entry</string>
+    <string name="oplus_input_tips_message">When enabled, tap an item to open the keyboard settings page. If blocked, grant root permission.</string>
+    <string name="oplus_input_section_core_features">Core features</string>
+    <string name="oplus_input_host_app_footer">Light and sound effects inspired by Samsung Keyboard &amp; KeysCafe</string>
+    <string name="oplus_input_liquid_glass_summary">ColorOS 17 native dynamic frosted liquid glass workshop</string>
+    <string name="oplus_input_liquid_glass_hint">Tap to open the skin workshop</string>
+    <string name="oplus_input_keyboard_effects_summary">Multi-particle effects with physical spring press (Keys Cafe style)</string>
+    <string name="oplus_input_keyboard_effects_hint">Tap to open keyboard effects</string>
+    <string name="oplus_input_keyboard_sounds_summary">Simulated mechanical keys and typewriter sounds (Keys Cafe style)</string>
+    <string name="oplus_input_keyboard_sounds_hint">Tap to open keyboard sounds</string>
+    <string name="oplus_input_enhancements_summary">Inline autofill suggestions and keyboard enhancements</string>
+    <string name="oplus_input_enhancements_hint">Tap to open enhancements</string>
+    <string name="oplus_input_launch_failed_title">Failed to open host page</string>
+    <string name="dialog_got_it">Got it</string>
+    <string name="oplus_input_close_content_desc">Close</string>
+
+    <!-- Breeno Keyboard launch failures (dialogs) -->
+    <string name="oplus_input_launch_root_failed">Root launch failed (%1$d): %2$s</string>
+    <string name="oplus_input_launch_root_error">Root execution error: %1$s</string>
+    <string name="oplus_input_launch_not_exported">Host page is not exported. Grant root to realOS for cross-app launch.</string>
+    <string name="oplus_input_launch_activity_missing">Unsupported keyboard version: container component not found (%1$s)</string>
+    <string name="oplus_input_launch_failed">Launch failed: %1$s</string>
+    <string name="oplus_input_unknown_error">unknown error</string>
+    <string name="oplus_input_unknown_exception">unknown exception</string>
+
+    <!-- System framework detail page -->
+    <string name="system_framework_autofill_section">Inline Autofill</string>
+    <string name="system_framework_fido_section">FIDO2 Scan</string>
+    <string name="system_framework_fido_redirect_title">FIDO2 scan redirect</string>
+    <string name="system_framework_fido_redirect_summary">Open system passkey authentication for FIDO:/ QR codes instead of a browser search</string>
+    <string name="system_framework_intent_section">Intent Resolution</string>
+    <string name="system_framework_intent_align_title">Align link resolution (Scanner / Fluid Cloud)</string>
+    <string name="system_framework_intent_align_summary">Only applies to OPPO Scanner and Fluid Cloud: ignore their hardcoded targets and resolve by default app, apps that declare support, then the default browser</string>
+
+    <!-- SystemUI navigation detail page -->
+    <string name="system_nav_section_title">System navigation</string>
+    <string name="system_nav_current_mode">Current navigation mode</string>
+    <string name="system_nav_mode_gesture">Gesture navigation</string>
+    <string name="system_nav_mode_buttons">3-button navigation</string>
+    <string name="system_nav_open_settings_failed">Unable to open system settings</string>
+    <string name="system_nav_visual_summary_gesture">Customize the gesture bar appearance, mask and dynamic arrow</string>
+    <string name="system_nav_visual_summary_buttons">Customize navigation button icon packs and third-party assets</string>
+    <string name="system_nav_visual_hint">Tap to open Visual tuning</string>
+    <string name="system_nav_haptic_summary_gesture">Swipe-back haptic waveform and vibration strength</string>
+    <string name="system_nav_haptic_summary_buttons">Button tap haptic feedback and vibration strength</string>
+    <string name="system_nav_haptic_hint">Tap to open Haptic tuning</string>
+    <string name="system_nav_logic_summary_gesture">Top and bottom exclusion zones for swipe-back</string>
+    <string name="system_nav_logic_summary_buttons">Button capsule shape and layout structure</string>
+    <string name="system_nav_logic_hint">Tap to open Logic tuning</string>
+    <string name="system_nav_advanced_summary">Fullscreen conflict handling and extra options</string>
+    <string name="system_nav_advanced_hint">Tap to open Misc tuning</string>
+
+    <!-- Settings tab -->
+    <string name="settings_section_behavior">Module behavior</string>
+    <string name="settings_section_logging">Logging</string>
+    <string name="settings_log_level_title">Log level</string>
+    <string name="log_level_none">Off</string>
+    <string name="log_level_error">Errors only</string>
+    <string name="log_level_warn">Warnings and above</string>
+    <string name="log_level_info">Info and above</string>
+    <string name="log_level_debug">Debug and above</string>
+    <string name="log_level_verbose">Verbose</string>
+    <string name="settings_hide_launcher_icon_title">Hide launcher icon</string>
+    <string name="settings_hide_launcher_icon_summary">Hide the module entry from the app drawer; open it from LSPosed Manager instead</string>
+    <string name="settings_section_about">About and support</string>
+    <string name="settings_version_title">Version</string>
+    <string name="settings_ui_system_title">Control library</string>
+    <string name="settings_ui_system_value" translatable="false">COUI-Kit</string>
+
+    <!-- Clock fonts -->
+    <string name="clock_font_app_name">Clock fonts</string>
+    <string name="clock_font_app_summary">AOD, lock screen and home widget</string>
+    <string name="clock_font_title">Clock fonts</string>
+    <string name="clock_font_section_imported">Imported fonts</string>
+    <string name="clock_font_import_action">Import TTF</string>
+    <string name="clock_font_importing">Validating and importing…</string>
+    <string name="clock_font_empty">No imported clock fonts</string>
+    <string name="clock_font_footer">Fonts are stored inside realOS. Removing a font only hides it; the file is kept so a clock that still references it does not break.</string>
+    <string name="clock_font_type_fixed">Fixed</string>
+    <string name="clock_font_type_flex">Flex</string>
+    <string name="clock_font_summary">%1$s · %2$s</string>
+    <string name="clock_font_size_kb">%1$.1f KB</string>
+    <string name="clock_font_hidden">Hidden</string>
+    <string name="clock_font_remove">Remove</string>
+    <string name="clock_font_restore">Restore</string>
+    <string name="clock_font_remove_title">Remove this font?</string>
+    <string name="clock_font_remove_message">The font will disappear from the clock font list. The file is kept so a currently selected clock keeps working.</string>
+    <string name="clock_font_remove_confirm">Remove</string>
+    <string name="clock_font_cancel">Cancel</string>
+    <string name="clock_font_import_success">Imported %1$s</string>
+    <string name="clock_font_duplicate">Already imported: %1$s</string>
+    <string name="clock_font_import_failed_title">Import failed</string>
+    <string name="clock_font_error_not_ttf">The selected file is not a TrueType font.</string>
+    <string name="clock_font_error_too_small">The font file is too small.</string>
+    <string name="clock_font_error_too_large">The font file is too large. The limit is 16 MB.</string>
+    <string name="clock_font_error_malformed">The font is malformed or truncated.</string>
+    <string name="clock_font_error_unsupported_format">Only TrueType .ttf fonts with glyf outlines are supported.</string>
+    <string name="clock_font_error_missing_glyphs">The font must contain digits 0-9 and a colon.</string>
+    <string name="clock_font_error_no_variation">The font has no usable variable weight axis.</string>
+    <string name="clock_font_error_weight_range">The weight axis must cover 100 to 700 for Fixed fonts, or 100 to 1000 for Flex fonts.</string>
+    <string name="clock_font_error_height_range">The HGHT axis must cover 1 to 1000 for Flex fonts.</string>
+    <string name="clock_font_error_avar_unsupported">Flex fonts with an avar table are not supported.</string>
+    <string name="clock_font_error_io">The font could not be read or written.</string>
+    <string name="clock_font_error_duplicate">This font is already imported.</string>
+    <string name="clock_font_tips_title">Clock font notes</string>
+    <string name="clock_font_tips_message">Fixed fonts use a continuous weight axis. Flex fonts additionally need an HGHT 1-1000 axis for vertical stretching. Reopen the clock font panel after importing.</string>
+    <string name="clock_font_restart_action">Restart clock font hosts</string>
+
+    <!-- realOS system font manager -->
+    <string name="system_font_title">Font manager</string>
+    <string name="system_font_section_current">Current font</string>
+    <string name="system_font_current_default">System default</string>
+    <string name="system_font_apply_hint">Select a font card in Settings to apply it. This page only manages imported files.</string>
+    <string name="system_font_entry_title">Show the realOS font entry in Settings</string>
+    <string name="system_font_entry_summary">Adds the imported font cards and replaces the stock \"More fonts\" card. Reopen the Settings font page after changing.</string>
+    <string name="system_font_section_imported">Imported fonts</string>
+    <string name="system_font_import">Import font</string>
+    <string name="system_font_empty">No imported fonts</string>
+    <string name="system_font_delete">Delete</string>
+    <string name="system_font_in_use">In use</string>
+    <string name="system_font_in_use_delete">Switch to another font in Settings first</string>
+    <string name="system_font_preview_sample">Aa Font preview The quick brown fox jumps over the lazy dog</string>
+    <string name="system_font_import_success">Imported %1$s</string>
+    <string name="system_font_duplicate">Already imported: %1$s</string>
+    <string name="system_font_error_size">Font file size is not supported</string>
+    <string name="system_font_error_format">TTC/WOFF fonts are not supported; use TTF or OTF</string>
+    <string name="system_font_error_invalid">Font file is malformed or incomplete</string>
+    <string name="system_font_error_io">Failed to read the font file</string>
+    <string name="system_font_footer">Fonts are stored inside realOS. Selecting a card in the Settings font page applies it through the system font manager.</string>
+    <string name="system_font_tips_title">About font sideloading</string>
+    <string name="system_font_tips_message">Use fonts that cover the system language. Select another font in Settings if text rendering breaks.</string>
+    <string name="camera_realos_tab_appearance">Appearance</string>
+    <string name="camera_realos_tab_appearance_footer">Applies to the settings page only; the viewfinder stays unchanged</string>
+    <string name="camera_realos_tab_theme_follow_title">Follow system theme and accent color</string>
+    <string name="camera_realos_tab_theme_follow_summary">Switch the settings page with the system dark mode and match the closest palette to the system accent color</string>
+    <string name="launcher_real_memory_title">Real memory info</string>
+    <string name="launcher_real_memory_summary">Replace the official placeholder text with real kernel data: physical RAM usage, zRAM compression ratio and swap usage</string>
+    <string name="launcher_memory_available_suffix">" available"</string>
+    <string name="launcher_recents_style_stacked">Stacked</string>
+    <string name="launcher_recents_style_tiled">Tiled</string>
+    <string name="launcher_recents_style_list">List</string>
+    <string name="wallet_card_custom_menu_title">Card Customization</string>
+    <string name="system_font_applied">Font applied</string>
+    <string name="system_font_apply_failed">Failed to apply font</string>
+    <string name="system_font_manager_label">realOS font manager</string>
+    <string name="oplus_input_autofill_tool_title">Autofill</string>
+</resources>
