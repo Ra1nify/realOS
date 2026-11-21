@@ -1,0 +1,25 @@
+# -----------------------------------------------------------------------------
+# DexKit consumer keep rules
+#
+# Location: src/main/aarKeepRules/ - *.keep files in this directory are packaged
+# into the AAR as consumer rules, merged automatically during R8 shrinking by
+# dependent modules (app) without redundant declarations in the app module.
+# (AGP library convention, equivalent to consumerProguardFiles).
+#
+# Why this must be kept:
+# DexKit native entry points use name-based JNI symbol resolution:
+#     Java_org_luckypray_dexkit_DexKitBridge_nativeInitDexKit
+# In Kotlin, these are declared in companion object as `@JvmStatic private external fun`,
+# which map to static native methods on the outer class DexKitBridge at bytecode level.
+# If R8 obfuscates the class name or native method names of DexKitBridge, JNI lookup
+# fails (UnsatisfiedLinkError) and DexKit becomes completely unusable.
+#
+# includedescriptorclasses: preserves class names of native parameter and return types
+# (ByteArray, ClassLoader, String, etc.) to prevent JNI descriptor mismatches.
+#
+# This matches official DexKit dexkit-android/proguard-rules.pro; because this project
+# directly includes DexKit source, the consumer rules are explicitly supplied here.
+# -----------------------------------------------------------------------------
+-keepclasseswithmembers,includedescriptorclasses class org.luckypray.dexkit.** {
+    native <methods>;
+}

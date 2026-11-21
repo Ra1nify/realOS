@@ -1,0 +1,28 @@
+<resources>
+    <style name="Theme.RealOS" parent="Theme.AppCompat.Light.NoActionBar" />
+
+    <!--
+      One derived theme per launcher icon alias; only the splash background differs.
+
+      Android 12+ splash background resolution:
+        1. android:windowSplashScreenBackground
+        2. windowBackground when absent
+      The splash icon uses the current launcher component's android:icon when
+      windowSplashScreenAnimatedIcon is absent.
+      Per-alias themes are the only way to vary the background; static theme attributes
+      cannot change at runtime.
+
+      Constraints:
+      - Do not set windowSplashScreenIconBackgroundColor: adaptive icons already include
+        a background layer; setting it adds an extra circular backing.
+      - Do not set postSplashScreenTheme: that attribute belongs to androidx core-splashscreen,
+        which this project does not include.
+    -->
+    <style name="Theme.RealOS.LauncherStencil">
+        <item name="android:windowSplashScreenBackground">@color/stencil_background</item>
+    </style>
+
+    <style name="Theme.RealOS.LauncherDotmatrix">
+        <item name="android:windowSplashScreenBackground">@color/dotmatrix_background</item>
+    </style>
+</resources>

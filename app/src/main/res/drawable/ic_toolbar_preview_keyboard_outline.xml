@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Toolbar keyboard preview icon: outline state (keyboard inactive).
+     Geometry from host themes_ic_show_keyboard.xml; fill is #FFFFFFFF,
+     tinted at runtime via setTint(theme color). -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="24dp"
+    android:height="24dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24">
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M2,6.9C2,5.575 3.075,4.5 4.4,4.5H19.6C20.926,4.5 22,5.575 22,6.9V18.1C22,19.426 20.926,20.5 19.6,20.5H4.4C3.075,20.5 2,19.426 2,18.1V6.9Z"
+        android:strokeColor="#FFFFFFFF"
+        android:strokeWidth="1.8"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M6,7.5L8,7.5A0.5,0.5 0,0 1,8.5 8L8.5,9A0.5,0.5 0,0 1,8 9.5L6,9.5A0.5,0.5 0,0 1,5.5 9L5.5,8A0.5,0.5 0,0 1,6 7.5z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M6,11.5L8,11.5A0.5,0.5 0,0 1,8.5 12L8.5,13A0.5,0.5 0,0 1,8 13.5L6,13.5A0.5,0.5 0,0 1,5.5 13L5.5,12A0.5,0.5 0,0 1,6 11.5z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M11,7.5L13,7.5A0.5,0.5 0,0 1,13.5 8L13.5,9A0.5,0.5 0,0 1,13 9.5L11,9.5A0.5,0.5 0,0 1,10.5 9L10.5,8A0.5,0.5 0,0 1,11 7.5z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M16,7.5L18,7.5A0.5,0.5 0,0 1,18.5 8L18.5,9A0.5,0.5 0,0 1,18 9.5L16,9.5A0.5,0.5 0,0 1,15.5 9L15.5,8A0.5,0.5 0,0 1,16 7.5z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M11,11.5L13,11.5A0.5,0.5 0,0 1,13.5 12L13.5,13A0.5,0.5 0,0 1,13 13.5L11,13.5A0.5,0.5 0,0 1,10.5 13L10.5,12A0.5,0.5 0,0 1,11 11.5z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M16,11.5L18,11.5A0.5,0.5 0,0 1,18.5 12L18.5,13A0.5,0.5 0,0 1,18 13.5L16,13.5A0.5,0.5 0,0 1,15.5 13L15.5,12A0.5,0.5 0,0 1,16 11.5z"/>
+    <path
+        android:fillColor="#FFFFFFFF"
+        android:pathData="M7,16C7,15.724 7.224,15.5 7.5,15.5H16.5C16.776,15.5 17,15.724 17,16V17C17,17.276 16.776,17.5 16.5,17.5H7.5C7.224,17.5 7,17.276 7,17V16Z"
+        android:fillType="evenOdd"/>
+</vector>
