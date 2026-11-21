@@ -30,7 +30,7 @@ import java.lang.reflect.Modifier
 object SystemUiSymbolResolver {
 
     private const val TAG = "RealOS-SysUiResolver"
-    const val RULE_VERSION = 2
+    const val RULE_VERSION = 3
     private const val CACHE_PREFS = "realos_systemui_symbols"
 
     // ── Known Host Class Names ──
@@ -272,7 +272,6 @@ object SystemUiSymbolResolver {
 
         val keyButtonDrawableClass = requiredClass(CLASS_KEY_BUTTON_DRAWABLE)
         val keyButtonDrawableDesc = keyButtonDrawableClass?.let { ClassDescriptor(it.name) }
-        logState(KEY_KEY_BUTTON_DRAWABLE, if (keyButtonDrawableClass != null) HookPointState.FOUND else HookPointState.MISSING)
 
         val shadowDrawableStateClass = safeLoadClass(CLASS_SHADOW_DRAWABLE_STATE)
         val shadowDrawableStateDesc = shadowDrawableStateClass?.let { ClassDescriptor(it.name) }
@@ -285,8 +284,14 @@ object SystemUiSymbolResolver {
         val keyButtonDrawableCtor = keyButtonDrawableClass?.declaredConstructors?.firstOrNull { c ->
             c.parameterTypes.size >= 2 &&
                 Drawable::class.java.isAssignableFrom(c.parameterTypes[0]) &&
-                Drawable::class.java.isAssignableFrom(c.parameterTypes[1])
+                (shadowDrawableStateClass?.isAssignableFrom(c.parameterTypes[1]) == true ||
+                    c.parameterTypes[1].name.contains("ShadowDrawableState") ||
+                    Drawable::class.java.isAssignableFrom(c.parameterTypes[1]))
         }?.let { ConstructorDescriptor.of(it) }
+        logState(
+            KEY_KEY_BUTTON_DRAWABLE,
+            if (keyButtonDrawableClass != null && keyButtonDrawableCtor != null) HookPointState.FOUND else HookPointState.MISSING
+        )
 
         val onAttachedToWindowMethod = navBarViewClass?.declaredMethods?.firstOrNull {
             it.name == "onAttachedToWindow" && it.parameterTypes.isEmpty()

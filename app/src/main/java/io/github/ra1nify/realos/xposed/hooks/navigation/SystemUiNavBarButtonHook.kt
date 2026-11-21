@@ -57,21 +57,33 @@ object SystemUiNavBarButtonHook {
      */
     private val fieldCache = java.util.concurrent.ConcurrentHashMap<
         Class<*>,
-        java.util.concurrent.ConcurrentHashMap<String, java.lang.reflect.Field?>>()
+        java.util.concurrent.ConcurrentHashMap<String, java.lang.reflect.Field>>()
+    private val missingFields = java.util.concurrent.ConcurrentHashMap<
+        Class<*>,
+        MutableSet<String>>()
 
     private fun fieldOf(cls: Class<*>?, name: String): java.lang.reflect.Field? {
         if (cls == null) return null
         val perClass = fieldCache.getOrPut(cls) { java.util.concurrent.ConcurrentHashMap() }
-        if (perClass.containsKey(name)) return perClass[name]
+        val cached = perClass[name]
+        if (cached != null) return cached
+        val missing = missingFields.getOrPut(cls) { java.util.Collections.newSetFromMap(java.util.concurrent.ConcurrentHashMap()) }
+        if (missing.contains(name)) return null
+
         var found: java.lang.reflect.Field? = null
         var c: Class<*>? = cls
         while (c != null && found == null) {
             found = runCatching { c.getDeclaredField(name) }.getOrNull()
             c = c.superclass
         }
-        runCatching { found?.isAccessible = true }
-        perClass[name] = found
-        return found
+        if (found != null) {
+            runCatching { found.isAccessible = true }
+            perClass[name] = found
+            return found
+        } else {
+            missing.add(name)
+            return null
+        }
     }
 
     /** Registered hot-reload receiver and its context, unregistered by [reset]. */
@@ -508,6 +520,7 @@ object SystemUiNavBarButtonHook {
         isReceiverRegistered = false
         // Hot reload swaps the host Class view; the old field cache is dropped.
         fieldCache.clear()
+        missingFields.clear()
     }
 
     private fun applyCustomIcons(
