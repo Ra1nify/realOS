@@ -18,6 +18,7 @@ data class ClockFontRecord(
     val fileName: String,
     val sha256: String,
     val type: ClockFontType,
+    val dynamicWeight: Boolean = true,
     val sizeBytes: Long,
     val hidden: Boolean,
     val addedAt: Long

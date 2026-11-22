@@ -50,7 +50,7 @@ fun ClockFontDetailScreen(
     var records by remember { mutableStateOf<List<ClockFontRecord>>(emptyList()) }
     var importing by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    var pendingRemove by remember { mutableStateOf<ClockFontRecord?>(null) }
+    var pendingDelete by remember { mutableStateOf<ClockFontRecord?>(null) }
 
     fun reload() {
         scope.launch {
@@ -166,53 +166,67 @@ fun ClockFontDetailScreen(
                         R.string.clock_font_type_fixed
                     }
                 )
+                val weightLabel = stringResource(
+                    if (record.dynamicWeight) {
+                        R.string.clock_font_weight_dynamic
+                    } else {
+                        R.string.clock_font_weight_still
+                    }
+                )
                 val sizeLabel = stringResource(R.string.clock_font_size_kb, record.sizeBytes / 1024f)
                 JumpPreference(
                     title = record.displayName,
-                    summary = stringResource(R.string.clock_font_summary, typeLabel, sizeLabel),
+                    summary = stringResource(R.string.clock_font_summary, typeLabel, weightLabel, sizeLabel),
                     statusText = if (record.hidden) stringResource(R.string.clock_font_hidden) else null,
                     endActions = {
-                        TextButton(
-                            text = stringResource(
-                                if (record.hidden) R.string.clock_font_restore else R.string.clock_font_remove
-                            ),
-                            onClick = {
-                                if (record.hidden) {
-                                    scope.launch {
-                                        withContext(Dispatchers.IO) {
-                                            ClockFontStore.setHidden(context, record.id, false)
+                        if (record.hidden) {
+                            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                                TextButton(
+                                    text = stringResource(R.string.clock_font_restore),
+                                    onClick = {
+                                        scope.launch {
+                                            withContext(Dispatchers.IO) {
+                                                ClockFontStore.setHidden(context, record.id, false)
+                                            }
+                                            reload()
                                         }
-                                        reload()
                                     }
-                                } else {
-                                    pendingRemove = record
-                                }
+                                )
+                                TextButton(
+                                    text = stringResource(R.string.clock_font_delete),
+                                    onClick = { pendingDelete = record }
+                                )
                             }
-                        )
+                        } else {
+                            TextButton(
+                                text = stringResource(R.string.clock_font_delete),
+                                onClick = { pendingDelete = record }
+                            )
+                        }
                     }
                 )
             }
         }
     }
 
-    pendingRemove?.let { record ->
+    pendingDelete?.let { record ->
         OverlayDialog(
             show = true,
-            onDismissRequest = { pendingRemove = null },
-            title = stringResource(R.string.clock_font_remove_title),
-            summary = stringResource(R.string.clock_font_remove_message),
-            confirmButtonText = stringResource(R.string.clock_font_remove_confirm),
+            onDismissRequest = { pendingDelete = null },
+            title = stringResource(R.string.clock_font_delete_title),
+            summary = stringResource(R.string.clock_font_delete_message),
+            confirmButtonText = stringResource(R.string.clock_font_delete_confirm),
             onConfirm = {
-                pendingRemove = null
+                pendingDelete = null
                 scope.launch {
                     withContext(Dispatchers.IO) {
-                        ClockFontStore.setHidden(context, record.id, true)
+                        ClockFontStore.delete(context, record.id)
                     }
                     reload()
                 }
             },
             dismissButtonText = stringResource(R.string.clock_font_cancel),
-            onDismiss = { pendingRemove = null }
+            onDismiss = { pendingDelete = null }
         ) { }
     }
 

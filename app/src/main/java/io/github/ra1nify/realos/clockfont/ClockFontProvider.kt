@@ -40,6 +40,7 @@ class ClockFontProvider : ContentProvider() {
                 ClockFontContract.COLUMN_ID,
                 ClockFontContract.COLUMN_DISPLAY_NAME,
                 ClockFontContract.COLUMN_TYPE,
+                ClockFontContract.COLUMN_DYNAMIC_WEIGHT,
                 ClockFontContract.COLUMN_SIZE_BYTES,
                 ClockFontContract.COLUMN_SHA256
             )
@@ -51,6 +52,7 @@ class ClockFontProvider : ContentProvider() {
                     ClockFontContract.COLUMN_ID -> record.id
                     ClockFontContract.COLUMN_DISPLAY_NAME -> record.displayName
                     ClockFontContract.COLUMN_TYPE -> record.type.wireValue
+                    ClockFontContract.COLUMN_DYNAMIC_WEIGHT -> if (record.dynamicWeight) 1 else 0
                     ClockFontContract.COLUMN_SIZE_BYTES -> record.sizeBytes
                     ClockFontContract.COLUMN_SHA256 -> record.sha256
                     else -> null

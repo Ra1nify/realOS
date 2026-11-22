@@ -95,6 +95,7 @@ object ClockFontStore {
                     fileName = fileName,
                     sha256 = sha,
                     type = success.type,
+                    dynamicWeight = success.dynamicWeight,
                     sizeBytes = size,
                     hidden = false,
                     addedAt = System.currentTimeMillis()
@@ -159,6 +160,7 @@ object ClockFontStore {
                             fileName = fileName,
                             sha256 = item.optString("sha256"),
                             type = ClockFontType.fromWire(item.optString("type")),
+                            dynamicWeight = item.optBoolean("dynamicWeight", item.optBoolean("dynamic_weight", true)),
                             sizeBytes = item.optLong("sizeBytes"),
                             hidden = item.optBoolean("hidden", false),
                             addedAt = item.optLong("addedAt")
@@ -186,6 +188,7 @@ object ClockFontStore {
                         put("fileName", record.fileName)
                         put("sha256", record.sha256)
                         put("type", record.type.wireValue)
+                        put("dynamicWeight", record.dynamicWeight)
                         put("sizeBytes", record.sizeBytes)
                         put("hidden", record.hidden)
                         put("addedAt", record.addedAt)
@@ -197,6 +200,9 @@ object ClockFontStore {
         if (!temp.renameTo(target)) {
             temp.copyTo(target, overwrite = true)
             temp.delete()
+        }
+        runCatching {
+            context.contentResolver.notifyChange(ClockFontContract.FONTS_URI, null)
         }
     }
 

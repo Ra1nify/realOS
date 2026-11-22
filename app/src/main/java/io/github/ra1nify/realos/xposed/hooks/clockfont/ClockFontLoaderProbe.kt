@@ -3,15 +3,15 @@ package io.github.ra1nify.realos.xposed.hooks.clockfont
 import android.content.Context
 import android.os.Process
 import android.os.UserHandle
-import android.util.Log
 import io.github.libxposed.api.XposedInterface
 import io.github.libxposed.api.XposedModule
+import io.github.ra1nify.realos.util.RealOSLog as Log
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Phase 1 observe-only probe.
+ * Diagnostic observe-only probe.
  *
  * Hooks only `ContextImpl.createPackageContext(...)`, waits for the original to
  * return, and then records which class loader the clock plugin context exposes
@@ -20,13 +20,7 @@ import java.util.concurrent.atomic.AtomicBoolean
  * It installs **no business hooks**, never changes arguments, and never changes
  * return values.
  *
- * The result is written to three places because the ColorOS main logcat buffer is
- * only 256 KiB and rotates within seconds:
- *  1. android.util.Log (tag RealOS-ClockFontProbe)
- *  2. module.log (persistent LSPosed module log)
- *  3. <host data dir>/app_realos_clockfont_probe/probe.log (durable per-host file)
- *
- * Active only when BuildConfig.CLOCKFONT_STAGE == 1.
+ * Active only when realOS global log level is set to DEBUG or higher (RealOSLog.DEBUG).
  */
 internal object ClockFontLoaderProbe {
 
@@ -99,19 +93,16 @@ internal object ClockFontLoaderProbe {
     private val seen = ConcurrentHashMap.newKeySet<String>()
 
     /**
-     * Safe to call from onPackageReady: it resolves only framework classes
-     * (ContextImpl / UserHandle) and installs one framework method hook. It does
-     * not load host or plugin classes.
+     * Safe to call from onPackageReady: gated by global log level.
      */
     fun install(module: XposedModule) {
+        if (!Log.isEnabled(Log.DEBUG)) return
         if (!installed.compareAndSet(false, true)) return
-        Log.i(TAG, "install requested")
-        module.log(Log.INFO, TAG, "install requested")
+        Log.d(TAG, "install requested")
 
         val contextImpl = runCatching { Class.forName("android.app.ContextImpl") }.getOrNull()
         if (contextImpl == null) {
             Log.w(TAG, "ContextImpl not found; probe disabled")
-            module.log(Log.WARN, TAG, "ContextImpl not found; probe disabled")
             return
         }
 
@@ -132,7 +123,6 @@ internal object ClockFontLoaderProbe {
         )
         if (!main && !asUser) {
             Log.w(TAG, "no ContextImpl.createPackageContext hook installed; probe disabled")
-            module.log(Log.WARN, TAG, "no ContextImpl.createPackageContext hook installed; probe disabled")
         }
     }
 
@@ -150,23 +140,21 @@ internal object ClockFontLoaderProbe {
         val method = runCatching { clazz.getDeclaredMethod(name, *params) }.getOrNull()
         if (method == null) {
             Log.w(TAG, "ContextImpl.$name not found; probe path disabled")
-            module.log(Log.WARN, TAG, "ContextImpl.$name not found; probe path disabled")
             return false
         }
         return runCatching {
             method.isAccessible = true
             module.hook(method).intercept { chain -> onContext(module, chain) }
-            Log.i(TAG, "probe hook installed: ContextImpl.$name")
-            module.log(Log.INFO, TAG, "probe hook installed: ContextImpl.$name")
+            Log.d(TAG, "probe hook installed: ContextImpl.$name")
             true
         }.onFailure {
-            Log.w(TAG, "failed to hook ContextImpl.$name", it)
-            module.log(Log.WARN, TAG, "failed to hook ContextImpl.$name: ${it.message}")
+            Log.w(TAG, "failed to hook ContextImpl.$name: ${it.message}")
         }.getOrDefault(false)
     }
 
     private fun onContext(module: XposedModule, chain: XposedInterface.Chain): Any? {
         val result = chain.proceed()
+        if (!Log.isEnabled(Log.DEBUG)) return result
         val pluginPackage = chain.args.getOrNull(0) as? String ?: return result
         if (pluginPackage !in PLUGIN_PACKAGES) return result
 
@@ -191,6 +179,7 @@ internal object ClockFontLoaderProbe {
         loader: ClassLoader,
         hostContext: Context?
     ) {
+        if (!Log.isEnabled(Log.DEBUG)) return
         val found = mutableListOf<String>()
         val missing = mutableListOf<String>()
         for (symbol in SYMBOLS) {
@@ -215,12 +204,12 @@ internal object ClockFontLoaderProbe {
                 "found=${found.size} missing=${missing.size}" +
                 if (missing.isEmpty()) "" else " missingSymbols=${missing.joinToString()}"
 
-        Log.i(TAG, message)
-        module.log(Log.INFO, TAG, message)
+        Log.d(TAG, message)
         writeProbeFile(hostContext, message)
     }
 
     private fun writeProbeFile(hostContext: Context?, message: String) {
+        if (!Log.isEnabled(Log.DEBUG)) return
         val ctx = hostContext ?: return
         runCatching {
             val dir = ctx.getDir(PROBE_DIR, Context.MODE_PRIVATE)

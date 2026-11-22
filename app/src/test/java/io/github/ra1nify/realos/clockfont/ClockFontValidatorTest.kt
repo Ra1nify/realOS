@@ -40,6 +40,22 @@ class ClockFontValidatorTest {
     }
 
     @Test
+    fun convertedOneClassicFontsAreAccepted() {
+        val fixed = File("scratch/OneClassic_Fixed.ttf")
+        if (fixed.isFile) {
+            val rFixed = ClockFontValidator.validate(fixed, fixed.name)
+            assertTrue("Fixed font rejected: $rFixed", rFixed is ClockFontValidator.Result.Success)
+            assertTrue((rFixed as ClockFontValidator.Result.Success).type == ClockFontType.FIXED)
+        }
+        val flex = File("scratch/OneClassic_Flex.ttf")
+        if (flex.isFile) {
+            val rFlex = ClockFontValidator.validate(flex, flex.name)
+            assertTrue("Flex font rejected: $rFlex", rFlex is ClockFontValidator.Result.Success)
+            assertTrue((rFlex as ClockFontValidator.Result.Success).type == ClockFontType.FLEX)
+        }
+    }
+
+    @Test
     fun nonFontIsRejected() {
         val file = File.createTempFile("not-a-font", ".ttf")
         try {

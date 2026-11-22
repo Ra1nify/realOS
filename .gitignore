@@ -41,3 +41,8 @@ local.properties
 # Development notes: working documents, not shipped or published
 /docs/dev/
 .kotlin/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.class

@@ -68,15 +68,6 @@ val LITE_TARGET_PROPERTY = "realos.lite.target"
 val BUILD_MODE_FULL = "full"
 val BUILD_MODE_LITE = "lite"
 
-/**
- * Staged gate for clockfont. Defaults to 0 (off) and must agree with realos.scope.clockfont:
- *   0 = off        inject no clock host
- *   1 = probe      observe createPackageContext / class resolution only, no behavior change
- *   2 = wallpapers enable the font list and preview in Wallpapers only
- *   3 = full       enable Wallpapers / SystemUI / Launcher / AOD
- */
-val CLOCKFONT_STAGE_PROPERTY = "realos.clockfont.stage"
-
 /** Same lookup chain as scope: -P / ORG_GRADLE_PROJECT_ env > local.properties. */
 fun readRealosProperty(name: String): String? {
     (project.findProperty(name) as? String)?.trim()?.takeIf { it.isNotEmpty() }?.let { return it }
@@ -87,20 +78,6 @@ fun readRealosProperty(name: String): String? {
     }
     return null
 }
-
-fun parseClockFontStage(raw: String?): Int {
-    if (raw.isNullOrBlank()) return 0
-    val value = raw.trim().toIntOrNull()
-    if (value == null || value !in 0..3) {
-        throw GradleException(
-            "[realOS ClockFont] invalid $CLOCKFONT_STAGE_PROPERTY='$raw': " +
-                "expected 0=off / 1=probe / 2=wallpapers / 3=full. Build aborted, nothing produced."
-        )
-    }
-    return value
-}
-
-val clockFontStage: Int = parseClockFontStage(readRealosProperty(CLOCKFONT_STAGE_PROPERTY))
 
 val buildModeRaw = readRealosProperty(MODE_PROPERTY) ?: BUILD_MODE_FULL
 val buildMode = buildModeRaw.lowercase()
@@ -309,28 +286,6 @@ val scopeMediaProvider = isScopeIncluded("mediaprovider")
 val scopeFido = isScopeIncluded("fido")
 val scopeIntentRoute = isScopeIncluded("intentroute")
 val scopeClockFont = isScopeIncluded("clockfont")
-
-// clockfont is a high-risk hook: scope and stage must both be set explicitly, otherwise the build fails.
-if (scopeClockFont && clockFontStage == 0) {
-    throw GradleException(
-        "[realOS ClockFont] realos.scope.clockfont=1 but $CLOCKFONT_STAGE_PROPERTY=0." +
-            " Set 1=probe / 2=wallpapers / 3=full, or disable the clockfont scope."
-    )
-}
-if (!scopeClockFont && clockFontStage > 0) {
-    throw GradleException(
-        "[realOS ClockFont] $CLOCKFONT_STAGE_PROPERTY=$clockFontStage but realos.scope.clockfont=0." +
-            " Set realos.scope.clockfont=1 as well, or set stage back to 0."
-    )
-}
-// Phase 1 only ships the observe-only probe; stage 2/3 business hooks are not written yet, so reject them.
-if (clockFontStage > 1) {
-    throw GradleException(
-        "[realOS ClockFont] stage=$clockFontStage is not implemented: only 0=off or 1=probe is allowed." +
-            " Business hooks will land in a later phase."
-    )
-}
-println("[realOS ClockFont] stage=$clockFontStage (0=off, 1=probe, 2=wallpapers, 3=full)")
 
 println(
     "[realOS Scope] opluskeyboard=$scopeOplusKeyboard, navigation=$scopeNavigation, font=$scopeFont, featureswitch=$scopeFeatureSwitch, " +
@@ -545,7 +500,6 @@ android {
         buildConfigField("boolean", "SCOPE_FIDO", scopeFido.toString())
         buildConfigField("boolean", "SCOPE_INTENTROUTE", scopeIntentRoute.toString())
         buildConfigField("boolean", "SCOPE_CLOCKFONT", scopeClockFont.toString())
-        buildConfigField("int", "CLOCKFONT_STAGE", clockFontStage.toString())
         // Lite marker: the runtime uses it to enable the three-attempt lock logic (see LiteHookGate).
         buildConfigField("boolean", "MODE_LITE", isLiteBuild.toString())
         buildConfigField("String", "LITE_TARGET", "\"${liteTarget ?: ""}\"")

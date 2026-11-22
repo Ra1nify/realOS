@@ -185,7 +185,7 @@ fun DetailScreen(
                     modifier = modifier
                 )
             }
-            DetailSubPage.CLOCK_FONT -> if (BuildConfig.SCOPE_CLOCKFONT && BuildConfig.CLOCKFONT_STAGE >= 2) {
+            DetailSubPage.CLOCK_FONT -> if (BuildConfig.SCOPE_CLOCKFONT) {
                 ClockFontDetailScreen(
                     onNavigateBack = { currentPage = DetailSubPage.LIST },
                     modifier = modifier
@@ -310,7 +310,7 @@ private fun ModuleListContent(
             modifier = Modifier.padding(start = 16.dp, top = 4.dp, bottom = 2.dp)
         )
 
-        if (BuildConfig.SCOPE_CLOCKFONT && BuildConfig.CLOCKFONT_STAGE >= 2) {
+        if (BuildConfig.SCOPE_CLOCKFONT) {
             ClockFontEntryCard(onClick = onNavigateToClockFont)
         }
 
