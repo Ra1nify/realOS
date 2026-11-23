@@ -85,7 +85,9 @@ ColorOS 17 handles non-adjustable font weights through several distinct layers:
 3. **TextView Attribute (`disable_font_weight_adjustment`)**:
    - In `MyCustomizedTextView.java`: `disable_font_weight_adjustment` prevents `setTypeface()` from updating font variation settings at runtime.
 4. **RealOS Custom Font Integration**:
-   - For custom fonts in `registry.json`, adding `"weightAdjustable": false` allows `ClockFontPluginHook` to intercept `setSeekBarEnable` or augment `keyguard_style_fonts_for_disable_font_weight`, locking the slider for non-variable or single-weight designs.
+   - `dynamicWeight` is a per-font **user policy**, independent of Fixed/Flex. It lives in realOS `registry.json` (default `true`) and is toggled from the realOS GUI.
+   - `ClockFontProvider` exposes it as `dynamic_weight`; `ClockFontPluginHook` uses it for `isVariableFont` / `setSeekBarEnable`.
+   - Fixed/Flex is still auto-detected from the presence of the `HGHT` axis; never derive `dynamicWeight` from the font type.
 
 ---
 

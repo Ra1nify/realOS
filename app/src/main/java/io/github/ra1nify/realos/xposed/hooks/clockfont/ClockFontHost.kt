@@ -13,12 +13,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicBoolean
 
 /**
- * Host-process client for the realOS clock-font provider.
- *
- * All calls are read-only and designed to avoid blocking the UI thread:
- * - Maintains an in-memory snapshot of font entries.
- * - Registers a ContentObserver on the provider URI for automatic background refresh.
- * - Typefaces are cached in-memory with variable font axis settings.
+ * Read-only provider client for clock hosts. Keeps an entry snapshot and a typeface cache.
  */
 internal object ClockFontHost {
 
@@ -56,6 +51,7 @@ internal object ClockFontHost {
 
     fun listValues(context: Context? = null): List<String> {
         val ctx = context ?: appContext
+        // Panel-only sync fallback; render hooks never query the provider.
         if (cachedEntries.isEmpty() && ctx != null) {
             refreshSync(ctx)
         }
@@ -68,18 +64,18 @@ internal object ClockFontHost {
         val id = ClockFontContract.idFromValue(value) ?: return false
         val entry = cachedEntries.firstOrNull { it.id == id }
         if (entry != null) return entry.type == ClockFontType.FLEX
-        val ctx = appContext ?: return false
-        refreshSync(ctx)
-        return cachedEntries.firstOrNull { it.id == id }?.type == ClockFontType.FLEX
+        // Fail closed until the snapshot arrives.
+        appContext?.let { refreshAsync(it) }
+        return false
     }
 
     fun isDynamicWeight(value: String?): Boolean {
-        val id = ClockFontContract.idFromValue(value) ?: return true
+        val id = ClockFontContract.idFromValue(value) ?: return false
         val entry = cachedEntries.firstOrNull { it.id == id }
         if (entry != null) return entry.dynamicWeight
-        val ctx = appContext ?: return true
-        refreshSync(ctx)
-        return cachedEntries.firstOrNull { it.id == id }?.dynamicWeight ?: true
+        // Fail closed until the snapshot arrives.
+        appContext?.let { refreshAsync(it) }
+        return false
     }
 
     fun buildTypeface(
@@ -90,11 +86,12 @@ internal object ClockFontHost {
     ): Typeface? {
         val id = ClockFontContract.idFromValue(value) ?: return null
         val ctx = context ?: appContext ?: return null
-        var entry = cachedEntries.firstOrNull { it.id == id }
-        if (entry == null) {
-            refreshSync(ctx)
-            entry = cachedEntries.firstOrNull { it.id == id } ?: return null
-        }
+        val entry = cachedEntries.firstOrNull { it.id == id }
+            ?: run {
+                // Do not query the provider from a render callback.
+                appContext?.let { refreshAsync(it) }
+                return null
+            }
 
         val safeWeight = if (entry.type == ClockFontType.FLEX) {
             weight.coerceIn(100, 1000)
@@ -110,9 +107,9 @@ internal object ClockFontHost {
         val typeface = runCatching {
             resolver.openFileDescriptor(uri, "r")?.use { pfd ->
                 val settings = if (entry.type == ClockFontType.FLEX) {
-                    "'wght' $safeWeight, 'HGHT' $safeHeight"
+                    "'wght' $safeWeight, 'opsz' 1010, 'HGHT' $safeHeight"
                 } else {
-                    "'wght' $safeWeight"
+                    "'wght' $safeWeight, 'opsz' 1010"
                 }
                 Typeface.Builder(pfd.fileDescriptor)
                     .setWeight(safeWeight)
@@ -156,6 +153,7 @@ internal object ClockFontHost {
                 observer
             )
         }.onFailure {
+            isObserving.set(false)
             Log.w(TAG, "failed to register ContentObserver: ${it.message}")
         }
     }
@@ -165,8 +163,10 @@ internal object ClockFontHost {
         Thread({
             try {
                 val result = queryEntries(context)
-                cachedEntries = result
-                Log.d(TAG, "refreshed ${result.size} clock font(s) in background")
+                if (result != null) {
+                    cachedEntries = result
+                    Log.d(TAG, "refreshed ${result.size} clock font(s) in background")
+                }
             } finally {
                 isRefreshing.set(false)
             }
@@ -174,13 +174,12 @@ internal object ClockFontHost {
     }
 
     private fun refreshSync(context: Context) {
-        val result = queryEntries(context)
-        if (result.isNotEmpty() || cachedEntries.isEmpty()) {
-            cachedEntries = result
-        }
+        // Null = provider failure; an empty list is valid.
+        val result = queryEntries(context) ?: return
+        cachedEntries = result
     }
 
-    private fun queryEntries(context: Context): List<Entry> {
+    private fun queryEntries(context: Context): List<Entry>? {
         val uri = ClockFontContract.FONTS_URI
         return runCatching {
             context.contentResolver.query(
@@ -221,7 +220,7 @@ internal object ClockFontHost {
             } ?: emptyList()
         }.onFailure {
             warnOnce("query", "clock-font provider unavailable: ${it.message}")
-        }.getOrDefault(emptyList())
+        }.getOrNull()
     }
 
     private fun warnOnce(key: String, message: String) {

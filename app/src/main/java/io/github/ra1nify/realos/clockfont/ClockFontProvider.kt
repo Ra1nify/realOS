@@ -9,10 +9,7 @@ import android.os.ParcelFileDescriptor
 import java.io.File
 
 /**
- * Read-only font provider consumed by the clock hooks in Wallpapers/SystemUI/Launcher/AOD.
- *
- * Write operations are intentionally unsupported. Import/delete stays in the realOS app;
- * hosts only read metadata and the TTF file.
+ * Read-only clock-font provider. Hosts read metadata and TTF files; writes are unsupported.
  */
 class ClockFontProvider : ContentProvider() {
 
@@ -76,16 +73,15 @@ class ClockFontProvider : ContentProvider() {
         return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? =
-        throw UnsupportedOperationException("clock fonts are read-only")
+    // Read-only provider: remote callers get a no-op instead of an exception.
+    override fun insert(uri: Uri, values: ContentValues?): Uri? = null
 
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int =
-        throw UnsupportedOperationException("clock fonts are read-only")
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int = 0
 
     override fun update(
         uri: Uri,
         values: ContentValues?,
         selection: String?,
         selectionArgs: Array<out String>?
-    ): Int = throw UnsupportedOperationException("clock fonts are read-only")
+    ): Int = 0
 }

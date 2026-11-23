@@ -95,7 +95,8 @@ object ClockFontStore {
                     fileName = fileName,
                     sha256 = sha,
                     type = success.type,
-                    dynamicWeight = success.dynamicWeight,
+                    // User policy, not a font property: default on, toggled in the GUI.
+                    dynamicWeight = true,
                     sizeBytes = size,
                     hidden = false,
                     addedAt = System.currentTimeMillis()
@@ -123,10 +124,21 @@ object ClockFontStore {
         }
     }
 
+    /** Per-font user policy: whether the host may show its weight slider. */
+    fun setDynamicWeight(context: Context, id: String, dynamicWeight: Boolean): Boolean {
+        synchronized(lock) {
+            val records = readRegistry(context)
+            val updated = records.map {
+                if (it.id == id) it.copy(dynamicWeight = dynamicWeight) else it
+            }
+            if (updated == records) return false
+            writeRegistry(context, updated)
+            return true
+        }
+    }
+
     /**
-     * Hard delete is deliberately not exposed by the UI yet. It remains available for a
-     * future cleanup flow after usage tracking exists. The provider may still serve a
-     * hidden font so an already-selected clock can continue to render.
+     * Removes the font file and registry entry; selected clocks fall back to the default.
      */
     fun delete(context: Context, id: String): Boolean {
         synchronized(lock) {
@@ -153,14 +165,18 @@ object ClockFontStore {
                     val item = fonts.optJSONObject(i) ?: continue
                     val id = item.optString("id").takeIf { it.isNotBlank() } ?: continue
                     val fileName = item.optString("fileName").takeIf { it.isNotBlank() } ?: continue
+                    val type = ClockFontType.fromWire(item.optString("type"))
                     add(
                         ClockFontRecord(
                             id = id,
                             displayName = item.optString("displayName", id),
                             fileName = fileName,
                             sha256 = item.optString("sha256"),
-                            type = ClockFontType.fromWire(item.optString("type")),
-                            dynamicWeight = item.optBoolean("dynamicWeight", item.optBoolean("dynamic_weight", true)),
+                            type = type,
+                            dynamicWeight = item.optBoolean(
+                                "dynamicWeight",
+                                item.optBoolean("dynamic_weight", true)
+                            ),
                             sizeBytes = item.optLong("sizeBytes"),
                             hidden = item.optBoolean("hidden", false),
                             addedAt = item.optLong("addedAt")

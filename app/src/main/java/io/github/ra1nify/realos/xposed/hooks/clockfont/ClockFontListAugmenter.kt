@@ -1,20 +1,8 @@
 package io.github.ra1nify.realos.xposed.hooks.clockfont
 
 /**
- * Pure list augmentation for `OplusKeyguardStyleFontSettingPanel.setFontData`.
- *
- * The host iterates the font array and skips the last element when `showLast`
- * is false:
- *
- *     for (i in array.indices) {
- *         if (i != array.lastIndex || showLast) add(array[i])
- *     }
- *
- * Appending custom values at the end therefore loses the last custom font when
- * the host passes `showLast = false`. This helper inserts them before the
- * hidden last element instead.
- *
- * No Android dependencies; covered by ClockFontListAugmenterTest.
+ * Inserts custom values before the host's hidden last font entry.
+ * The host drops the last item when showLast is false.
  */
 internal object ClockFontListAugmenter {
 

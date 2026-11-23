@@ -38,13 +38,16 @@ object ClockFontContract {
 
     fun idFromValue(value: String?): String? {
         val raw = value ?: return null
-        val idx = raw.indexOf(VALUE_PREFIX)
+        // The host may store the value with a variable:/fixed: path prefix.
+        val normalized = raw.removePrefix("variable:").removePrefix("fixed:")
+        val idx = normalized.indexOf(VALUE_PREFIX)
         if (idx >= 0) {
-            val after = raw.substring(idx + VALUE_PREFIX.length)
+            val after = normalized.substring(idx + VALUE_PREFIX.length)
             return after.substringBefore('/').substringBefore('?').takeIf { it.isNotEmpty() }
         }
-        if (raw.startsWith("cf_")) {
-            return raw.substringBefore('/').substringBefore('?').takeIf { it.isNotEmpty() }
+        // Legacy bare cf_ ids, including fixed:cf_xxx / variable:cf_xxx.
+        if (normalized.startsWith("cf_")) {
+            return normalized.substringBefore('/').substringBefore('?').takeIf { it.isNotEmpty() }
         }
         return null
     }

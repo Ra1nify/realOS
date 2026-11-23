@@ -21,6 +21,7 @@ from fontTools.pens.ttGlyphPen import TTGlyphPen
 from fontTools.pens.cu2quPen import Cu2QuPen
 from fontTools.pens.recordingPen import DecomposingRecordingPen
 from fontTools.subset import Subsetter, Options
+from fontTools.varLib.instancer import instantiateVariableFont
 
 # Required clock glyphs: digits 0-9, colon, and space
 CLOCK_CHARS = "0123456789: "
@@ -53,6 +54,8 @@ def ensure_truetype_outlines(font):
         del font['CFF ']
     if 'CFF2' in font:
         del font['CFF2']
+    # TrueType sfnt version after replacing CFF outlines.
+    font.sfntVersion = "\x00\x01\x00\x00"
     font['head'].glyphDataFormat = 0
     font['maxp'].tableVersion = 0x00010000
     maxp = font['maxp']
@@ -208,15 +211,112 @@ def stretch_colon_y(y, y_min_base=30.0, y_max_base=570.0, y_min_target=-2464.0, 
     rel = (y - y_min_base) / h_base
     return y_min_target + rel * (y_max_target - y_min_target)
 
+
+REFERENCE_CHARS = "0123456789: "
+
+
+def _bbox(points):
+    if not points:
+        return None
+    xs = [p[0] for p in points]
+    ys = [p[1] for p in points]
+    return (min(xs), max(xs), min(ys), max(ys))
+
+
+def _map_points(points, src, dst):
+    """Affine-map a point list from src=(xmin,xmax,ymin,ymax) to dst."""
+    sx_min, sx_max, sy_min, sy_max = src
+    dx_min, dx_max, dy_min, dy_max = dst
+    if sx_max == sx_min:
+        sx = 1.0
+        dx0 = (dx_min + dx_max) / 2.0 - sx_min
+    else:
+        sx = (dx_max - dx_min) / float(sx_max - sx_min)
+        dx0 = dx_min - sx_min * sx
+    if sy_max == sy_min:
+        sy = 1.0
+        dy0 = (dy_min + dy_max) / 2.0 - sy_min
+    else:
+        sy = (dy_max - dy_min) / float(sy_max - sy_min)
+        dy0 = dy_min - sy_min * sy
+    return [(round(x * sx + dx0), round(y * sy + dy0)) for x, y in points]
+
+
+def _extract_reference_boxes(font):
+    """Extract per-character bbox and advance from a reference clock font."""
+    cmap = font.getBestCmap() or {}
+    glyf = font['glyf']
+    hmtx = font['hmtx']
+    boxes = {}
+    for ch in REFERENCE_CHARS:
+        name = cmap.get(ord(ch))
+        if not name or name not in hmtx.metrics:
+            continue
+        advance = hmtx.metrics[name][0]
+        glyph = glyf.get(name)
+        if glyph is not None and getattr(glyph, 'numberOfContours', 0) > 0:
+            boxes[ch] = (glyph.xMin, glyph.xMax, glyph.yMin, glyph.yMax, advance)
+        else:
+            boxes[ch] = (0, 0, 0, 0, advance)
+    return boxes
+
+
+def load_reference(path, mode, weight=700):
+    """Load official clock-font geometry for reference-based conversion."""
+    ref = TTFont(path)
+    if 'glyf' not in ref:
+        raise ValueError(f"reference font has no glyf table: {path}")
+    cmap = ref.getBestCmap() or {}
+    if not all(ord(c) in cmap for c in '0123456789:'):
+        raise ValueError(f"reference font is missing clock digits/colon: {path}")
+
+    hhea = ref['hhea']
+    os2 = ref['OS/2']
+    head = ref['head']
+    metrics = {
+        'ascent': hhea.ascent,
+        'descent': hhea.descent,
+        'line_gap': hhea.lineGap,
+        'typo_ascender': os2.sTypoAscender,
+        'typo_descender': os2.sTypoDescender,
+        'typo_line_gap': os2.sTypoLineGap,
+        'win_ascent': os2.usWinAscent,
+        'win_descent': os2.usWinDescent,
+        'x_avg': getattr(os2, 'xAvgCharWidth', 500),
+        'head_bbox': (head.xMin, head.yMin, head.xMax, head.yMax),
+        'fvar': [(a.axisTag, a.minValue, a.defaultValue, a.maxValue) for a in ref['fvar'].axes] if 'fvar' in ref else [],
+    }
+
+    if mode == 'flex':
+        f1 = instantiateVariableFont(ref, {'wght': float(weight), 'HGHT': 1.0}, inplace=False, updateFontNames=False)
+        f2 = instantiateVariableFont(ref, {'wght': float(weight), 'HGHT': 1000.0}, inplace=False, updateFontNames=False)
+        compact = _extract_reference_boxes(f1)
+        stretched = _extract_reference_boxes(f2)
+        f1.close()
+        f2.close()
+        metrics['adv_max'] = max((v[4] for v in stretched.values()), default=hhea.advanceWidthMax)
+        result = {'metrics': metrics, 'compact': compact, 'stretched': stretched}
+    else:
+        fixed = _extract_reference_boxes(ref)
+        metrics['adv_max'] = max((v[4] for v in fixed.values()), default=hhea.advanceWidthMax)
+        result = {'metrics': metrics, 'fixed': fixed}
+
+    ref.close()
+    return result
+
+
 def convert_font(
     input_path,
     output_path,
     mode="fixed",
     display_name=None,
-    synthetic_weight=False
+    synthetic_weight=False,
+    reference_path=None,
+    reference_weight=700
 ):
     print(f"Loading font from {input_path}...")
     font = TTFont(input_path)
+    reference = load_reference(reference_path, mode, reference_weight) if reference_path else None
 
     # 1. Convert CFF to TrueType if necessary
     ensure_truetype_outlines(font)
@@ -306,38 +406,68 @@ def convert_font(
 
     if mode == "fixed":
         # Fixed Mode (LayoutType 1)
-        font['hhea'].ascent = 928
-        font['hhea'].descent = -244
-        font['hhea'].lineGap = 0
+        if reference is not None:
+            m = reference['metrics']
+            font['hhea'].ascent = m['ascent']
+            font['hhea'].descent = m['descent']
+            font['hhea'].lineGap = m['line_gap']
 
-        os2 = font['OS/2']
-        os2.sTypoAscender = 850
-        os2.sTypoDescender = -150
-        os2.sTypoLineGap = 0
-        os2.usWinAscent = 928
-        os2.usWinDescent = 244
-        os2.usWeightClass = 700
-        os2.fsType = 0
+            os2 = font['OS/2']
+            os2.sTypoAscender = m['typo_ascender']
+            os2.sTypoDescender = m['typo_descender']
+            os2.sTypoLineGap = m['typo_line_gap']
+            os2.usWinAscent = m['win_ascent']
+            os2.usWinDescent = m['win_descent']
+            os2.usWeightClass = 700
+            os2.fsType = 0
+            os2.xAvgCharWidth = m['x_avg']
 
-        # Center vertically in [-25, 715] (height ~740)
-        target_center_y = 345.0
-        current_center_y = (digit_y_min + digit_y_max) / 2.0
-        delta_y = round(target_center_y - current_center_y)
+            # Map each clock glyph to the official per-digit box and advance.
+            hmtx = font['hmtx']
+            for ch, box in reference['fixed'].items():
+                name = cmap.get(ord(ch))
+                if not name:
+                    continue
+                g = glyf.get(name)
+                if g is not None and hasattr(g, 'coordinates') and box[1] > box[0] and box[3] > box[2]:
+                    src = (g.xMin, g.xMax, g.yMin, g.yMax)
+                    g.coordinates = GlyphCoordinates(_map_points(g.coordinates, src, box[:4]))
+                    g.recalcBounds(glyf)
+                    hmtx.metrics[name] = (box[4], box[0])
+                elif name in hmtx.metrics:
+                    hmtx.metrics[name] = (box[4], 0)
 
-        # Scale height if needed to fit within ~740
-        v_scale = 1.0
-        if digit_height > 740:
-            v_scale = 735.0 / digit_height
+            font['hhea'].advanceWidthMax = m['adv_max']
+            head = font['head']
+            head.xMin, head.yMin, head.xMax, head.yMax = m['head_bbox']
+        else:
+            font['hhea'].ascent = 928
+            font['hhea'].descent = -244
+            font['hhea'].lineGap = 0
 
-        for name in font.getGlyphOrder():
-            if name in glyf and hasattr(glyf[name], 'coordinates'):
-                g = glyf[name]
-                new_coords = []
-                for x, y in g.coordinates:
-                    sy = round(target_center_y + (y - current_center_y) * v_scale) if v_scale != 1.0 else (y + delta_y)
-                    new_coords.append((x, sy))
-                g.coordinates = GlyphCoordinates(new_coords)
-                g.recalcBounds(glyf)
+            os2 = font['OS/2']
+            os2.sTypoAscender = 850
+            os2.sTypoDescender = -150
+            # Match stock fixed OS/2 metrics.
+            os2.sTypoLineGap = 200
+            os2.usWinAscent = 1048
+            os2.usWinDescent = 271
+            os2.usWeightClass = 700
+            os2.fsType = 0
+
+            # Preserve source height; move the digit box to the stock center.
+            target_center_y = 333.5
+            current_center_y = (digit_y_min + digit_y_max) / 2.0
+            delta_y = round(target_center_y - current_center_y)
+
+            for name in font.getGlyphOrder():
+                if name in glyf and hasattr(glyf[name], 'coordinates'):
+                    g = glyf[name]
+                    new_coords = []
+                    for x, y in g.coordinates:
+                        new_coords.append((x, y + delta_y))
+                    g.coordinates = GlyphCoordinates(new_coords)
+                    g.recalcBounds(glyf)
 
         # Variable font axis 'wght' (100.0 .. 700.0, default 700.0)
         fvar = newTable('fvar')
@@ -346,6 +476,13 @@ def convert_font(
         axis_wght.minValue = 100.0
         axis_wght.defaultValue = 700.0
         axis_wght.maxValue = 700.0
+        if reference is not None:
+            for tag, lo, default, hi in reference['metrics']['fvar']:
+                if tag == 'wght':
+                    axis_wght.minValue = lo
+                    axis_wght.defaultValue = default
+                    axis_wght.maxValue = hi
+                    break
         axis_wght.flags = 0
         axis_wght.axisNameID = 256
         name_table.setName("Weight", 256, 3, 1, 0x409)
@@ -379,18 +516,34 @@ def convert_font(
 
     elif mode == "flex":
         # Flex Mode (LayoutType 2)
-        font['hhea'].ascent = 700
-        font['hhea'].descent = -3543
-        font['hhea'].lineGap = 0
+        if reference is not None:
+            m = reference['metrics']
+            font['hhea'].ascent = m['ascent']
+            font['hhea'].descent = m['descent']
+            font['hhea'].lineGap = m['line_gap']
 
-        os2 = font['OS/2']
-        os2.sTypoAscender = 700
-        os2.sTypoDescender = -3543
-        os2.sTypoLineGap = 0
-        os2.usWinAscent = 700
-        os2.usWinDescent = 3543
-        os2.usWeightClass = 1000
-        os2.fsType = 0
+            os2 = font['OS/2']
+            os2.sTypoAscender = m['typo_ascender']
+            os2.sTypoDescender = m['typo_descender']
+            os2.sTypoLineGap = m['typo_line_gap']
+            os2.usWinAscent = m['win_ascent']
+            os2.usWinDescent = m['win_descent']
+            os2.usWeightClass = 1000
+            os2.fsType = 0
+            os2.xAvgCharWidth = m['x_avg']
+        else:
+            font['hhea'].ascent = 700
+            font['hhea'].descent = -3543
+            font['hhea'].lineGap = 0
+
+            os2 = font['OS/2']
+            os2.sTypoAscender = 700
+            os2.sTypoDescender = -3543
+            os2.sTypoLineGap = 0
+            os2.usWinAscent = 700
+            os2.usWinDescent = 3543
+            os2.usWeightClass = 1000
+            os2.fsType = 0
 
         # Anchor top to y = 673, compact height = 748 (y in [-75, 673])
         y_top_anchor = 673.0
@@ -400,6 +553,8 @@ def convert_font(
 
         compact_coords = {}
         stretched_coords = {}
+        char_for_name = {cmap.get(ord(ch)): ch for ch in REFERENCE_CHARS}
+        hmtx = font['hmtx']
 
         for name in font.getGlyphOrder():
             if name in glyf and hasattr(glyf[name], 'coordinates'):
@@ -417,12 +572,56 @@ def convert_font(
                         sy = round(stretch_y_piecewise(cy, y_top=y_top_anchor, h_min=h_min, h_max=h_max))
                     c_pts.append((x, cy))
                     s_pts.append((x, sy))
+
+                if reference is not None:
+                    ch = char_for_name.get(name)
+                    ref_c = reference['compact'].get(ch)
+                    ref_s = reference['stretched'].get(ch)
+                    if ref_c is not None and ref_s is not None:
+                        src_c = _bbox(c_pts)
+                        src_s = _bbox(s_pts)
+                        if src_c is not None and src_s is not None:
+                            if ref_c[1] > ref_c[0] and ref_c[3] > ref_c[2]:
+                                c_pts = _map_points(c_pts, src_c, ref_c[:4])
+                            if ref_s[1] > ref_s[0] and ref_s[3] > ref_s[2]:
+                                s_pts = _map_points(s_pts, src_s, ref_s[:4])
+                        hmtx.metrics[name] = (ref_s[4], ref_s[0])
+
                 compact_coords[name] = c_pts
                 stretched_coords[name] = s_pts
 
                 # Base master in glyf table is at HGHT=1000 (stretched master)
                 g.coordinates = GlyphCoordinates(s_pts)
                 g.recalcBounds(glyf)
+
+        if reference is not None:
+            # Set official advances for non-outline glyphs.
+            for ch, box in reference['stretched'].items():
+                name = cmap.get(ord(ch))
+                if name and name in hmtx.metrics:
+                    hmtx.metrics[name] = (box[4], box[0] if box[1] > box[0] else 0)
+            font['hhea'].advanceWidthMax = reference['metrics']['adv_max']
+            os2.xAvgCharWidth = reference['metrics']['x_avg']
+            head = font['head']
+            head.xMin, head.yMin, head.xMax, head.yMax = reference['metrics']['head_bbox']
+        else:
+            # Stock tunable fonts are tabular; match their equal advances.
+            digit_names = [cmap.get(ord(c)) for c in '0123456789']
+            digit_names = [n for n in digit_names if n and n in hmtx.metrics]
+            if digit_names:
+                uniform_adv = max(hmtx.metrics[n][0] for n in digit_names)
+                for name in digit_names:
+                    g = glyf[name]
+                    x_min = getattr(g, 'xMin', hmtx.metrics[name][1])
+                    x_max = getattr(g, 'xMax', x_min)
+                    new_lsb = (uniform_adv - (x_max - x_min)) // 2
+                    dx = new_lsb - x_min
+                    if dx:
+                        if hasattr(g, 'coordinates'):
+                            g.coordinates = GlyphCoordinates([(x + dx, y) for x, y in g.coordinates])
+                            g.recalcBounds(glyf)
+                    hmtx.metrics[name] = (uniform_adv, new_lsb)
+                font['hhea'].advanceWidthMax = max(adv for adv, _ in hmtx.metrics.values())
 
         # Build fvar with 'wght' and 'HGHT'
         fvar = newTable('fvar')
@@ -431,15 +630,25 @@ def convert_font(
         axis_wght.minValue = 100.0
         axis_wght.defaultValue = 1000.0
         axis_wght.maxValue = 1000.0
-        axis_wght.flags = 0
-        axis_wght.axisNameID = 256
-        name_table.setName("Weight", 256, 3, 1, 0x409)
-
         axis_hght = Axis()
         axis_hght.axisTag = 'HGHT'
         axis_hght.minValue = 1.0
         axis_hght.defaultValue = 1000.0
         axis_hght.maxValue = 1000.0
+        if reference is not None:
+            for tag, lo, default, hi in reference['metrics']['fvar']:
+                if tag == 'wght':
+                    axis_wght.minValue = lo
+                    axis_wght.defaultValue = default
+                    axis_wght.maxValue = hi
+                elif tag == 'HGHT':
+                    axis_hght.minValue = lo
+                    axis_hght.defaultValue = default
+                    axis_hght.maxValue = hi
+        axis_wght.flags = 0
+        axis_wght.axisNameID = 256
+        name_table.setName("Weight", 256, 3, 1, 0x409)
+
         axis_hght.flags = 0
         axis_hght.axisNameID = 257
         name_table.setName("Height", 257, 3, 1, 0x409)
@@ -461,7 +670,7 @@ def convert_font(
                 num_pts = len(s_pts)
                 
                 # HGHT variation deltas (stretched -> compact as HGHT goes 1000 -> 1)
-                hght_deltas = [(0, c_pts[i][1] - s_pts[i][1]) for i in range(num_pts)]
+                hght_deltas = [(c_pts[i][0] - s_pts[i][0], c_pts[i][1] - s_pts[i][1]) for i in range(num_pts)]
                 hght_deltas += [(0, 0), (0, 0), (0, 0), (0, 0)]
                 var_hght = TupleVariation({'HGHT': (-1.0, -1.0, 0.0)}, hght_deltas)
 
@@ -493,6 +702,8 @@ def main():
     parser.add_argument("--mode", choices=["fixed", "flex"], default="fixed", help="Target clock font mode")
     parser.add_argument("--name", help="Display name for the font")
     parser.add_argument("--synthetic-weight", action="store_true", help="Enable synthetic normal-based thinning (default: False, keeps original outlines)")
+    parser.add_argument("--reference", help="Official clock TTF/OTF to use as the geometry reference")
+    parser.add_argument("--reference-weight", type=int, default=700, help="Weight used to measure a variable reference font (default: 700)")
 
     args = parser.parse_args()
     convert_font(
@@ -500,7 +711,9 @@ def main():
         output_path=args.output,
         mode=args.mode,
         display_name=args.name,
-        synthetic_weight=args.synthetic_weight
+        synthetic_weight=args.synthetic_weight,
+        reference_path=args.reference,
+        reference_weight=args.reference_weight
     )
 
 if __name__ == "__main__":

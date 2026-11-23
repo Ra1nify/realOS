@@ -6,6 +6,7 @@ import android.util.Log as AndroidLog
 import android.view.View
 import io.github.libxposed.api.XposedInterface
 import io.github.libxposed.api.XposedModule
+import io.github.ra1nify.realos.clockfont.ClockFontContract
 import io.github.ra1nify.realos.util.RealOSLog as Log
 import java.lang.reflect.Method
 import java.lang.reflect.Proxy
@@ -27,12 +28,19 @@ import java.util.concurrent.atomic.AtomicBoolean
 internal object ClockFontPluginHook {
 
     private const val TAG = "RealOS-ClockFontPlugin"
+    // Probe evidence: only personality.clocks carries the font classes
+    // (base found=0/8, personality found=8/8). Do not add a base loader path.
     private const val TARGET_PLUGIN = "com.oplus.keyguard.personality.clocks"
 
     private val contextHookInstalled = AtomicBoolean(false)
     private val pluginHooksInstalled = AtomicBoolean(false)
     private val installedHookKeys = ConcurrentHashMap.newKeySet<String>()
     private val selectedFonts = Collections.synchronizedMap(WeakHashMap<Any, String>())
+    private val panelFontLists = Collections.synchronizedMap(WeakHashMap<Any, List<String>>())
+    private val panelLayoutTypes = Collections.synchronizedMap(WeakHashMap<Any, Int>())
+
+    @Volatile
+    private var seekBarEnableMethod: Method? = null
 
     fun install(module: XposedModule) {
         if (!contextHookInstalled.compareAndSet(false, true)) return
@@ -68,6 +76,9 @@ internal object ClockFontPluginHook {
         pluginHooksInstalled.set(false)
         installedHookKeys.clear()
         selectedFonts.clear()
+        panelFontLists.clear()
+        panelLayoutTypes.clear()
+        seekBarEnableMethod = null
         ClockFontHost.invalidate()
     }
 
@@ -136,17 +147,26 @@ internal object ClockFontPluginHook {
         ) ?: return logMissingMethod(module, className, "setFontData")
 
         safeHook(module, method, "OplusKeyguardStyleFontSettingPanel.setFontData") { chain ->
+            val panel = chain.thisObject
             val layoutType = (chain.args.getOrNull(1) as? Number)?.toInt() ?: -1
+            if (panel != null) {
+                panelLayoutTypes[panel] = layoutType
+                if (layoutType != 0) panelFontLists.remove(panel)
+            }
             // 0 = LAYOUT_TYPE_TIME (time font), 1 = LAYOUT_TYPE_WEEKLY (week/date font)
             if (layoutType != 0) return@safeHook chain.proceed()
-
-            val custom = ClockFontHost.listValues()
-            if (custom.isEmpty()) return@safeHook chain.proceed()
 
             val args = chain.args.toTypedArray()
             val original = (args.getOrNull(2) as? Array<*>)?.filterIsInstance<String>() ?: emptyList()
             val showLast = (args.getOrNull(3) as? Boolean) ?: true
+            val custom = ClockFontHost.listValues()
             val augmented = ClockFontListAugmenter.augment(original, custom, showLast)
+            if (panel != null) {
+                // setFontData hides the last element when showLast=false; mirror its visible list
+                // so setFontSelected computes the same adapter index.
+                panelFontLists[panel] = if (showLast) augmented else augmented.dropLast(1)
+            }
+            if (custom.isEmpty()) return@safeHook chain.proceed()
 
             args[2] = augmented.toTypedArray()
             chain.proceed(args)
@@ -170,21 +190,39 @@ internal object ClockFontPluginHook {
                 selectedFonts[panel] = initialSelected
             }
 
-            val custom = ClockFontHost.listValues()
-            if (custom.isEmpty()) {
-                val result = chain.proceed()
-                applyCustomFontSeekBarIfApplicable(panel, initialSelected)
+            val layout = panel?.let { panelLayoutTypes[it] }
+            if (layout != null && layout != 0) return@safeHook chain.proceed()
+
+            // The host stores prefixed values (variable:/fixed:) in some config paths;
+            // the list holds the raw realos-clock:// value, so normalize before comparing.
+            val normalized = normalizeCustomValue(initialSelected)
+            val args = chain.args.toTypedArray()
+            if (normalized != null) args[0] = normalized
+
+            // setFontData already computed the visible augmented list; use exactly that
+            // list so the adapter index is identical when showLast=false.
+            val stored = panel?.let { panelFontLists[it] }
+            if (stored != null) {
+                args[1] = stored.toTypedArray()
+                val result = chain.proceed(args)
+                applyCustomFontSeekBarIfApplicable(panel, normalized ?: initialSelected)
                 return@safeHook result
             }
 
-            val args = chain.args.toTypedArray()
+            val custom = ClockFontHost.listValues()
+            if (custom.isEmpty()) {
+                val result = chain.proceed(args)
+                applyCustomFontSeekBarIfApplicable(panel, normalized ?: initialSelected)
+                return@safeHook result
+            }
+
             val original = (args.getOrNull(1) as? Array<*>)?.filterIsInstance<String>() ?: emptyList()
             val additions = custom.distinct().filterNot { it in original }
             if (additions.isNotEmpty()) {
                 args[1] = (original + additions).toTypedArray()
             }
             val result = chain.proceed(args)
-            applyCustomFontSeekBarIfApplicable(panel, initialSelected)
+            applyCustomFontSeekBarIfApplicable(panel, normalized ?: initialSelected)
             result
         }
     }
@@ -194,6 +232,7 @@ internal object ClockFontPluginHook {
         val clazz = resolveClass(loader, className) ?: return logMissingClass(module, className)
         val method = resolveMethod(clazz, "setSeekBarEnable", Boolean::class.javaPrimitiveType!!)
             ?: return logMissingMethod(module, className, "setSeekBarEnable")
+        seekBarEnableMethod = method
 
         safeHook(module, method, "OplusKeyguardStyleFontSettingPanel.setSeekBarEnable") { chain ->
             val panel = chain.thisObject
@@ -225,26 +264,23 @@ internal object ClockFontPluginHook {
                 loader,
                 arrayOf(listenerInterface)
             ) { _, invokedMethod, args ->
-                if (invokedMethod.name == "onItemSelect") {
-                    val selected = args?.getOrNull(0) as? String
-                    if (selected != null) {
-                        selectedFonts[panel] = selected
-                    }
-                    val res = runCatching {
-                        if (args == null) {
-                            invokedMethod.invoke(originalListener)
-                        } else {
-                            invokedMethod.invoke(originalListener, *args)
-                        }
-                    }.getOrNull()
-                    applyCustomFontSeekBarIfApplicable(panel, selected)
-                    res
-                } else {
+                fun invokeOriginal(): Any? =
                     if (args == null) {
                         invokedMethod.invoke(originalListener)
                     } else {
                         invokedMethod.invoke(originalListener, *args)
                     }
+
+                if (invokedMethod.name == "onItemSelect") {
+                    val selected = args?.getOrNull(0) as? String
+                    if (selected != null) {
+                        selectedFonts[panel] = selected
+                    }
+                    val result = runCatching { invokeOriginal() }.getOrNull()
+                    applyCustomFontSeekBarIfApplicable(panel, selected)
+                    result
+                } else {
+                    invokeOriginal()
                 }
             }
 
@@ -254,13 +290,18 @@ internal object ClockFontPluginHook {
         }
     }
 
+    private fun normalizeCustomValue(value: String?): String? {
+        val id = ClockFontContract.idFromValue(value) ?: return value
+        return ClockFontContract.valueFor(id)
+    }
+
     private fun applyCustomFontSeekBarIfApplicable(panel: Any?, font: String?) {
         if (panel == null || font == null || !ClockFontHost.isCustom(font)) return
         val dynamic = ClockFontHost.isDynamicWeight(font)
+        val method = seekBarEnableMethod ?: return
         runCatching {
-            val setEnableMethod = panel.javaClass.getDeclaredMethod("setSeekBarEnable", Boolean::class.javaPrimitiveType)
-            setEnableMethod.isAccessible = true
-            setEnableMethod.invoke(panel, dynamic)
+            method.isAccessible = true
+            method.invoke(panel, dynamic)
         }
     }
 
@@ -377,19 +418,27 @@ internal object ClockFontPluginHook {
         safeHook(module, method, "DigitalClockStyleConfigCompatEx.isVariableFont") { chain ->
             val value = chain.args.getOrNull(0) as? String
             if (!ClockFontHost.isCustom(value)) return@safeHook chain.proceed()
-            ClockFontHost.isFlex(value)
+            ClockFontHost.isDynamicWeight(value)
         }
     }
 
     private fun hookClockLayoutSelectionPanel(module: XposedModule, loader: ClassLoader) {
         val className = "com.oplus.keyguard.clock.base.widget.stylepanel.ClockLayoutSelectionPanel"
-        val clazz = resolveClass(loader, className) ?: return
-        val method = resolveMethod(clazz, "getTargetTypeFace") ?: return
+        val clazz = resolveClass(loader, className) ?: return logMissingClass(module, className)
+        val method = resolveMethod(clazz, "getTargetTypeFace")
+            ?: return logMissingMethod(module, className, "getTargetTypeFace")
+        val fontFamilyField = runCatching {
+            clazz.getDeclaredField("fontFamily").apply { isAccessible = true }
+        }.getOrNull()
+        if (fontFamilyField == null) {
+            Log.w(TAG, "ClockLayoutSelectionPanel.fontFamily not found; hook disabled")
+            module.log(AndroidLog.WARN, TAG, "ClockLayoutSelectionPanel.fontFamily not found; hook disabled")
+            return
+        }
 
         safeHook(module, method, "ClockLayoutSelectionPanel.getTargetTypeFace") { chain ->
             val panel = chain.thisObject as? View ?: return@safeHook chain.proceed()
-            val field = runCatching { clazz.getDeclaredField("fontFamily").apply { isAccessible = true } }.getOrNull()
-            val value = field?.get(panel) as? String
+            val value = runCatching { fontFamilyField.get(panel) as? String }.getOrNull()
             if (!ClockFontHost.isCustom(value)) return@safeHook chain.proceed()
             ClockFontHost.buildTypeface(panel.context, value, 500, 50) ?: chain.proceed()
         }

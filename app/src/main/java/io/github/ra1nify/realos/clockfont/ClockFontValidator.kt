@@ -27,7 +27,6 @@ object ClockFontValidator {
         data class Success(
             val displayName: String,
             val type: ClockFontType,
-            val dynamicWeight: Boolean = true,
             val weightMin: Int,
             val weightDefault: Int,
             val weightMax: Int,

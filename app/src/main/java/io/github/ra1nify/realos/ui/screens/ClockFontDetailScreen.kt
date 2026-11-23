@@ -34,6 +34,7 @@ import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
 import io.github.ra1nify.realos.ui.components.OverlayDialog
 import io.github.ra1nify.realos.ui.components.TextButton
 import io.github.ra1nify.realos.ui.components.preference.JumpPreference
+import io.github.ra1nify.realos.ui.components.preference.SwitchPreference
 import io.github.ra1nify.realos.ui.theme.AppTheme
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -176,7 +177,7 @@ fun ClockFontDetailScreen(
                 val sizeLabel = stringResource(R.string.clock_font_size_kb, record.sizeBytes / 1024f)
                 JumpPreference(
                     title = record.displayName,
-                    summary = stringResource(R.string.clock_font_summary, typeLabel, weightLabel, sizeLabel),
+                    summary = stringResource(R.string.clock_font_summary, typeLabel, sizeLabel),
                     statusText = if (record.hidden) stringResource(R.string.clock_font_hidden) else null,
                     endActions = {
                         if (record.hidden) {
@@ -204,6 +205,20 @@ fun ClockFontDetailScreen(
                             )
                         }
                     }
+                )
+                HorizontalDivider()
+                SwitchPreference(
+                    checked = record.dynamicWeight,
+                    onCheckedChange = { checked ->
+                        scope.launch {
+                            withContext(Dispatchers.IO) {
+                                ClockFontStore.setDynamicWeight(context, record.id, checked)
+                            }
+                            reload()
+                        }
+                    },
+                    title = stringResource(R.string.clock_font_weight_toggle_title),
+                    summary = weightLabel
                 )
             }
         }
