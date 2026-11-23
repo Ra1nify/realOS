@@ -6,9 +6,9 @@ import android.content.Intent
 /**
  * Low-level host process restart commands.
  *
- * Restart strategy, package lists and success messages live in
- * `io.github.ra1nify.realos.restart.RestartPolicies`; `RestartExecutor` maps a
- * policy onto these primitives.
+ * Restart targets live in `io.github.ra1nify.realos.restart.RestartPolicies`;
+ * `RestartConfig` resolves the command and `RestartExecutor` maps a policy onto
+ * these primitives.
  *
  * All commands run through `su -M -c` with a 15 second timeout.
  */

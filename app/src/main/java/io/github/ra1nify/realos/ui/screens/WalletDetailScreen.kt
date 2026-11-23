@@ -9,17 +9,13 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.ra1nify.realos.R
-import io.github.ra1nify.realos.restart.RestartExecutor
 import io.github.ra1nify.realos.restart.RestartPolicies
-import io.github.ra1nify.realos.restart.toastMessageRes
-import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
+import io.github.ra1nify.realos.ui.components.SpecPageScaffold
 import io.github.ra1nify.realos.wallet.WalletConfig
 import io.github.ra1nify.realos.xposed.loader.SpecPackages
 import io.github.ra1nify.realos.ui.components.BasicComponentGroup
@@ -38,7 +34,6 @@ fun WalletDetailScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     var nonNfcDiyEnabled by remember {
         mutableStateOf(WalletConfig.isNonNfcCardDiyEnabled(context))
@@ -68,23 +63,13 @@ fun WalletDetailScreen(
         }
     }
 
-    ModuleDetailScaffold(
+    SpecPageScaffold(
         title = rememberHostAppName(SpecPackages.WALLET, stringResource(R.string.wallet_app_name)),
         onNavigateBack = onNavigateBack,
+        restartPolicy = RestartPolicies.wallet,
         modifier = modifier,
         tipsTitle = stringResource(R.string.wallet_tips_title),
-        tipsMessage = stringResource(R.string.wallet_tips_message),
-        onRestart = {
-            scope.launch {
-                val policy = RestartPolicies.wallet
-                val result = RestartExecutor.restart(context, policy)
-                Toast.makeText(
-                    context,
-                    context.getString(result.toastMessageRes(policy)),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        tipsMessage = stringResource(R.string.wallet_tips_message)
     ) {
         BasicComponentGroup(
             title = stringResource(R.string.wallet_section_features_title)

@@ -1,6 +1,5 @@
 package io.github.ra1nify.realos.ui.screens
 
-import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AutoAwesome
 import androidx.compose.material.icons.outlined.ColorLens
@@ -10,17 +9,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.ra1nify.realos.R
-import io.github.ra1nify.realos.restart.RestartExecutor
 import io.github.ra1nify.realos.restart.RestartPolicies
-import io.github.ra1nify.realos.restart.toastMessageRes
-import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
+import io.github.ra1nify.realos.ui.components.SpecPageScaffold
 import io.github.ra1nify.realos.opluskeyboard.KeyboardPagesContract
 import io.github.ra1nify.realos.opluskeyboard.OplusKeyboardManager
 import io.github.ra1nify.realos.ui.components.HorizontalDivider
@@ -35,7 +30,6 @@ fun KeyboardDetailScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
     val keyboardPkg = remember {
         OplusKeyboardManager.getInstalledKeyboardPackage(context) ?: "com.oplus.keyboard"
     }
@@ -85,21 +79,11 @@ fun KeyboardDetailScreen(
         OplusKeyboardManager.setEnhancementsEnabled(context, keyboardPkg, enabled)
     }
 
-    ModuleDetailScaffold(
+    SpecPageScaffold(
         title = rememberHostAppName(keyboardPkg, stringResource(R.string.oplus_input_app_name)),
         onNavigateBack = onNavigateBack,
+        restartPolicy = RestartPolicies.keyboard(keyboardPkg),
         modifier = modifier,
-        onRestart = {
-            scope.launch {
-                val policy = RestartPolicies.keyboard(keyboardPkg)
-                val result = RestartExecutor.restart(context, policy)
-                Toast.makeText(
-                    context,
-                    context.getString(result.toastMessageRes(policy)),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        },
         restartContentDescription = stringResource(R.string.oplus_input_restart_action),
         tipsTitle = stringResource(R.string.oplus_input_tips_title),
         tipsMessage = stringResource(R.string.oplus_input_tips_message)

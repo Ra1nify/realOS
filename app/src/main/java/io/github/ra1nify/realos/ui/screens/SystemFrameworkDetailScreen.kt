@@ -11,7 +11,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.ra1nify.realos.BuildConfig
 import io.github.ra1nify.realos.R
-import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
+import io.github.ra1nify.realos.restart.RestartPolicies
+import io.github.ra1nify.realos.ui.components.SpecPageScaffold
 import io.github.ra1nify.realos.opluskeyboard.OplusInputPrefs
 import io.github.ra1nify.realos.opluskeyboard.OplusWorkshopUiText
 import io.github.ra1nify.realos.fido.FidoRedirectConfig
@@ -44,9 +45,10 @@ fun SystemFrameworkDetailScreen(
         IntentRouteConfig.syncToRemote(context)
     }
 
-    ModuleDetailScaffold(
+    SpecPageScaffold(
         title = rememberHostAppName(SpecPackages.ANDROID, stringResource(R.string.system_framework_app_name)),
         onNavigateBack = onNavigateBack,
+        restartPolicy = RestartPolicies.systemFramework,
         modifier = modifier
     ) {
         BasicComponentGroup(

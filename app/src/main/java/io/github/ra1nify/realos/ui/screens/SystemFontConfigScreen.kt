@@ -11,9 +11,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import io.github.ra1nify.realos.R
 import io.github.ra1nify.realos.font.SystemFontConfig
+import io.github.ra1nify.realos.restart.RestartPolicies
 import io.github.ra1nify.realos.ui.components.BasicComponentGroup
 import io.github.ra1nify.realos.ui.components.HorizontalDivider
-import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
+import io.github.ra1nify.realos.ui.components.SpecPageScaffold
 import io.github.ra1nify.realos.ui.components.preference.SwitchPreference
 
 /**
@@ -63,9 +64,10 @@ fun SystemFontConfigScreen(
     onBack: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    ModuleDetailScaffold(
+    SpecPageScaffold(
         title = stringResource(R.string.settings_detail_title),
         onNavigateBack = onBack,
+        restartPolicy = RestartPolicies.settingsFont,
         modifier = modifier,
         tipsTitle = stringResource(R.string.settings_font_tips_title),
         tipsMessage = stringResource(R.string.settings_font_tips_message)

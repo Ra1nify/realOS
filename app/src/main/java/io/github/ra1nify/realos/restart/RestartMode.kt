@@ -1,9 +1,9 @@
 package io.github.ra1nify.realos.restart
 
 /**
- * Restart strategy for a scoped host.
+ * Restart strategy for one host package.
  *
- * The numeric values mirror the `restart.mode` property:
+ * The numeric values map to the project restart policy:
  * 0 = no restart support, 1 = `am force-stop`, 2 = `pkill -f`.
  */
 enum class RestartMode(val value: Int) {

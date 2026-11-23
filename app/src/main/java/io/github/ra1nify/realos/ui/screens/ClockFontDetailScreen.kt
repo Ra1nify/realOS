@@ -25,12 +25,10 @@ import io.github.ra1nify.realos.clockfont.ClockFontImportResult
 import io.github.ra1nify.realos.clockfont.ClockFontRecord
 import io.github.ra1nify.realos.clockfont.ClockFontStore
 import io.github.ra1nify.realos.clockfont.ClockFontType
-import io.github.ra1nify.realos.restart.RestartExecutor
 import io.github.ra1nify.realos.restart.RestartPolicies
-import io.github.ra1nify.realos.restart.RestartResult
 import io.github.ra1nify.realos.ui.components.BasicComponentGroup
 import io.github.ra1nify.realos.ui.components.HorizontalDivider
-import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
+import io.github.ra1nify.realos.ui.components.SpecPageScaffold
 import io.github.ra1nify.realos.ui.components.OverlayDialog
 import io.github.ra1nify.realos.ui.components.TextButton
 import io.github.ra1nify.realos.ui.components.preference.JumpPreference
@@ -90,31 +88,13 @@ fun ClockFontDetailScreen(
         }
     }
 
-    ModuleDetailScaffold(
+    SpecPageScaffold(
         title = stringResource(R.string.clock_font_title),
         onNavigateBack = onNavigateBack,
+        restartPolicy = RestartPolicies.clockFont,
         modifier = modifier,
         tipsTitle = stringResource(R.string.clock_font_tips_title),
         tipsMessage = stringResource(R.string.clock_font_tips_message),
-        onRestart = {
-            scope.launch {
-                val appResult = RestartExecutor.restart(context, RestartPolicies.clockFont)
-                val systemUiResult = RestartExecutor.restart(context, RestartPolicies.systemUi)
-                val success = appResult is RestartResult.Success &&
-                    systemUiResult is RestartResult.Success
-                Toast.makeText(
-                    context,
-                    context.getString(
-                        if (success) {
-                            R.string.restart_success_clock_font
-                        } else {
-                            R.string.restart_failed_need_root
-                        }
-                    ),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        },
         restartContentDescription = stringResource(R.string.clock_font_restart_action)
     ) {
         BasicComponentGroup(

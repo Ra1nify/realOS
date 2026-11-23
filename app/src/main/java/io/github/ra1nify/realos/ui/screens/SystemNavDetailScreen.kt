@@ -18,20 +18,16 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import io.github.ra1nify.realos.R
-import io.github.ra1nify.realos.restart.RestartExecutor
 import io.github.ra1nify.realos.restart.RestartPolicies
-import io.github.ra1nify.realos.restart.toastMessageRes
-import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
+import io.github.ra1nify.realos.ui.components.SpecPageScaffold
 import io.github.ra1nify.realos.opluskeyboard.OplusWorkshopUiText
 import io.github.ra1nify.realos.navigation.SettingsConfig
 import io.github.ra1nify.realos.navigation.SettingsNavContract
@@ -83,7 +79,6 @@ fun SystemNavDetailScreen(
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     // Pushes local values to the host once on entry.
     LaunchedEffect(Unit) { SettingsConfig.syncToRemote(context) }
@@ -196,21 +191,11 @@ fun SystemNavDetailScreen(
     }
 
 
-    ModuleDetailScaffold(
+    SpecPageScaffold(
         title = rememberHostAppName(SpecPackages.SYSTEMUI, stringResource(R.string.systemui_app_name)),
         onNavigateBack = onNavigateBack,
-        modifier = modifier,
-        onRestart = {
-            scope.launch {
-                val policy = RestartPolicies.systemUi
-                val result = RestartExecutor.restart(context, policy)
-                Toast.makeText(
-                    context,
-                    context.getString(result.toastMessageRes(policy)),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+        restartPolicy = RestartPolicies.systemUi,
+        modifier = modifier
     ) {
         // Rows 1 to 5 share one card group.
         BasicComponentGroup(

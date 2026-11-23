@@ -294,6 +294,98 @@ println(
 )
 
 // =================================================================
+// realOS Restart Mode Controller
+//
+//   restart.mode = 0 | 1 | 2
+//     0 = no restart button anywhere, 1 = am force-stop, 2 = pkill -f
+//
+//   restart.scope.<host.package> = 0 | 1 | 2
+//     Per-host override; the project defaults are in RESTART_PROJECT_SCOPES.
+//
+// Project defaults live in this file. Command line / environment may override
+// them for one build; invalid values warn and keep the project default.
+// android/system never accept 1 or 2.
+// =================================================================
+val RESTART_MODE_PROPERTY = "restart.mode"
+val RESTART_SCOPE_PREFIX = "restart.scope."
+val RESTART_PROJECT_MODE = 1
+val RESTART_PROJECT_SCOPES: Map<String, Int> = mapOf(
+    // system_server must never be restarted from the UI.
+    "android" to 0,
+    "system" to 0,
+    // SystemUI is persistent; force-stop may leave it stopped.
+    "com.android.systemui" to 2
+)
+val RESTART_PROTECTED_PACKAGES = setOf("android", "system")
+val HOST_PACKAGE_REGEX = Regex("^[A-Za-z0-9_]+(\\.[A-Za-z0-9_]+)*$")
+
+fun parseRestartMode(raw: String?): Int? = when (raw?.trim()) {
+    "0" -> 0
+    "1" -> 1
+    "2" -> 2
+    else -> null
+}
+
+val restartMode: Int = run {
+    val raw = (project.findProperty(RESTART_MODE_PROPERTY) as? String)?.trim()
+    if (raw.isNullOrEmpty()) return@run RESTART_PROJECT_MODE
+    parseRestartMode(raw) ?: run {
+        println("[realOS Restart] WARN $RESTART_MODE_PROPERTY='$raw' is not 0/1/2, using $RESTART_PROJECT_MODE")
+        RESTART_PROJECT_MODE
+    }
+}
+
+fun collectRestartScopes(source: String, entries: Map<String, String?>): Map<String, Int> = buildMap {
+    entries.forEach { (rawPackage, rawMode) ->
+        val packageName = rawPackage.trim()
+        if (rawMode.isNullOrBlank()) return@forEach
+        if (!HOST_PACKAGE_REGEX.matches(packageName)) {
+            println("[realOS Restart] WARN invalid host package '$packageName' (from $source), ignored")
+            return@forEach
+        }
+        val mode = parseRestartMode(rawMode)
+        if (mode == null) {
+            println(
+                "[realOS Restart] WARN $RESTART_SCOPE_PREFIX$packageName='$rawMode' is not 0/1/2" +
+                    " (from $source), ignored"
+            )
+            return@forEach
+        }
+        if (packageName in RESTART_PROTECTED_PACKAGES && mode != 0) {
+            println("[realOS Restart] WARN $packageName must stay at 0 (from $source), ignored")
+            return@forEach
+        }
+        put(packageName, mode)
+    }
+}
+
+/** Command line -P and ORG_GRADLE_PROJECT_ env (Gradle maps both to project properties). */
+val gradleRestartEntries: Map<String, String?> =
+    providers.gradlePropertiesPrefixedBy(RESTART_SCOPE_PREFIX).orNull
+        ?.mapKeys { (name, _) -> name.removePrefix(RESTART_SCOPE_PREFIX) }
+        ?: emptyMap()
+
+/** Command line / environment overrides the project defaults. */
+val restartScopeMap: Map<String, Int> = buildMap {
+    putAll(
+        collectRestartScopes(
+            "project defaults",
+            RESTART_PROJECT_SCOPES.mapValues { it.value.toString() }
+        )
+    )
+    putAll(collectRestartScopes("command line / environment", gradleRestartEntries))
+}
+
+val restartScopeConfig: String = restartScopeMap.entries
+    .sortedBy { it.key }
+    .joinToString(",") { "${it.key}:${it.value}" }
+
+println(
+    "[realOS Restart] mode=$restartMode, overrides=" +
+        restartScopeConfig.ifEmpty { "none" }
+)
+
+// =================================================================
 // realOS Scope Keep Rules Generator
 //
 // Generate per-spec keep rules from the scope config:
@@ -503,6 +595,9 @@ android {
         // Lite marker: the runtime uses it to enable the three-attempt lock logic (see LiteHookGate).
         buildConfigField("boolean", "MODE_LITE", isLiteBuild.toString())
         buildConfigField("String", "LITE_TARGET", "\"${liteTarget ?: ""}\"")
+        // Restart defaults and per-host overrides; parsed by RestartConfig.
+        buildConfigField("int", "RESTART_MODE", restartMode.toString())
+        buildConfigField("String", "RESTART_SCOPE_MODES", "\"$restartScopeConfig\"")
 
     }
 
