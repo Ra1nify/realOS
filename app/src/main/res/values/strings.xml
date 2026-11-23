@@ -694,17 +694,12 @@
 
     <!-- realOS system font manager -->
     <string name="system_font_title">Font manager</string>
-    <string name="system_font_section_current">Current font</string>
-    <string name="system_font_current_default">System default</string>
-    <string name="system_font_apply_hint">Select a font card in Settings to apply it. This page only manages imported files.</string>
-    <string name="system_font_entry_title">Show the realOS font entry in Settings</string>
-    <string name="system_font_entry_summary">Adds the imported font cards and replaces the stock \"More fonts\" card. Reopen the Settings font page after changing.</string>
     <string name="system_font_section_imported">Imported fonts</string>
     <string name="system_font_import">Import font</string>
     <string name="system_font_empty">No imported fonts</string>
     <string name="system_font_delete">Delete</string>
     <string name="system_font_in_use">In use</string>
-    <string name="system_font_in_use_delete">Switch to another font in Settings first</string>
+    <string name="system_font_deleted_slot">Font file deleted; the system keeps using the current slot copy until another font is selected</string>
     <string name="system_font_preview_sample">Aa Font preview The quick brown fox jumps over the lazy dog</string>
     <string name="system_font_import_success">Imported %1$s</string>
     <string name="system_font_duplicate">Already imported: %1$s</string>
@@ -712,9 +707,16 @@
     <string name="system_font_error_format">TTC/WOFF fonts are not supported; use TTF or OTF</string>
     <string name="system_font_error_invalid">Font file is malformed or incomplete</string>
     <string name="system_font_error_io">Failed to read the font file</string>
-    <string name="system_font_footer">Fonts are stored inside realOS. Selecting a card in the Settings font page applies it through the system font manager.</string>
+    <string name="system_font_footer">Fonts are stored inside realOS. Select a card in the Settings font page and tap Apply to use it. Deleting the active font removes its stored file; the system keeps using the current slot copy until another font is selected.</string>
     <string name="system_font_tips_title">About font sideloading</string>
-    <string name="system_font_tips_message">Use fonts that cover the system language. Select another font in Settings if text rendering breaks.</string>
+    <string name="system_font_tips_message">Use fonts that cover the system language. Deleting the active font does not change the current system font; select another font in Settings to replace it.</string>
+    <string name="settings_font_section">Fonts</string>
+    <string name="settings_font_config_title">Custom font configuration</string>
+    <string name="settings_font_config_summary">Shows imported fonts and appends the realOS font manager card. Turning this off only hides the realOS font entries; the font library and current font stay unchanged.</string>
+    <string name="settings_font_hide_theme_store_title">Hide theme-store font entry</string>
+    <string name="settings_font_hide_theme_store_summary">Hides the theme-store \"More fonts\" card on the Settings font page.</string>
+    <string name="settings_font_tips_title">Custom font configuration</string>
+    <string name="settings_font_tips_message">The first switch appends realOS font cards and the font manager to the Settings font page. The second hides the theme-store \"More fonts\" card. Disabling the first switch only hides the realOS entries; stored fonts and the current system font stay unchanged.</string>
     <string name="camera_realos_tab_appearance">Appearance</string>
     <string name="camera_realos_tab_appearance_footer">Applies to the settings page only; the viewfinder stays unchanged</string>
     <string name="camera_realos_tab_theme_follow_title">Follow system theme and accent color</string>

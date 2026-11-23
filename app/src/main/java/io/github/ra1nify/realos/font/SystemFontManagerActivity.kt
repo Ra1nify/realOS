@@ -19,7 +19,6 @@ class SystemFontManagerActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         XposedServiceManager.initialize(this)
-        SystemFontConfig.syncToRemote(this)
         setContent {
             RealOSTheme {
                 SystemFontManagerScreen(onBack = { finish() })

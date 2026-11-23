@@ -78,7 +78,12 @@ object SystemFontStore {
                     format = success.format,
                     addedAt = System.currentTimeMillis()
                 )
-                writeRegistry(context, existing + record)
+                try {
+                    writeRegistry(context, existing + record)
+                } catch (t: Throwable) {
+                    finalFile.delete()
+                    throw t
+                }
                 Log.i(TAG, "imported ${record.displayName} (${record.id}) format=${record.format}")
                 SystemFontImportResult.Success(record)
             }
@@ -103,8 +108,22 @@ object SystemFontStore {
 
     private fun copyToTemp(context: Context, uri: Uri, temp: File): Boolean = runCatching {
         context.contentResolver.openInputStream(uri)?.use { input ->
-            temp.outputStream().use { output -> input.copyTo(output) }
-            true
+            temp.outputStream().use { output ->
+                // Cap the copy so an oversized pick cannot fill the data directory.
+                val buffer = ByteArray(64 * 1024)
+                var remaining = SystemFontValidator.MAX_FILE_BYTES + 1
+                while (remaining > 0) {
+                    val read = input.read(
+                        buffer,
+                        0,
+                        minOf(buffer.size.toLong(), remaining).toInt()
+                    )
+                    if (read <= 0) break
+                    output.write(buffer, 0, read)
+                    remaining -= read
+                }
+                true
+            }
         } ?: false
     }.getOrDefault(false)
 

@@ -179,9 +179,13 @@ fun DetailScreen(
                     modifier = modifier
                 )
             }
-            DetailSubPage.SETTINGS -> if (BuildConfig.SCOPE_FEATURESWITCH) {
-                SettingsDetailScreen(
+            DetailSubPage.SETTINGS -> when {
+                BuildConfig.SCOPE_FEATURESWITCH -> SettingsDetailScreen(
                     onNavigateBack = { currentPage = DetailSubPage.LIST },
+                    modifier = modifier
+                )
+                BuildConfig.SCOPE_FONT -> SystemFontConfigScreen(
+                    onBack = { currentPage = DetailSubPage.LIST },
                     modifier = modifier
                 )
             }
@@ -281,7 +285,7 @@ private fun ModuleListContent(
             SpecPackages.LAUNCHER -> BuildConfig.SCOPE_LAUNCHER
             SpecPackages.WALLET -> BuildConfig.SCOPE_WALLET
             SpecPackages.MEDIA_PROVIDER -> BuildConfig.SCOPE_MEDIA_PROVIDER
-            SpecPackages.SETTINGS -> BuildConfig.SCOPE_FEATURESWITCH
+            SpecPackages.SETTINGS -> BuildConfig.SCOPE_FEATURESWITCH || BuildConfig.SCOPE_FONT
             else -> true
         }
     }

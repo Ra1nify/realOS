@@ -221,7 +221,8 @@ object SystemFontValidator {
             return runCatching {
                 val bytes = ByteArray(length) { buf.get(offset + it) }
                 when {
-                    platform == 0 || platform == 3 && encoding in 0..1 || encoding == 10 ->
+                    platform == 3 && encoding == 10 -> String(bytes, Charsets.UTF_32BE)
+                    platform == 0 || platform == 3 && encoding in 0..1 ->
                         String(bytes, Charsets.UTF_16BE)
                     else -> String(bytes, Charsets.UTF_8)
                 }

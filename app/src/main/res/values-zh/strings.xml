@@ -692,17 +692,12 @@
 
     <!-- realOS 系统字体管理 -->
     <string name="system_font_title">字体管理</string>
-    <string name="system_font_section_current">当前字体</string>
-    <string name="system_font_current_default">系统默认</string>
-    <string name="system_font_apply_hint">在设置字体页选择字体卡片即可应用；这里只负责导入和删除。</string>
-    <string name="system_font_entry_title">在设置字体页显示 realOS 入口</string>
-    <string name="system_font_entry_summary">添加已导入字体卡片，并替换设置里的“更多字体”卡片；修改后重新进入字体页生效。</string>
     <string name="system_font_section_imported">已导入字体</string>
     <string name="system_font_import">导入字体</string>
     <string name="system_font_empty">还没有导入字体</string>
     <string name="system_font_delete">删除</string>
     <string name="system_font_in_use">使用中</string>
-    <string name="system_font_in_use_delete">请先在设置字体页切换到其他字体</string>
+    <string name="system_font_deleted_slot">字体文件已删除；系统会继续使用当前槽位副本，直到选择其他字体</string>
     <string name="system_font_preview_sample">Aa 字体预览 天地玄黄</string>
     <string name="system_font_import_success">已导入 %1$s</string>
     <string name="system_font_duplicate">已经导入过：%1$s</string>
@@ -710,9 +705,16 @@
     <string name="system_font_error_format">不支持 TTC/WOFF，请使用 TTF 或 OTF</string>
     <string name="system_font_error_invalid">字体文件损坏或不完整</string>
     <string name="system_font_error_io">读取字体文件失败</string>
-    <string name="system_font_footer">字体保存在 realOS 内部。在设置字体页选择对应卡片即可通过系统字体管理器应用。</string>
+    <string name="system_font_footer">字体保存在 realOS 内部。在设置字体页选择卡片并点“应用”即可使用；删除正在使用的字体会移除字体库文件，但系统会继续使用当前槽位副本，直到选择其他字体。</string>
     <string name="system_font_tips_title">关于字体侧载</string>
-    <string name="system_font_tips_message">请使用支持系统语言的字体。若文字显示异常，可在设置字体页切换到其他字体。</string>
+    <string name="system_font_tips_message">请使用支持系统语言的字体。删除正在使用的字体不会改变当前系统字体；需要在设置里选择其他字体来替换。</string>
+    <string name="settings_font_section">字体</string>
+    <string name="settings_font_config_title">自定义字体配置</string>
+    <string name="settings_font_config_summary">显示已导入字体，并追加 realOS 字体管理卡片。关闭后只隐藏 realOS 字体入口，字体库和当前字体保持不变。</string>
+    <string name="settings_font_hide_theme_store_title">隐藏主题商店字体跳转</string>
+    <string name="settings_font_hide_theme_store_summary">隐藏设置字体页里的主题商店“更多字体”卡片。</string>
+    <string name="settings_font_tips_title">自定义字体配置</string>
+    <string name="settings_font_tips_message">第一个开关会在设置字体页追加 realOS 字体卡片和字体管理入口；第二个开关用于隐藏主题商店的“更多字体”卡片。关闭第一个开关只会隐藏 realOS 入口，已存储字体和当前系统字体保持不变。</string>
     <string name="camera_realos_tab_appearance">外观</string>
     <string name="camera_realos_tab_appearance_footer">仅作用于相机设置页，取景器保持原样</string>
     <string name="camera_realos_tab_theme_follow_title">跟随系统深浅与强调色</string>

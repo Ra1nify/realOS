@@ -10,7 +10,7 @@ import java.io.File
 
 /**
  * Read-only provider consumed by the Settings process when a realOS font is
- * applied. Import/delete stay in the realOS app.
+ * previewed or applied. Import/delete stay in the realOS app.
  */
 class SystemFontProvider : ContentProvider() {
 
@@ -78,16 +78,15 @@ class SystemFontProvider : ContentProvider() {
         return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_ONLY)
     }
 
-    override fun insert(uri: Uri, values: ContentValues?): Uri? =
-        throw UnsupportedOperationException("system fonts are read-only")
+    // Read-only provider: write operations are ignored.
+    override fun insert(uri: Uri, values: ContentValues?): Uri? = null
 
-    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int =
-        throw UnsupportedOperationException("system fonts are read-only")
+    override fun delete(uri: Uri, selection: String?, selectionArgs: Array<out String>?): Int = 0
 
     override fun update(
         uri: Uri,
         values: ContentValues?,
         selection: String?,
         selectionArgs: Array<out String>?
-    ): Int = throw UnsupportedOperationException("system fonts are read-only")
+    ): Int = 0
 }

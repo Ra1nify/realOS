@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import kotlinx.coroutines.launch
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import io.github.ra1nify.realos.BuildConfig
 import io.github.ra1nify.realos.R
 import io.github.ra1nify.realos.restart.RestartExecutor
 import io.github.ra1nify.realos.restart.RestartPolicies
@@ -157,6 +158,10 @@ fun SettingsDetailScreen(
             }
         }
     ) {
+        if (BuildConfig.SCOPE_FONT) {
+            SystemFontConfigGroup()
+        }
+
         // ── OnePlus and brand features ──
         BasicComponentGroup(
             title = stringResource(R.string.settings_sec_oneplus)

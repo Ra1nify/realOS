@@ -20,11 +20,10 @@ object SystemFontContract {
     /** Framework settings keys written by the Settings process. */
     const val SETTING_CURRENT_TYPEFACE = "current_typeface"
     const val SETTING_CURRENT_TYPEFACE_NAME = "current_typeface_name"
+    const val SETTING_FONT_ID = "realos_font_id"
 
     /** Synthetic owner value for a realOS-imported font. */
     const val CUSTOM_TYPEFACE_VALUE = "realos.font"
-
-    const val DEFAULT_TYPEFACE_VALUE = "com.monotype.android.font.system.default.font"
 
     const val COLUMN_ID = "_id"
     const val COLUMN_DISPLAY_NAME = "display_name"

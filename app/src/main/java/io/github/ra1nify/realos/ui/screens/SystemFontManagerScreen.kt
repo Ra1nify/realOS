@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import com.itos.coui.text.CouiTextKind
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +28,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.compose.LifecycleResumeEffect
 import io.github.ra1nify.realos.R
 import io.github.ra1nify.realos.font.SystemFontConfig
 import io.github.ra1nify.realos.font.SystemFontContract
@@ -40,9 +40,9 @@ import io.github.ra1nify.realos.ui.components.BasicComponentGroup
 import io.github.ra1nify.realos.ui.components.HorizontalDivider
 import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
 import io.github.ra1nify.realos.ui.components.TextButton
-import io.github.ra1nify.realos.ui.components.preference.SwitchPreference
 import io.github.ra1nify.realos.ui.theme.AppTheme
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import io.github.ra1nify.realos.ui.components.Text
@@ -63,17 +63,20 @@ fun SystemFontManagerScreen(
     val scope = rememberCoroutineScope()
     var records by remember { mutableStateOf<List<SystemFontRecord>>(emptyList()) }
     var importing by remember { mutableStateOf(false) }
-    var entryEnabled by remember { mutableStateOf(SystemFontConfig.isEnabled(context)) }
     var currentTypeface by remember {
         mutableStateOf(readSetting(context, SystemFontContract.SETTING_CURRENT_TYPEFACE))
     }
     var currentName by remember {
         mutableStateOf(readSetting(context, SystemFontContract.SETTING_CURRENT_TYPEFACE_NAME))
     }
+    var currentId by remember {
+        mutableStateOf(readSetting(context, SystemFontContract.SETTING_FONT_ID))
+    }
 
     fun refreshSystemFont() {
         currentTypeface = readSetting(context, SystemFontContract.SETTING_CURRENT_TYPEFACE)
         currentName = readSetting(context, SystemFontContract.SETTING_CURRENT_TYPEFACE_NAME)
+        currentId = readSetting(context, SystemFontContract.SETTING_FONT_ID)
     }
 
     fun reload() {
@@ -83,24 +86,37 @@ fun SystemFontManagerScreen(
         }
     }
 
-    fun isApplied(record: SystemFontRecord): Boolean =
-        currentTypeface == SystemFontContract.CUSTOM_TYPEFACE_VALUE &&
-            !currentName.isNullOrBlank() &&
-            currentName == record.displayName
+    fun isApplied(record: SystemFontRecord): Boolean {
+        if (currentTypeface != SystemFontContract.CUSTOM_TYPEFACE_VALUE) return false
+        if (!currentId.isNullOrBlank()) return currentId == record.id
+        // Legacy applies have no id; only an unambiguous display name is accepted.
+        if (currentName.isNullOrBlank()) return false
+        val matches = records.filter { it.displayName == currentName }
+        return matches.size == 1 && matches.first().id == record.id
+    }
 
     fun deleteFont(record: SystemFontRecord) {
-        if (isApplied(record)) {
-            Toast.makeText(context, R.string.system_font_in_use_delete, Toast.LENGTH_SHORT).show()
-            return
-        }
+        val applied = isApplied(record)
         scope.launch {
-            withContext(Dispatchers.IO) { SystemFontStore.delete(context, record.id) }
+            val deleted = withContext(Dispatchers.IO + NonCancellable) {
+                val ok = SystemFontStore.delete(context, record.id)
+                SystemFontConfig.bumpRevision(context)
+                ok
+            }
             reload()
+            if (applied && deleted) {
+                Toast.makeText(
+                    context,
+                    R.string.system_font_deleted_slot,
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
     }
 
-    LaunchedEffect(Unit) {
+    LifecycleResumeEffect(Unit) {
         reload()
+        onPauseOrDispose { }
     }
 
     val picker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -118,6 +134,7 @@ fun SystemFontManagerScreen(
                         context.getString(R.string.system_font_import_success, result.record.displayName),
                         Toast.LENGTH_SHORT
                     ).show()
+                    SystemFontConfig.bumpRevision(context)
                     reload()
                 }
                 is SystemFontImportResult.Duplicate -> {
@@ -138,15 +155,6 @@ fun SystemFontManagerScreen(
         }
     }
 
-    val currentLabel = when {
-        currentTypeface == SystemFontContract.CUSTOM_TYPEFACE_VALUE &&
-            !currentName.isNullOrBlank() -> currentName.orEmpty()
-        !currentName.isNullOrBlank() &&
-            currentTypeface != null &&
-            currentTypeface != SystemFontContract.DEFAULT_TYPEFACE_VALUE -> currentName.orEmpty()
-        else -> stringResource(R.string.system_font_current_default)
-    }
-
     ModuleDetailScaffold(
         title = stringResource(R.string.system_font_title),
         onNavigateBack = onBack,
@@ -154,34 +162,6 @@ fun SystemFontManagerScreen(
         tipsTitle = stringResource(R.string.system_font_tips_title),
         tipsMessage = stringResource(R.string.system_font_tips_message)
     ) {
-        BasicComponentGroup(
-            title = stringResource(R.string.system_font_section_current),
-            footer = stringResource(R.string.system_font_apply_hint)
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 14.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = currentLabel,
-                    modifier = Modifier.weight(1f),
-                    kind = CouiTextKind.ItemTitle,
-                    color = AppTheme.colorScheme.onSurface
-                )
-            }
-            SwitchPreference(
-                checked = entryEnabled,
-                onCheckedChange = { enabled ->
-                    entryEnabled = enabled
-                    SystemFontConfig.setEnabled(context, enabled)
-                },
-                title = stringResource(R.string.system_font_entry_title),
-                summary = stringResource(R.string.system_font_entry_summary)
-            )
-        }
-
         BasicComponentGroup(
             title = stringResource(R.string.system_font_section_imported),
             footer = stringResource(R.string.system_font_footer),
