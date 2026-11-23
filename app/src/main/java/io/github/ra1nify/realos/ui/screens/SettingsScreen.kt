@@ -32,6 +32,7 @@ import io.github.ra1nify.realos.util.RealOSLogSettings
 import io.github.ra1nify.realos.ui.components.preference.JumpPreference
 import io.github.ra1nify.realos.ui.components.preference.OverlaySpinnerPreference
 import io.github.ra1nify.realos.ui.components.BasicComponentGroup
+import io.github.ra1nify.realos.ui.components.HorizontalDivider
 import io.github.ra1nify.realos.ui.components.DropdownItem
 import io.github.ra1nify.realos.ui.components.preference.SwitchPreference
 import io.github.ra1nify.realos.ui.components.SquircleShape
@@ -145,6 +146,7 @@ fun SettingsScreen(
                         statusText = "v" + BuildConfig.VERSION_NAME,
                         onClick = { }
                     )
+                    HorizontalDivider()
                     JumpPreference(
                         title = stringResource(R.string.settings_ui_system_title),
                         statusText = stringResource(R.string.settings_ui_system_value),

@@ -21,6 +21,7 @@ import io.github.ra1nify.realos.restart.toastMessageRes
 import io.github.ra1nify.realos.featureswitch.FeatureSwitchConfig
 import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
 import io.github.ra1nify.realos.ui.components.BasicComponentGroup
+import io.github.ra1nify.realos.ui.components.HorizontalDivider
 import io.github.ra1nify.realos.ui.components.preference.SwitchPreference
 
 /**
@@ -175,6 +176,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_ONEPLUS_BRAND, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_oneplus_red_one_title),
                 summary = stringResource(R.string.feat_oneplus_red_one_summary),
@@ -199,6 +201,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_GT_MODE, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_app_frozen_title),
                 summary = stringResource(R.string.feat_app_frozen_summary),
@@ -208,6 +211,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_APP_FROZEN, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_pure_mode_title),
                 summary = stringResource(R.string.feat_pure_mode_summary),
@@ -217,6 +221,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_PURE_MODE, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_fluid_cloud_title),
                 summary = stringResource(R.string.feat_fluid_cloud_summary),
@@ -226,6 +231,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_FLUID_CLOUD, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_mini_capsule_title),
                 summary = stringResource(R.string.feat_mini_capsule_summary),
@@ -235,6 +241,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_MINI_CAPSULE, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_custom_hide_app_title),
                 summary = stringResource(R.string.feat_custom_hide_app_summary),
@@ -244,6 +251,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_CUSTOM_HIDE_APP, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_taskbar_title),
                 summary = stringResource(R.string.feat_taskbar_summary),
@@ -268,6 +276,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_VIDEO_COLOR_ENHANCE, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_video_osie_title),
                 summary = stringResource(R.string.feat_video_osie_summary),
@@ -277,6 +286,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_VIDEO_OSIE, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_video_sr_title),
                 summary = stringResource(R.string.feat_video_sr_summary),
@@ -286,6 +296,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_VIDEO_SR, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_app_high_refresh_title),
                 summary = stringResource(R.string.feat_app_high_refresh_summary),
@@ -295,6 +306,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_APP_HIGH_REFRESH, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_pwm_reboot_close_title),
                 summary = stringResource(R.string.feat_pwm_reboot_close_summary),
@@ -304,6 +316,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_PWM_REBOOT_CLOSE, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_comfort_color_temp_title),
                 summary = stringResource(R.string.feat_comfort_color_temp_summary),
@@ -313,6 +326,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_COMFORT_COLOR_TEMP, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_single_pulse_refresh_title),
                 summary = stringResource(R.string.feat_single_pulse_refresh_summary),
@@ -322,6 +336,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_SINGLE_PULSE_REFRESH, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_dc_min_2nit_title),
                 summary = stringResource(R.string.feat_dc_min_2nit_summary),
@@ -346,6 +361,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_DUAL_HEADPHONE, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_multi_sounds_play_title),
                 summary = stringResource(R.string.feat_multi_sounds_play_summary),
@@ -355,6 +371,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_MULTI_SOUNDS_PLAY, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_super_volume_title),
                 summary = stringResource(R.string.feat_super_volume_summary),
@@ -364,6 +381,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_SUPER_VOLUME, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_karaoke_title),
                 summary = stringResource(R.string.feat_karaoke_summary),
@@ -373,6 +391,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_KARAOKE, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_dolby_title),
                 summary = stringResource(R.string.feat_dolby_summary),
@@ -382,6 +401,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_DOLBY, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_dirac_title),
                 summary = stringResource(R.string.feat_dirac_summary),
@@ -406,6 +426,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_DISABLE_OEM_UNLOCK_BYPASS, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_disallow_disable_bypass_title),
                 summary = stringResource(R.string.feat_disallow_disable_bypass_summary),
@@ -415,6 +436,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_APP_DISALLOW_DISABLE_BYPASS, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_clear_cache_bypass_title),
                 summary = stringResource(R.string.feat_clear_cache_bypass_summary),
@@ -424,6 +446,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_CLEAR_CACHE_DISABLED_BYPASS, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_volte_bypass_title),
                 summary = stringResource(R.string.feat_volte_bypass_summary),
@@ -433,6 +456,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_VOLTE_UNAVAILABLE_BYPASS, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_vowifi_bypass_title),
                 summary = stringResource(R.string.feat_vowifi_bypass_summary),
@@ -442,6 +466,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_VOWIFI_UNAVAILABLE_BYPASS, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_video_wallpaper_title),
                 summary = stringResource(R.string.feat_video_wallpaper_summary),
@@ -451,6 +476,7 @@ fun SettingsDetailScreen(
                     FeatureSwitchConfig.setEnabled(context, FeatureSwitchConfig.KEY_VIDEO_WALLPAPER, checked)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.feat_switch_prev_app_bypass_title),
                 summary = stringResource(R.string.feat_switch_prev_app_bypass_summary),

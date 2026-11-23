@@ -24,6 +24,7 @@ import io.github.ra1nify.realos.ui.components.ModuleDetailScaffold
 import io.github.ra1nify.realos.launcher.LauncherConfig
 import io.github.ra1nify.realos.xposed.loader.SpecPackages
 import io.github.ra1nify.realos.ui.components.BasicComponentGroup
+import io.github.ra1nify.realos.ui.components.HorizontalDivider
 import io.github.ra1nify.realos.ui.components.Icon
 import io.github.ra1nify.realos.ui.components.preference.SwitchPreference
 
@@ -85,6 +86,7 @@ fun LauncherDetailScreen(
                     LauncherConfig.setMemoryHooksEnabled(context, enabled)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.launcher_recents_extra_styles_title),
                 summary = stringResource(R.string.launcher_recents_extra_styles_summary),
@@ -95,6 +97,7 @@ fun LauncherDetailScreen(
                     LauncherConfig.setRecentsExtraStylesEnabled(context, enabled)
                 }
             )
+            HorizontalDivider()
             SwitchPreference(
                 title = stringResource(R.string.launcher_color_filter_title),
                 summary = stringResource(R.string.launcher_color_filter_summary),
