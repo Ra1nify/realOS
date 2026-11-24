@@ -1,6 +1,7 @@
 package io.github.ra1nify.realos.xposed.hooks.clockfont
 
 import android.content.Context
+import android.content.res.AssetManager
 import android.os.Process
 import android.os.UserHandle
 import io.github.libxposed.api.XposedInterface
@@ -74,6 +75,11 @@ internal object ClockFontLoaderProbe {
             String::class.java
         ),
         Symbol(
+            "com.oplus.keyguard.clock.digital.util.ext.DigitalClockStyleConfigCompatEx",
+            "isVariableFont",
+            String::class.java
+        ),
+        Symbol(
             "com.oplus.keyguard.clock.common.view.font.OplusKeyguardStyleFontSettingPanel",
             "setFontData",
             String::class.java,
@@ -86,6 +92,28 @@ internal object ClockFontLoaderProbe {
             "setFontSelected",
             String::class.java,
             Array<String>::class.java
+        ),
+        // Text/gallery coverage symbols.
+        Symbol(
+            "com.oplus.keyguard.clock.text.util.Utils",
+            "buildTypeFace",
+            Context::class.java,
+            String::class.java,
+            Int::class.javaPrimitiveType!!,
+            Int::class.javaPrimitiveType!!
+        ),
+        Symbol(
+            "com.oplus.keyguard.clock.text.ui.magazine.TextTimeUtils",
+            "getTextTypeFace",
+            AssetManager::class.java,
+            Int::class.javaPrimitiveType!!,
+            String::class.java
+        ),
+        Symbol(
+            "com.oplus.keyguard.clock.gallery.utils.TypefaceVariantCache",
+            "createNewTypeFace",
+            Context::class.java,
+            String::class.java
         )
     )
 

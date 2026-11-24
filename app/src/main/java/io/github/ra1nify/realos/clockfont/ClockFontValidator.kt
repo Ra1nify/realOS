@@ -100,30 +100,13 @@ object ClockFontValidator {
                 else -> throw InvalidFont(ClockFontError.NOT_TTF, "sfnt=0x${version.toUInt().toString(16)}")
             }
 
-            val numTables = buf.u16(4)
-            if (numTables !in 1..64) throw InvalidFont(detail = "numTables=$numTables")
-            if (12L + numTables.toLong() * 16L > size) {
-                throw InvalidFont(detail = "table directory truncated")
+            val sfnt = try {
+                SfntTables.parse(bytes)
+            } catch (e: SfntTables.FormatException) {
+                throw InvalidFont(detail = e.message)
             }
-
-            for (i in 0 until numTables) {
-                val record = 12 + i * 16
-                val tag = tagAt(record)
-                val offset = buf.u32(record + 8)
-                val length = buf.u32(record + 12)
-                if (offset < 12L || length < 0L || offset + length > size) {
-                    throw InvalidFont(detail = "table $tag out of bounds")
-                }
-                if (tables.put(tag, Table(offset.toInt(), length.toInt())) != null) {
-                    throw InvalidFont(detail = "duplicate table $tag")
-                }
-            }
-
-            val ordered = tables.values.sortedBy { it.offset }
-            for (i in 1 until ordered.size) {
-                if (ordered[i].offset < ordered[i - 1].offset + ordered[i - 1].length) {
-                    throw InvalidFont(detail = "overlapping tables")
-                }
+            sfnt.tables.forEach { (tag, table) ->
+                tables[tag] = Table(table.offset, table.length)
             }
 
             for (tag in listOf("head", "hhea", "maxp", "hmtx", "cmap", "name", "loca", "glyf", "fvar", "gvar")) {
@@ -166,7 +149,7 @@ object ClockFontValidator {
             validateFvar()
             validateGvar()
             validateOs2()
-            val tabularDigits = validateHmtxDigits(glyphIds, cmap)
+            val tabularDigits = validateHmtxDigits(glyphIds)
 
             val wght = axes.firstOrNull { it.tag == "wght" }
                 ?: throw InvalidFont(ClockFontError.WEIGHT_RANGE, "missing wght")
@@ -256,106 +239,19 @@ object ClockFontValidator {
 
         private fun validateCmap(cmap: Table): Map<Char, Int> {
             if (cmap.length < 4) throw InvalidFont(detail = "cmap truncated")
-            val count = buf.u16(cmap.offset + 2)
-            if (count !in 1..64) throw InvalidFont(detail = "cmap count")
-            var chosen = -1
-            for (i in 0 until count) {
-                val record = cmap.offset + 4 + i * 8
-                if (record + 8 > cmap.offset + cmap.length) break
-                val platform = buf.u16(record)
-                val encoding = buf.u16(record + 2)
-                val relative = buf.u32(record + 4)
-                if (relative < 0 || relative + 2 > cmap.length) continue
-                val sub = cmap.offset + relative.toInt()
-                val format = buf.u16(sub)
-                if (format == 4 && (platform == 3 && encoding in 1..10 || platform == 0)) {
-                    chosen = sub
-                    break
-                }
-            }
-            if (chosen < 0) {
-                for (i in 0 until count) {
-                    val record = cmap.offset + 4 + i * 8
-                    if (record + 8 > cmap.offset + cmap.length) break
-                    val relative = buf.u32(record + 4)
-                    if (relative < 0 || relative + 2 > cmap.length) continue
-                    val sub = cmap.offset + relative.toInt()
-                    if (buf.u16(sub) == 12) {
-                        chosen = sub
-                        break
-                    }
-                }
-            }
-            if (chosen < 0) throw InvalidFont(ClockFontError.MISSING_GLYPHS, "no Unicode cmap")
+            val subtable = SfntCmap.findUnicodeSubtable(bytes, cmap.offset, cmap.length)
+                ?: throw InvalidFont(ClockFontError.MISSING_GLYPHS, "no Unicode cmap")
+            val cmapEnd = cmap.offset + cmap.length
 
             val result = HashMap<Char, Int>()
             for (ch in "0123456789:") {
-                val gid = glyphFor(chosen, ch.code, cmap)
+                val gid = SfntCmap.glyphFor(bytes, subtable, cmapEnd, ch.code, numGlyphs)
                     ?: throw InvalidFont(ClockFontError.MISSING_GLYPHS, "missing '$ch'")
                 result[ch] = gid
             }
-            result['.'] = glyphFor(chosen, '.'.code, cmap) ?: -1
+            result['.'] = SfntCmap.glyphFor(bytes, subtable, cmapEnd, '.'.code, numGlyphs) ?: -1
             if (result['.'] == -1) warnings += "missing period glyph"
             return result
-        }
-
-        private fun glyphFor(subtable: Int, codePoint: Int, cmap: Table): Int? {
-            val format = buf.u16(subtable)
-            return when (format) {
-                4 -> glyphForFormat4(subtable, codePoint, cmap)
-                12 -> glyphForFormat12(subtable, codePoint, cmap)
-                else -> null
-            }
-        }
-
-        private fun glyphForFormat4(subtable: Int, codePoint: Int, cmap: Table): Int? {
-            val length = buf.u16(subtable + 2)
-            if (length < 16 || subtable + length > cmap.offset + cmap.length) return null
-            val segCount = buf.u16(subtable + 6) / 2
-            if (segCount <= 0) return null
-            val endCodes = subtable + 14
-            val startCodes = endCodes + segCount * 2 + 2
-            val idDeltas = startCodes + segCount * 2
-            val idRangeOffsets = idDeltas + segCount * 2
-            if (idRangeOffsets + segCount * 2 > subtable + length) return null
-
-            for (i in 0 until segCount) {
-                val end = buf.u16(endCodes + i * 2)
-                if (codePoint > end) continue
-                val start = buf.u16(startCodes + i * 2)
-                if (codePoint < start) return null
-                val delta = buf.i16(idDeltas + i * 2)
-                val rangeOffset = buf.u16(idRangeOffsets + i * 2)
-                val gid = if (rangeOffset == 0) {
-                    (codePoint + delta) and 0xFFFF
-                } else {
-                    val glyphOffset = idRangeOffsets + i * 2 + rangeOffset + (codePoint - start) * 2
-                    if (glyphOffset + 2 > subtable + length) return null
-                    val raw = buf.u16(glyphOffset)
-                    if (raw == 0) return null
-                    (raw + delta) and 0xFFFF
-                }
-                return gid.takeIf { it in 1 until numGlyphs }
-            }
-            return null
-        }
-
-        private fun glyphForFormat12(subtable: Int, codePoint: Int, cmap: Table): Int? {
-            val length = buf.u32(subtable + 4)
-            if (length < 16 || subtable + length > cmap.offset + cmap.length) return null
-            val groups = buf.u32(subtable + 12)
-            if (groups < 0 || groups > 0x10000) return null
-            for (i in 0 until groups.toInt()) {
-                val record = subtable + 16 + i * 12
-                if (record + 12 > subtable + length) return null
-                val start = buf.u32(record)
-                val end = buf.u32(record + 4)
-                if (codePoint < start || codePoint > end) continue
-                val startGlyph = buf.u32(record + 8)
-                val gid = startGlyph + (codePoint - start)
-                return gid.toInt().takeIf { it in 1 until numGlyphs }
-            }
-            return null
         }
 
         private fun validateFvar() {
@@ -442,7 +338,7 @@ object ClockFontValidator {
             if (weightClass !in 1..1000) warnings += "OS/2 weightClass=$weightClass"
         }
 
-        private fun validateHmtxDigits(glyphIds: Map<Char, Int>, cmap: Table): Boolean {
+        private fun validateHmtxDigits(glyphIds: Map<Char, Int>): Boolean {
             val hmtx = table("hmtx")
             val advances = ArrayList<Int>(10)
             for (ch in "0123456789") {
