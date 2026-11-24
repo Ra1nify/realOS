@@ -26,10 +26,11 @@ class ClockFontProvider : ContentProvider() {
         if (uri.pathSegments.firstOrNull() != ClockFontContract.PATH_FONTS) return null
 
         val id = uri.pathSegments.getOrNull(1)
+        // Hidden entries remain resolvable.
         val records = if (id != null) {
             listOfNotNull(ClockFontStore.find(context, id, includeHidden = true))
         } else {
-            ClockFontStore.list(context, includeHidden = false)
+            ClockFontStore.list(context, includeHidden = true)
         }
 
         val columns = projection?.map { it }?.toTypedArray()
@@ -38,6 +39,7 @@ class ClockFontProvider : ContentProvider() {
                 ClockFontContract.COLUMN_DISPLAY_NAME,
                 ClockFontContract.COLUMN_TYPE,
                 ClockFontContract.COLUMN_DYNAMIC_WEIGHT,
+                ClockFontContract.COLUMN_HIDDEN,
                 ClockFontContract.COLUMN_SIZE_BYTES,
                 ClockFontContract.COLUMN_SHA256
             )
@@ -50,6 +52,7 @@ class ClockFontProvider : ContentProvider() {
                     ClockFontContract.COLUMN_DISPLAY_NAME -> record.displayName
                     ClockFontContract.COLUMN_TYPE -> record.type.wireValue
                     ClockFontContract.COLUMN_DYNAMIC_WEIGHT -> if (record.dynamicWeight) 1 else 0
+                    ClockFontContract.COLUMN_HIDDEN -> if (record.hidden) 1 else 0
                     ClockFontContract.COLUMN_SIZE_BYTES -> record.sizeBytes
                     ClockFontContract.COLUMN_SHA256 -> record.sha256
                     else -> null

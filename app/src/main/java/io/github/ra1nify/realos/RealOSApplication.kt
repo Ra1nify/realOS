@@ -1,6 +1,8 @@
 package io.github.ra1nify.realos
 
 import android.app.Application
+import io.github.ra1nify.realos.clockfont.ClockFontPublisher
+import io.github.ra1nify.realos.service.XposedServiceManager
 import io.github.ra1nify.realos.util.RealOSLog
 
 /**
@@ -14,5 +16,10 @@ class RealOSApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         RealOSLog.initApp(this)
+        // Publish existing clock fonts after an app update.
+        XposedServiceManager.initialize(this)
+        if (BuildConfig.SCOPE_CLOCKFONT) {
+            ClockFontPublisher.start(this)
+        }
     }
 }

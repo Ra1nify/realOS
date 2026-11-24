@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.os.Handler
 import android.os.Looper
+import android.os.ParcelFileDescriptor
 import io.github.ra1nify.realos.util.RealOSLog as Log
 import android.widget.Toast
 import io.github.libxposed.service.HookedTarget
@@ -25,6 +26,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.suspendCancellableCoroutine
+import java.util.concurrent.CopyOnWriteArrayList
 import kotlin.coroutines.resume
 
 object XposedServiceManager {
@@ -66,6 +68,9 @@ object XposedServiceManager {
     private var initialized = false
     private var appContext: Context? = null
 
+    /** Service-bound callbacks. */
+    private val serviceBoundListeners = CopyOnWriteArrayList<() -> Unit>()
+
     @Volatile
     private var hasProbedOnAppLaunch = false
 
@@ -103,6 +108,11 @@ object XposedServiceManager {
                 updateRunningTargets(service)
                 updateScope(service)
                 persistCacheIfChanged()
+                serviceBoundListeners.forEach { listener ->
+                    runCatching { listener() }.onFailure {
+                        Log.w(TAG, "service-bound listener failed", it)
+                    }
+                }
             }
 
             override fun onServiceDied(service: XposedService) {
@@ -245,6 +255,36 @@ object XposedServiceManager {
             Log.e(TAG, "Failed to get remote preferences", e)
             null
         }
+    }
+
+    /** Registers a callback fired after the service binds. */
+    fun addOnServiceBoundListener(listener: () -> Unit) {
+        serviceBoundListeners.addIfAbsent(listener)
+        if (currentService != null) {
+            runCatching { listener() }
+        }
+    }
+
+    /** Lists files in the DE module directory. */
+    fun listRemoteFiles(): Set<String>? {
+        val service = currentService ?: return null
+        return runCatching { service.listRemoteFiles().toSet() }
+            .onFailure { Log.w(TAG, "Failed to list remote files", it) }
+            .getOrNull()
+    }
+
+    fun openRemoteFile(name: String): ParcelFileDescriptor? {
+        val service = currentService ?: return null
+        return runCatching { service.openRemoteFile(name) }
+            .onFailure { Log.w(TAG, "Failed to open remote file $name", it) }
+            .getOrNull()
+    }
+
+    fun deleteRemoteFile(name: String): Boolean {
+        val service = currentService ?: return false
+        return runCatching { service.deleteRemoteFile(name) }
+            .onFailure { Log.w(TAG, "Failed to delete remote file $name", it) }
+            .getOrDefault(false)
     }
 
     suspend fun getRunningTargets(): List<HookedTarget> = suspendCancellableCoroutine { continuation ->

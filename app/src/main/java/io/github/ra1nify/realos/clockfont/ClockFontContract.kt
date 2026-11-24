@@ -20,8 +20,20 @@ object ClockFontContract {
     const val COLUMN_DISPLAY_NAME = "display_name"
     const val COLUMN_TYPE = "type"
     const val COLUMN_DYNAMIC_WEIGHT = "dynamic_weight"
+    const val COLUMN_HIDDEN = "hidden"
     const val COLUMN_SIZE_BYTES = "size_bytes"
     const val COLUMN_SHA256 = "sha256"
+
+    /** LSPosed remote metadata group. */
+    const val REMOTE_PREFS = "clockfont_config"
+    const val REMOTE_KEY_VERSION = "version"
+    const val REMOTE_KEY_REVISION = "revision"
+    const val REMOTE_KEY_ENTRIES = "entries"
+    const val REMOTE_KEY_STATUS_BAR_CLOCK = "status_bar_clock_enabled"
+    const val REMOTE_CONFIG_VERSION = 2
+    const val REMOTE_FILE_PREFIX = "clockfont_"
+
+    fun remoteFileName(id: String): String = "$REMOTE_FILE_PREFIX$id.ttf"
 
     const val TYPE_FIXED = "fixed"
     const val TYPE_FLEX = "flex"

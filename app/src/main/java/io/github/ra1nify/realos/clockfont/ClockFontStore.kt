@@ -103,6 +103,7 @@ object ClockFontStore {
                 )
                 val updated = existing + record
                 writeRegistry(context, updated)
+                ClockFontPublisher.requestPublish(context)
                 Log.i(TAG, "imported ${record.displayName} (${record.id}) type=${record.type}")
                 ClockFontImportResult.Success(record)
             }
@@ -115,43 +116,49 @@ object ClockFontStore {
     }
 
     fun setHidden(context: Context, id: String, hidden: Boolean): Boolean {
-        synchronized(lock) {
+        val changed = synchronized(lock) {
             val records = readRegistry(context)
             val updated = records.map { if (it.id == id) it.copy(hidden = hidden) else it }
             if (updated == records) return false
             writeRegistry(context, updated)
-            return true
+            true
         }
+        ClockFontPublisher.requestPublish(context)
+        return changed
     }
 
     /** Per-font user policy: whether the host may show its weight slider. */
     fun setDynamicWeight(context: Context, id: String, dynamicWeight: Boolean): Boolean {
-        synchronized(lock) {
+        val changed = synchronized(lock) {
             val records = readRegistry(context)
             val updated = records.map {
                 if (it.id == id) it.copy(dynamicWeight = dynamicWeight) else it
             }
             if (updated == records) return false
             writeRegistry(context, updated)
-            return true
+            true
         }
+        ClockFontPublisher.requestPublish(context)
+        return changed
     }
 
-    /**
-     * Removes the font file and registry entry; selected clocks fall back to the default.
-     */
-    fun delete(context: Context, id: String): Boolean {
+    /** Hides a font but keeps its bytes registered. */
+    fun retire(context: Context, id: String): Boolean = setHidden(context, id, true)
+
+    /** Deletes the registry entry and font file. */
+    fun purge(context: Context, id: String): Boolean {
         synchronized(lock) {
             val records = readRegistry(context)
             val record = records.firstOrNull { it.id == id } ?: return false
+            val updated = records.filterNot { it.id == id }
+            writeRegistry(context, updated)
             val file = fontFile(context, record)
             if (file.exists() && !file.delete()) {
                 Log.w(TAG, "failed to delete font file ${record.fileName}")
             }
-            val updated = records.filterNot { it.id == id }
-            writeRegistry(context, updated)
-            return true
         }
+        ClockFontPublisher.requestPublish(context)
+        return true
     }
 
     private fun readRegistry(context: Context): List<ClockFontRecord> {

@@ -22,6 +22,7 @@ import androidx.compose.ui.unit.dp
 import io.github.ra1nify.realos.R
 import io.github.ra1nify.realos.clockfont.ClockFontError
 import io.github.ra1nify.realos.clockfont.ClockFontImportResult
+import io.github.ra1nify.realos.clockfont.ClockFontPublisher
 import io.github.ra1nify.realos.clockfont.ClockFontRecord
 import io.github.ra1nify.realos.clockfont.ClockFontStore
 import io.github.ra1nify.realos.clockfont.ClockFontType
@@ -47,14 +48,19 @@ fun ClockFontDetailScreen(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var records by remember { mutableStateOf<List<ClockFontRecord>>(emptyList()) }
+    var systemClockEnabled by remember { mutableStateOf(false) }
     var importing by remember { mutableStateOf(false) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
-    var pendingDelete by remember { mutableStateOf<ClockFontRecord?>(null) }
+    var pendingRemove by remember { mutableStateOf<ClockFontRecord?>(null) }
+    var pendingPurge by remember { mutableStateOf<ClockFontRecord?>(null) }
 
     fun reload() {
         scope.launch {
             records = withContext(Dispatchers.IO) {
                 ClockFontStore.list(context, includeHidden = true)
+            }
+            systemClockEnabled = withContext(Dispatchers.IO) {
+                ClockFontPublisher.isStatusBarClockEnabled(context)
             }
         }
     }
@@ -97,6 +103,25 @@ fun ClockFontDetailScreen(
         tipsMessage = stringResource(R.string.clock_font_tips_message),
         restartContentDescription = stringResource(R.string.clock_font_restart_action)
     ) {
+        BasicComponentGroup(
+            title = stringResource(R.string.clock_font_system_clock_section),
+            footer = stringResource(R.string.clock_font_system_clock_footer)
+        ) {
+            SwitchPreference(
+                checked = systemClockEnabled,
+                onCheckedChange = { checked ->
+                    systemClockEnabled = checked
+                    scope.launch {
+                        withContext(Dispatchers.IO) {
+                            ClockFontPublisher.setStatusBarClockEnabled(context, checked)
+                        }
+                    }
+                },
+                title = stringResource(R.string.clock_font_system_clock_title),
+                summary = stringResource(R.string.clock_font_system_clock_summary)
+            )
+        }
+
         BasicComponentGroup(
             title = stringResource(R.string.clock_font_section_imported),
             footer = stringResource(R.string.clock_font_footer),
@@ -174,14 +199,14 @@ fun ClockFontDetailScreen(
                                     }
                                 )
                                 TextButton(
-                                    text = stringResource(R.string.clock_font_delete),
-                                    onClick = { pendingDelete = record }
+                                    text = stringResource(R.string.clock_font_purge),
+                                    onClick = { pendingPurge = record }
                                 )
                             }
                         } else {
                             TextButton(
                                 text = stringResource(R.string.clock_font_delete),
-                                onClick = { pendingDelete = record }
+                                onClick = { pendingRemove = record }
                             )
                         }
                     }
@@ -204,24 +229,45 @@ fun ClockFontDetailScreen(
         }
     }
 
-    pendingDelete?.let { record ->
+    pendingRemove?.let { record ->
         OverlayDialog(
             show = true,
-            onDismissRequest = { pendingDelete = null },
-            title = stringResource(R.string.clock_font_delete_title),
-            summary = stringResource(R.string.clock_font_delete_message),
-            confirmButtonText = stringResource(R.string.clock_font_delete_confirm),
+            onDismissRequest = { pendingRemove = null },
+            title = stringResource(R.string.clock_font_remove_title),
+            summary = stringResource(R.string.clock_font_remove_message),
+            confirmButtonText = stringResource(R.string.clock_font_remove_confirm),
             onConfirm = {
-                pendingDelete = null
+                pendingRemove = null
                 scope.launch {
                     withContext(Dispatchers.IO) {
-                        ClockFontStore.delete(context, record.id)
+                        ClockFontStore.retire(context, record.id)
                     }
                     reload()
                 }
             },
             dismissButtonText = stringResource(R.string.clock_font_cancel),
-            onDismiss = { pendingDelete = null }
+            onDismiss = { pendingRemove = null }
+        ) { }
+    }
+
+    pendingPurge?.let { record ->
+        OverlayDialog(
+            show = true,
+            onDismissRequest = { pendingPurge = null },
+            title = stringResource(R.string.clock_font_delete_title),
+            summary = stringResource(R.string.clock_font_delete_message),
+            confirmButtonText = stringResource(R.string.clock_font_delete_confirm),
+            onConfirm = {
+                pendingPurge = null
+                scope.launch {
+                    withContext(Dispatchers.IO) {
+                        ClockFontStore.purge(context, record.id)
+                    }
+                    reload()
+                }
+            },
+            dismissButtonText = stringResource(R.string.clock_font_cancel),
+            onDismiss = { pendingPurge = null }
         ) { }
     }
 
