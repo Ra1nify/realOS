@@ -41,6 +41,9 @@ interface SpecLoader {
     /** Called from the Application.onCreate hook chain, AFTER the original call proceeds. */
     fun onAppStart(module: XposedModule, app: Application) {}
 
+    /** True when [onHotReload] schedules installation asynchronously. */
+    val hotReloadInstallIsAsync: Boolean get() = false
+
     /** Optional system_server hook: called from onSystemServerStarting. */
     fun onSystemServerStarting(module: XposedModule, classLoader: ClassLoader) {}
 

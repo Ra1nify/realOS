@@ -29,12 +29,17 @@ object LauncherSpec : SpecLoader {
 
     override val packageNames: Set<String> = SpecPackages.LAUNCHER_VARIANTS
 
-    private val installExecutor = Executors.newSingleThreadExecutor { r ->
-        Thread(r, "realOS-launcher-install").apply { isDaemon = true }
-    }
+    override val hotReloadInstallIsAsync: Boolean = true
+
+    @Volatile
+    private var installExecutor = newInstallExecutor()
 
     @Volatile
     private var installScheduled = false
+
+    private fun newInstallExecutor() = Executors.newSingleThreadExecutor { r ->
+        Thread(r, "realOS-launcher-install").apply { isDaemon = true }
+    }
 
     override fun onPackageReady(module: XposedModule, packageName: String, classLoader: ClassLoader) {
         if (packageName !in SpecPackages.LAUNCHER_VARIANTS) return
@@ -122,12 +127,16 @@ object LauncherSpec : SpecLoader {
     }
 
     override fun onHotReloadCleanup() {
+        installScheduled = false
+        installExecutor.shutdownNow()
+        installExecutor = newInstallExecutor()
         RecentsStyleGate.reset()
         RecentsStyleRegistry.clearInstances()
         LauncherMemoryHook.reset()
     }
 
     override fun onHotReload(module: XposedModule, app: Application) {
+        installScheduled = false
         RecentsStyleGate.reset()
         RecentsStyleRegistry.clearInstances()
         LauncherMemoryHook.reset()
