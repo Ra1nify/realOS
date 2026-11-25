@@ -35,6 +35,20 @@ them.
   behaviour for the single APK sample in front of you.
 - **Minimal change**: make only the changes directly required by the current task (see section 2).
 
+## Code design rules
+
+- Stay faithful to source and reverse-engineering facts; do not add requirements beyond the task.
+- Use `adb shell -su` only for silent background information extraction. Do not control the screen.
+  For screenshots or layout checks, ask the user to set up the foreground first.
+- Do not build unless the user reports a build problem or provides a build error log; static work is
+  the default.
+- For long tasks, propose an assessment, test or implementation plan when needed.
+- Comments: concise en-US. State only what the code does. No rationale, history or decorative prose.
+- Review code and use the simpler, optimized form where behaviour stays the same.
+- Hook code must follow JADX/dexsql results; no hardcoded symbols.
+- Follow standard indentation and naming. Code and comments are en-US; conversation follows the
+  user's language.
+
 ## 0. Workspace context
 
 Common directory meanings:
@@ -44,8 +58,9 @@ Common directory meanings:
   resources and hook points.
 - Xposed/LSPosed API reference: for example `libxposed102`, `xposed api101`, or a similar docs
   directory.
-- Local Android device: never assume a fixed port. Use `adb devices` to confirm an online device,
-  then decide about installing, rebooting or capturing logs as needed.
+- Local Android device: never assume a fixed port. Use `adb devices` to confirm an online device.
+  Use `adb shell -su` only for silent background information extraction; do not control the screen.
+  For screenshots or layout checks, ask the user to set up the foreground first.
 
 Before starting a task you must pin down: the module source directory to modify, the matching host
 decompiled directory, that module's symbol resolution entry point and its data model / cache / status
@@ -382,14 +397,13 @@ log.
 
 ## 10. Verification requirements
 
-- After a change, run the static checks, diff checks, symbol/reference checks and any necessary
-  decompiled-code comparison that match the change. Do not build unless necessary; building and
-  installing are performed by the user. Run a minimal build only when the user explicitly asks, when a
-  compile error must be confirmed, or when static checks cannot cover a key risk.
-- Do not build, install, reboot or operate the device by default; if the user asks for device
-  verification, confirm the target device with `adb devices` first and let the user decide the install
-  and reboot scope. Never report a build, install or runtime verification as verified when it was not
-  executed.
+- After a change, run static checks, diff checks, symbol/reference checks and any necessary
+  decompiled-code comparison that match the change. Do not build unless the user reports a build
+  problem or provides a build error log; static work is the default.
+- Do not install, reboot or operate the device by default. Use `adb shell -su` only for silent
+  background information extraction; do not control the screen. Ask the user to set up the foreground
+  for screenshots or layout checks. Let the user decide the install and reboot scope. Never report a
+  build, install or runtime verification as verified when it was not executed.
 - Whether the project compiles, and whether the related hook features remain independent.
 - Whether every obfuscated hook point goes through the current module's symbol resolver; whether no
   target app resource ID is hardcoded; whether a resource resolution failure fails closed without
