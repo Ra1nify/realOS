@@ -45,6 +45,7 @@ val SCOPE_KEEP_CLASSES: Map<String, List<String>> = mapOf(
     "fido" to listOf("io.github.ra1nify.realos.xposed.hooks.fido.FidoScanRedirectSpec"),
     "intentroute" to listOf("io.github.ra1nify.realos.xposed.hooks.intentroute.IntentRouteAlignmentSpec"),
     "clockfont" to listOf("io.github.ra1nify.realos.xposed.hooks.clockfont.ClockFontSpec"),
+    "clockseconds" to listOf("io.github.ra1nify.realos.xposed.hooks.clockseconds.ClockSecondsSpec"),
 )
 
 /** Supported scope keys, taken from [SCOPE_KEEP_CLASSES] so the two lists cannot drift. */
@@ -286,11 +287,12 @@ val scopeMediaProvider = isScopeIncluded("mediaprovider")
 val scopeFido = isScopeIncluded("fido")
 val scopeIntentRoute = isScopeIncluded("intentroute")
 val scopeClockFont = isScopeIncluded("clockfont")
+val scopeClockSeconds = isScopeIncluded("clockseconds")
 
 println(
     "[realOS Scope] opluskeyboard=$scopeOplusKeyboard, navigation=$scopeNavigation, font=$scopeFont, featureswitch=$scopeFeatureSwitch, " +
         "camera=$scopeCamera, launcher=$scopeLauncher, wallet=$scopeWallet, mediaprovider=$scopeMediaProvider, fido=$scopeFido, intentroute=$scopeIntentRoute, " +
-        "clockfont=$scopeClockFont"
+        "clockfont=$scopeClockFont, clockseconds=$scopeClockSeconds"
 )
 
 // =================================================================
@@ -472,7 +474,8 @@ val BASE_SCOPE_PACKAGES: Map<String, List<String>> = mapOf(
         "com.android.systemui",
         "com.android.launcher",
         "com.oplus.aod"
-    )
+    ),
+    "clockseconds" to listOf("com.android.settings")
 )
 
 fun generateScopeList(): String {
@@ -592,6 +595,7 @@ android {
         buildConfigField("boolean", "SCOPE_FIDO", scopeFido.toString())
         buildConfigField("boolean", "SCOPE_INTENTROUTE", scopeIntentRoute.toString())
         buildConfigField("boolean", "SCOPE_CLOCKFONT", scopeClockFont.toString())
+        buildConfigField("boolean", "SCOPE_CLOCKSECONDS", scopeClockSeconds.toString())
         // Lite marker: the runtime uses it to enable the three-attempt lock logic (see LiteHookGate).
         buildConfigField("boolean", "MODE_LITE", isLiteBuild.toString())
         buildConfigField("String", "LITE_TARGET", "\"${liteTarget ?: ""}\"")
@@ -675,6 +679,7 @@ val SCOPE_MANIFEST_PREFIXES: Map<String, List<String>> = mapOf(
     "fido" to listOf(".fido."),
     "intentroute" to listOf(".intentroute."),
     "clockfont" to listOf(".clockfont."),
+    "clockseconds" to emptyList(),
 )
 
 if (isLiteBuild) {

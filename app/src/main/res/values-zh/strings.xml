@@ -653,6 +653,13 @@
     <string name="clock_font_system_clock_title">状态栏和通知中心时钟</string>
     <string name="clock_font_system_clock_summary">让状态栏和通知中心时钟使用当前应用的时钟字体。</string>
     <string name="clock_font_system_clock_footer">控制中心时钟保持不变。如果切换后没有立即生效，请重启时钟字体宿主。</string>
+
+    <!-- Status bar clock seconds conversion -->
+    <string name="clock_seconds_always">时分秒</string>
+    <string name="clock_seconds_config_section">状态栏时钟</string>
+    <string name="clock_seconds_config_title">启用长效时分秒选项</string>
+    <string name="clock_seconds_config_summary">把系统设置中的“时分秒（5 分钟）”改为常驻“时分秒”。修改后请重启系统设置。</string>
+    <string name="clock_seconds_config_footer">关闭并重启系统设置后恢复原生 5 分钟选项；当前常驻状态会降级为原生 5 分钟。</string>
     <string name="clock_font_section_imported">已导入字体</string>
     <string name="clock_font_import_action">导入 TTF</string>
     <string name="clock_font_importing">正在校验并导入…</string>

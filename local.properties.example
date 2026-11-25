@@ -29,6 +29,7 @@
 #   fido           FIDO (system)
 #   intentroute    intent route normalization (system)
 #   clockfont      clock fonts (wallpapers, systemui, launcher, aod)
+#   clockseconds   status bar clock seconds (settings)
 realos.scope.opluskeyboard=1
 realos.scope.navigation=0
 realos.scope.featureswitch=0
@@ -40,6 +41,7 @@ realos.scope.mediaprovider=0
 realos.scope.fido=0
 realos.scope.intentroute=0
 realos.scope.clockfont=0
+realos.scope.clockseconds=0
 
 # 2. Version controller
 #

@@ -146,6 +146,9 @@ fun SettingsDetailScreen(
         if (BuildConfig.SCOPE_FONT) {
             SystemFontConfigGroup()
         }
+        if (BuildConfig.SCOPE_CLOCKSECONDS) {
+            ClockSecondsConfigGroup()
+        }
 
         // ── OnePlus and brand features ──
         BasicComponentGroup(

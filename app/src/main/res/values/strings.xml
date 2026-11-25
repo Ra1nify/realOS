@@ -655,6 +655,13 @@
     <string name="clock_font_system_clock_title">Status bar and notification clock</string>
     <string name="clock_font_system_clock_summary">Use the applied clock font for the status bar and notification center clocks.</string>
     <string name="clock_font_system_clock_footer">The control center clock stays unchanged. Restart clock font hosts if the change does not appear immediately.</string>
+
+    <!-- Status bar clock seconds conversion -->
+    <string name="clock_seconds_always">Hours, minutes, and seconds</string>
+    <string name="clock_seconds_config_section">Status bar clock</string>
+    <string name="clock_seconds_config_title">Enable persistent clock seconds</string>
+    <string name="clock_seconds_config_summary">Changes “Hours, minutes, and seconds (5 minutes)” to persistent “Hours, minutes, and seconds” in Settings &gt; Status bar &gt; Display Time. Restart Settings after changing.</string>
+    <string name="clock_seconds_config_footer">After turning this off and restarting Settings, the native 5-minute option returns; an active persistent state is downgraded to 5 minutes.</string>
     <string name="clock_font_section_imported">Imported fonts</string>
     <string name="clock_font_import_action">Import TTF</string>
     <string name="clock_font_importing">Validating and importing…</string>

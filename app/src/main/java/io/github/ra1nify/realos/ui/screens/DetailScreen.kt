@@ -184,10 +184,11 @@ fun DetailScreen(
                     onNavigateBack = { currentPage = DetailSubPage.LIST },
                     modifier = modifier
                 )
-                BuildConfig.SCOPE_FONT -> SystemFontConfigScreen(
+                BuildConfig.SCOPE_FONT || BuildConfig.SCOPE_CLOCKSECONDS -> SystemFontConfigScreen(
                     onBack = { currentPage = DetailSubPage.LIST },
                     modifier = modifier
                 )
+                else -> Unit
             }
             DetailSubPage.CLOCK_FONT -> if (BuildConfig.SCOPE_CLOCKFONT) {
                 ClockFontDetailScreen(
@@ -285,7 +286,8 @@ private fun ModuleListContent(
             SpecPackages.LAUNCHER -> BuildConfig.SCOPE_LAUNCHER
             SpecPackages.WALLET -> BuildConfig.SCOPE_WALLET
             SpecPackages.MEDIA_PROVIDER -> BuildConfig.SCOPE_MEDIA_PROVIDER
-            SpecPackages.SETTINGS -> BuildConfig.SCOPE_FEATURESWITCH || BuildConfig.SCOPE_FONT
+            SpecPackages.SETTINGS ->
+                BuildConfig.SCOPE_FEATURESWITCH || BuildConfig.SCOPE_FONT || BuildConfig.SCOPE_CLOCKSECONDS
             else -> true
         }
     }

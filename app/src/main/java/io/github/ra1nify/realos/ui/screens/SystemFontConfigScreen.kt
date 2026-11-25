@@ -9,6 +9,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import io.github.ra1nify.realos.BuildConfig
 import io.github.ra1nify.realos.R
 import io.github.ra1nify.realos.font.SystemFontConfig
 import io.github.ra1nify.realos.restart.RestartPolicies
@@ -58,7 +59,7 @@ fun SystemFontConfigGroup() {
     }
 }
 
-/** Font-only Settings host page used when the feature-switch scope is absent. */
+/** Settings host page for the enabled font and clock-seconds groups. */
 @Composable
 fun SystemFontConfigScreen(
     onBack: () -> Unit,
@@ -69,9 +70,22 @@ fun SystemFontConfigScreen(
         onNavigateBack = onBack,
         restartPolicy = RestartPolicies.settingsFont,
         modifier = modifier,
-        tipsTitle = stringResource(R.string.settings_font_tips_title),
-        tipsMessage = stringResource(R.string.settings_font_tips_message)
+        tipsTitle = if (BuildConfig.SCOPE_FONT) {
+            stringResource(R.string.settings_font_tips_title)
+        } else {
+            null
+        },
+        tipsMessage = if (BuildConfig.SCOPE_FONT) {
+            stringResource(R.string.settings_font_tips_message)
+        } else {
+            null
+        }
     ) {
-        SystemFontConfigGroup()
+        if (BuildConfig.SCOPE_FONT) {
+            SystemFontConfigGroup()
+        }
+        if (BuildConfig.SCOPE_CLOCKSECONDS) {
+            ClockSecondsConfigGroup()
+        }
     }
 }

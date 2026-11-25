@@ -35,6 +35,7 @@ object SpecRegistry {
         if (BuildConfig.SCOPE_FIDO) loadSpec("io.github.ra1nify.realos.xposed.hooks.fido.FidoScanRedirectSpec")?.let { add(it) }
         if (BuildConfig.SCOPE_INTENTROUTE) loadSpec("io.github.ra1nify.realos.xposed.hooks.intentroute.IntentRouteAlignmentSpec")?.let { add(it) }
         if (BuildConfig.SCOPE_CLOCKFONT) loadSpec("io.github.ra1nify.realos.xposed.hooks.clockfont.ClockFontSpec")?.let { add(it) }
+        if (BuildConfig.SCOPE_CLOCKSECONDS) loadSpec("io.github.ra1nify.realos.xposed.hooks.clockseconds.ClockSecondsSpec")?.let { add(it) }
     }
 
     private val specsByPackage: Map<String, List<SpecLoader>> by lazy {
