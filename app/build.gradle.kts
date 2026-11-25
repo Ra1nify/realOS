@@ -832,15 +832,15 @@ androidComponents {
 }
 
 dependencies {
-    implementation(libs.core.ktx)
-    compileOnly("io.github.libxposed:api:102.0.0")
-    implementation("io.github.libxposed:service:102.0.0")
+    implementation(libs.androidx.core.ktx)
+    compileOnly(libs.api)
+    implementation(libs.service)
     implementation(project(":libs:dexkit"))
 
     // coui (ColorOS 17 Compose design system): the only widget library realOS depends on.
-    implementation("io.github.itoseo:coui:0.0.1-alpha12")
-    implementation("io.github.itoseo:coui-icons:0.0.1-alpha12")
-    implementation("io.github.itoseo:coui-material3:0.0.1-alpha12")
+    implementation(libs.coui)
+    implementation(libs.coui.icons)
+    implementation(libs.coui.material3)
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
@@ -850,7 +850,6 @@ dependencies {
     implementation(libs.androidx.compose.ui)
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
-    implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.compose)

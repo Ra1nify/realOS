@@ -65,5 +65,6 @@ android {
 }
 
 dependencies {
+    // DexKit schema ABI: 23.5.26.
     implementation("com.google.flatbuffers:flatbuffers-java:23.5.26")
 }
