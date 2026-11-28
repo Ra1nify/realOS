@@ -1,5 +1,6 @@
 // Ported from rmuix-extend colorpicker/Hsv.kt (compose-rmuix-ui, Apache-2.0), realOS-maintained copy.
 // Pure math and Compose Color operations; implementation matches apart from the package name.
+// The hex helpers were reworked: realOS always shows and accepts `#AARRGGBB`.
 
 package io.github.ra1nify.realos.ui.extend.colorpicker
 
@@ -58,15 +59,16 @@ internal fun hsvToColor(
     return Color(red = r + offset, green = g + offset, blue = b + offset, alpha = alpha.coerceIn(0f, 1f))
 }
 
-/** `#RRGGBB`; outputs `#AARRGGBB` when [includeAlpha] is true and the color is not opaque. */
-internal fun Color.toHexString(includeAlpha: Boolean): String {
-    val argb = toArgb()
-    val alpha = (argb ushr 24) and 0xFF
-    if (includeAlpha && alpha != 0xFF) {
-        val hex = argb.toUInt().toString(radix = 16)
-        return "#" + hex.padStart(8, '0').uppercase()
-    }
-    val rgb = (argb and 0x00FFFFFF).toUInt()
-    val hex = rgb.toString(radix = 16)
-    return "#" + hex.padStart(6, '0').uppercase()
+/** `#AARRGGBB`, always eight digits; the alpha byte is never dropped. */
+internal fun Color.toHexArgb(): String =
+    "#" + toArgb().toUInt().toString(radix = 16).padStart(8, '0').uppercase()
+
+/** Parses `#AARRGGBB`, or `#RRGGBB` with an opaque alpha byte; null when the text is not a color. */
+internal fun parseHexArgb(input: String): Color? {
+    val clean = input.removePrefix("#").trim()
+    if (clean.length != 6 && clean.length != 8) return null
+    if (clean.any { it !in '0'..'9' && it !in 'A'..'F' && it !in 'a'..'f' }) return null
+    val value = clean.toLongOrNull(radix = 16) ?: return null
+    val argb = if (clean.length == 6) value or 0xFF000000L else value
+    return Color(argb.toInt())
 }

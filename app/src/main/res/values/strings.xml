@@ -744,4 +744,9 @@
     <string name="system_font_apply_failed">Failed to apply font</string>
     <string name="system_font_manager_label">realOS font manager</string>
     <string name="oplus_input_autofill_tool_title">Autofill</string>
+<string name="color_picker_alpha_value">%1$d%%</string>
+    <string name="color_picker_alpha_title">Opacity</string>
+    <string name="color_picker_hex_title">Hex value</string>
+    <string name="color_picker_hex_clear">Clear hex value</string>
 </resources>
+

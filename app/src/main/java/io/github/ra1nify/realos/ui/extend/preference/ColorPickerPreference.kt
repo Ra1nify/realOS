@@ -11,6 +11,7 @@ package io.github.ra1nify.realos.ui.extend.preference
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -28,8 +29,10 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.itos.coui.layout.Item
+import io.github.ra1nify.realos.R
 import io.github.ra1nify.realos.ui.extend.colorpicker.ColorPickerDefaults
 import io.github.ra1nify.realos.ui.extend.colorpicker.OverlayColorPickerDialog
+import io.github.ra1nify.realos.ui.extend.colorpicker.colorPickerString
 import io.github.ra1nify.realos.ui.components.Text
 import io.github.ra1nify.realos.ui.theme.AppTheme
 
@@ -45,7 +48,9 @@ import io.github.ra1nify.realos.ui.theme.AppTheme
  * @param modifier Modifier applied to the row.
  * @param summary Optional summary text.
  * @param enabled Whether the row accepts input.
- * @param showAlphaSlider Whether the dialog shows the alpha track.
+ * @param showAlphaSlider Whether the dialog shows the opacity parameter row.
+ * @param extraRows Extra rows inserted into the dialog picker, forwarded to
+ *   [OverlayColorPickerDialog].
  * @param dialogTitle Dialog title, defaults to [title].
  * @param previewShape Swatch shape.
  * @param previewSize Swatch size.
@@ -61,11 +66,12 @@ fun ColorPickerPreference(
     summary: String? = null,
     enabled: Boolean = true,
     showAlphaSlider: Boolean = true,
+    extraRows: (@Composable ColumnScope.() -> Unit)? = null,
     dialogTitle: String = title,
     previewShape: Shape = CircleShape,
-    previewSize: Dp = ColorPickerDefaults.PresetSize,
-    confirmLabel: String = "OK",
-    cancelLabel: String = "Cancel",
+    previewSize: Dp = ColorPickerDefaults.SwatchSize,
+    confirmLabel: String = colorPickerString(R.string.oplus_input_dialog_ok),
+    cancelLabel: String = colorPickerString(R.string.oplus_input_dialog_cancel),
 ) {
     var showDialog by remember { mutableStateOf(false) }
 
@@ -131,6 +137,7 @@ fun ColorPickerPreference(
             onDismissRequest = { showDialog = false },
             title = dialogTitle,
             showAlphaSlider = showAlphaSlider,
+            extraRows = extraRows,
             confirmLabel = confirmLabel,
             cancelLabel = cancelLabel,
         )

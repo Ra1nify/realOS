@@ -10,6 +10,10 @@
 
 package io.github.ra1nify.realos.ui.extend.colorpicker
 
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -18,11 +22,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.dp
 import com.itos.coui.dialog.CouiDialogAction
 import com.itos.coui.dialog.CouiDialogActionColors
 import com.itos.coui.dialog.CouiDialogActionStyle
+import com.itos.coui.dialog.CouiDialogDefaults
 import com.itos.coui.dialog.Dialog as CouiDialog
 import com.itos.coui.theme.CouiTheme
+import io.github.ra1nify.realos.R
 
 /**
  * Color dialog hosting [ColorPicker].
@@ -37,7 +44,8 @@ import com.itos.coui.theme.CouiTheme
  * @param onDismissRequest Callback on dismiss (outside tap, back key or cancel).
  * @param modifier Modifier applied to the dialog window.
  * @param title Dialog title.
- * @param showAlphaSlider Whether the alpha track is shown.
+ * @param showAlphaSlider Whether the opacity parameter row is shown.
+ * @param extraRows Extra rows inserted after the opacity row, forwarded to [ColorPicker].
  * @param confirmLabel Confirm button label.
  * @param cancelLabel Cancel button label.
  * @param colors Picker colors.
@@ -52,8 +60,9 @@ fun OverlayColorPickerDialog(
     modifier: Modifier = Modifier,
     title: String? = null,
     showAlphaSlider: Boolean = true,
-    confirmLabel: String = "OK",
-    cancelLabel: String = "Cancel",
+    extraRows: (@Composable ColumnScope.() -> Unit)? = null,
+    confirmLabel: String = colorPickerString(R.string.oplus_input_dialog_ok),
+    cancelLabel: String = colorPickerString(R.string.oplus_input_dialog_cancel),
     colors: ColorPickerColors = ColorPickerDefaults.colorPickerColors(),
 ) {
     var draft by remember { mutableStateOf(color) }
@@ -87,14 +96,30 @@ fun OverlayColorPickerDialog(
                 onClick = onDismissRequest,
             ),
     ) {
-        ColorPicker(
-            color = draft,
-            onColorChange = {
-                draft = it
-                onColorChange(it)
-            },
-            showAlphaSlider = showAlphaSlider,
-            colors = colors,
-        )
+        // COUI's Dialog content slot carries no padding of its own (only `message` gets one), so the
+        // picker supplies the dialog content margin itself; rows inside keep zero horizontal padding
+        // and rely on this, which keeps the wheel and rows aligned on the same edge.
+        Column(
+            modifier =
+                Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        start = CouiDialogDefaults.contentPadding,
+                        end = CouiDialogDefaults.contentPadding,
+                        top = 8.dp,
+                        bottom = 8.dp,
+                    ),
+        ) {
+            ColorPicker(
+                color = draft,
+                onColorChange = {
+                    draft = it
+                    onColorChange(it)
+                },
+                showAlphaSlider = showAlphaSlider,
+                extraRows = extraRows,
+                colors = colors,
+            )
+        }
     }
 }

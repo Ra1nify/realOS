@@ -1,6 +1,11 @@
-// realOS color picker types, rebuilt on COUI-Kit (`com.itos.coui`).
-// COUI ships no color picker widget, so the picker is drawn locally; every color,
-// corner and text style it uses comes from the COUI theme instead of local constants.
+// realOS color picker types.
+//
+// The hue ring and its inset saturation/value table are drawn locally because COUI has no color
+// picker widget; everything else in the picker is a COUI control.
+//
+// Geometry contract (docs/dev/color-picker-spec.md): the ring owns hue and its hit zone is the
+// annulus `innerRadius..outerRadius`, the table keeps `WheelSquareFill` of the inner radius as its
+// half-diagonal, so the two zones cannot overlap.
 
 package io.github.ra1nify.realos.ui.extend.colorpicker
 
@@ -8,80 +13,94 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.unit.dp
-import com.itos.coui.shape.CouiCapsuleShape
-import com.itos.coui.shape.CouiShape
+import com.itos.coui.layout.CouiPageDefaults
 import com.itos.coui.theme.CouiTheme
 
 /**
  * [ColorPicker] colors.
  *
- * @param thumbColor Ring color of the area, hue and alpha thumbs.
- * @param trackColor Border color of the hue and alpha tracks.
- * @param hexTextColor Hex readout color.
+ * @param thumbColor Table thumb ring color.
+ * @param trackColor Table thumb hairline.
+ * @param hexTextColor Hex value text.
+ * @param thumbShadowColor Soft halo behind the table thumb.
+ * @param checkerLight Checkerboard light cell under the preview swatch.
+ * @param checkerDark Checkerboard dark cell under the preview swatch.
  */
 @Immutable
 data class ColorPickerColors(
     val thumbColor: Color,
     val trackColor: Color,
     val hexTextColor: Color,
+    val thumbShadowColor: Color = Color.Black.copy(alpha = 0.16f),
+    val checkerLight: Color = Color.White,
+    val checkerDark: Color = Color(0xFFDBDBDB),
 )
 
 /**
- * [ColorPicker] defaults, expressed with COUI theme tokens and COUI shapes.
+ * [ColorPicker] geometry and defaults, expressed with COUI tokens.
+ *
+ * The wheel proportions follow the ColorOS color wheel: the ring takes
+ * [WheelRingWidthRatio] of the side and the table keeps [WheelSquareFill] of the radius that
+ * remains inside the ring, which leaves a visible gutter and keeps the table clear of the ring.
  */
 object ColorPickerDefaults {
-    /** Saturation/value area aspect ratio. */
-    const val AREA_ASPECT_RATIO = 1.6f
 
-    /** Saturation/value area corner radius, applied through [CouiShape]. */
-    val AreaCornerRadius = 12.dp
+    /**
+     * Largest wheel side; the wheel is square and centers inside the available width.
+     *
+     * Bounded by the COUI dialog width (392dp) rather than height: the picker content is a plain
+     * column with no scroll container, so the wheel cannot push a slider out of reach.
+     */
+    val WheelMaxSize = 210.dp
 
-    /** Hue and alpha track height. */
-    val TrackHeight = 12.dp
+    /** Hue ring width as a fraction of the wheel side. */
+    const val WheelRingWidthRatio = 0.11f
 
-    /** Thumb ring diameter. */
+    /** Saturation/value table half-diagonal as a fraction of the ring inner radius. */
+    const val WheelSquareFill = 0.9f
+
+    /** Table thumb diameter. */
     val ThumbSize = 20.dp
 
-    /** Preset swatch diameter. */
-    val PresetSize = 28.dp
-
-    /** Vertical spacing between picker rows. */
-    val RowSpacing = 12.dp
-
-    /** Thumb ring stroke width. */
+    /** Table thumb ring stroke width. */
     val ThumbStroke = 2.dp
 
-    /** COUI squircle for the saturation/value area and the preset swatches. */
-    val AreaShape: Shape = CouiShape(AreaCornerRadius)
+    /** Vertical spacing between picker rows: the COUI settings group spacing. */
+    val RowSpacing = CouiPageDefaults.groupSpacing
 
-    /** COUI capsule for the hue and alpha tracks. */
-    val TrackShape: Shape = CouiCapsuleShape
+    /** Settings row swatch diameter. */
+    val SwatchSize = 28.dp
 
-    /** Preset swatches: colors plus black and white. */
-    @Composable
-    fun presetColors(): List<Color> =
-        remember {
-            listOf(
-                Color(0xFFD32F2F),
-                Color(0xFFF57C00),
-                Color(0xFFFBC02D),
-                Color(0xFF388E3C),
-                Color(0xFF0080FF),
-                Color(0xFF7B1FA2),
-                Color(0xFF000000),
-                Color(0xFFFFFFFF),
-            )
-        }
+    /** Hue ring stops: red through the spectrum back to red. */
+    val spectrumColors: List<Color> =
+        listOf(
+            Color(0xFFFF0000),
+            Color(0xFFFFFF00),
+            Color(0xFF00FF00),
+            Color(0xFF00FFFF),
+            Color(0xFF0000FF),
+            Color(0xFFFF00FF),
+            Color(0xFFFF0000),
+        )
 
     @Composable
     fun colorPickerColors(
         thumbColor: Color = CouiTheme.colorScheme.onAccent,
         trackColor: Color = CouiTheme.colorScheme.outlineVariant,
         hexTextColor: Color = CouiTheme.colorScheme.onSurfaceVariant,
+        thumbShadowColor: Color = CouiTheme.colorScheme.outlineVariant.copy(alpha = 0.18f),
+        checkerLight: Color = CouiTheme.colorScheme.surface,
+        checkerDark: Color = CouiTheme.colorScheme.outlineVariant,
     ): ColorPickerColors =
-        remember(thumbColor, trackColor, hexTextColor) {
-            ColorPickerColors(thumbColor = thumbColor, trackColor = trackColor, hexTextColor = hexTextColor)
+        remember(thumbColor, trackColor, hexTextColor, thumbShadowColor, checkerLight, checkerDark) {
+            ColorPickerColors(
+                thumbColor = thumbColor,
+                trackColor = trackColor,
+                hexTextColor = hexTextColor,
+                thumbShadowColor = thumbShadowColor,
+                checkerLight = checkerLight,
+                checkerDark = checkerDark,
+            )
         }
 }
