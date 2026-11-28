@@ -82,6 +82,15 @@ object ModuleResources {
         }
     }
 
+    /** Returns a formatted module string, or an empty string when the resource cannot be resolved. */
+    fun string(context: Context, resId: Int, vararg args: Any): String {
+        val resources = get(context) ?: return ""
+        return runCatching { resources.getString(resId, *args) }.getOrElse {
+            Log.w(TAG, "Missing module string 0x${Integer.toHexString(resId)} via $cachedSource")
+            ""
+        }
+    }
+
     /** Clears the cached table; used when the module APK is replaced. */
     fun invalidate() {
         cached = null

@@ -1,6 +1,5 @@
 package io.github.ra1nify.realos.ui.components.preference
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -19,13 +18,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.itos.coui.layout.Item
 import com.itos.coui.slider.CouiSliderColors
 import com.itos.coui.slider.Slider
-import io.github.ra1nify.realos.ui.theme.AppTheme
 
 /**
  * Slider preference with a title, summary and value text.
@@ -39,7 +35,6 @@ import io.github.ra1nify.realos.ui.theme.AppTheme
  * - `sliderColors`: now coui [CouiSliderColors] (coui `Slider` accepts nullable colors);
  * - `onClick`: kept; non-null adds a trailing chevron and makes the row clickable;
  * - `showKeyPoints`: mapped to coui `Slider` `showTickMarks` (evenly spaced ticks);
- * - `startLabel` / `endLabel` / `labelColor`: kept; the slider draws 14sp labels at both ends;
  * - `holdDownState`: coui `Item` has built-in press feedback; the parameter is kept and unused.
  *
  * Parameters removed from the signature, with no coui equivalent:
@@ -47,7 +42,14 @@ import io.github.ra1nify.realos.ui.theme.AppTheme
  * - `sliderHeight`: coui `Slider` has a fixed 48dp minimum height, not settable by the caller;
  * - `hapticEffect`: coui `Slider` has built-in segment haptics, with no replaceable haptic parameter;
  * - `keyPoints` / `magnetThreshold`: coui only has evenly spaced ticks (`steps` + `showTickMarks`),
- *   no custom key point list or magnet threshold.
+ *   no custom key point list or magnet threshold;
+ * - `startLabel` / `endLabel` / `labelColor`: dropped on purpose; no call site needs end labels and
+ *   they shortened the track.
+ *
+ * Gesture contract: the value handed to [onValueChange] must be written back to `value` unchanged.
+ * `CouiSliderMotion.syncValue()` treats an incoming value that differs from what the drag produced as
+ * an external edit and ends the gesture, so a drag stops after its first move. Quantising belongs in
+ * [onValueChangeFinished]; see COUI docs/components/slider.md.
  *
  * @param value Current value; values outside [valueRange] are clamped by coui `Slider`.
  * @param onValueChange Value change callback.
@@ -68,9 +70,6 @@ import io.github.ra1nify.realos.ui.theme.AppTheme
  * @param onValueChangeFinished Drag/click end callback.
  * @param sliderColors Slider colors; `null` uses the coui theme defaults.
  * @param showKeyPoints Whether to show evenly spaced tick marks (maps to coui `showTickMarks`; use with `steps`).
- * @param startLabel Slider start label.
- * @param endLabel Slider end label.
- * @param labelColor Both label colors; `null` uses the theme secondary text color.
  * @param insideMargin Row padding; defaults to the coui row metrics (16dp horizontal, 10dp vertical).
  */
 @Suppress("UNUSED_PARAMETER")
@@ -95,9 +94,6 @@ fun SliderPreference(
     onValueChangeFinished: (() -> Unit)? = null,
     sliderColors: CouiSliderColors? = null,
     showKeyPoints: Boolean = false,
-    startLabel: String? = null,
-    endLabel: String? = null,
-    labelColor: Color? = null,
     insideMargin: PaddingValues = PreferenceInsideMargin,
 ) {
     val currentOnValueChange by rememberUpdatedState(onValueChange)
@@ -108,7 +104,6 @@ fun SliderPreference(
     val bottomPadding = insideMargin.calculateBottomPadding()
     val resolvedTitleColor = titleColor ?: preferenceTitleColor(enabled)
     val resolvedSummaryColor = summaryColor ?: preferenceSummaryColor(enabled)
-    val resolvedLabelColor = labelColor ?: preferenceSummaryColor(enabled)
     val summaryText = summary
     val summarySlot: (@Composable () -> Unit)? =
         if (summaryText == null) {
@@ -158,83 +153,18 @@ fun SliderPreference(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
             bottomAction?.invoke()
-            SliderWithLabels(
-                startLabel = startLabel,
-                endLabel = endLabel,
-                labelColor = resolvedLabelColor,
-            ) {
-                Slider(
-                    modifier = Modifier.fillMaxWidth(),
-                    value = value,
-                    onValueChange = { currentOnValueChange(it) },
-                    colors = sliderColors,
-                    valueRange = valueRange,
-                    steps = steps,
-                    showTickMarks = showKeyPoints,
-                    enabled = enabled,
-                    onValueChangeFinished = { currentOnValueChangeFinished?.invoke() },
-                )
-            }
+            Slider(
+                modifier = Modifier.fillMaxWidth(),
+                value = value,
+                onValueChange = { currentOnValueChange(it) },
+                colors = sliderColors,
+                valueRange = valueRange,
+                steps = steps,
+                showTickMarks = showKeyPoints,
+                enabled = enabled,
+                onValueChangeFinished = { currentOnValueChangeFinished?.invoke() },
+            )
             Spacer(modifier = Modifier.height(bottomPadding))
         }
     }
-}
-
-/**
- * Draws optional labels at both slider ends, matching rmuix `SliderWithLabels`:
- * labels are vertically centered, the slider takes the remaining width; with no labels the slider fills the row.
- */
-@Composable
-private fun SliderWithLabels(
-    startLabel: String?,
-    endLabel: String?,
-    labelColor: Color,
-    slider: @Composable () -> Unit,
-) {
-    if (startLabel == null && endLabel == null) {
-        slider()
-        return
-    }
-    Row(modifier = Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-        startLabel?.let {
-            Text(
-                modifier = Modifier.padding(end = SliderPreferenceDefaults.LabelPadding),
-                text = it,
-                style =
-                    AppTheme.textStyles.subtitle.copy(
-                        fontSize = SliderPreferenceDefaults.LabelTextSize,
-                        fontWeight = FontWeight.Normal,
-                    ),
-                color = labelColor,
-            )
-        }
-        Box(modifier = Modifier.weight(1f)) {
-            slider()
-        }
-        endLabel?.let {
-            Text(
-                modifier = Modifier.padding(start = SliderPreferenceDefaults.LabelPadding),
-                text = it,
-                style =
-                    AppTheme.textStyles.subtitle.copy(
-                        fontSize = SliderPreferenceDefaults.LabelTextSize,
-                        fontWeight = FontWeight.Normal,
-                    ),
-                color = labelColor,
-            )
-        }
-    }
-}
-
-/** [SliderPreference] end label default sizes. */
-object SliderPreferenceDefaults {
-    /** Label text size; matches rmuix `SliderPreferenceDefaults.LabelTextSize`. */
-    val LabelTextSize = 14.sp
-
-    /** Gap between a label and the slider track; matches rmuix `SliderPreferenceDefaults.LabelPadding`. */
-    val LabelPadding = 10.dp
-
-    /** Default label color: theme secondary text color. */
-    @Composable
-    fun labelColor(): Color = AppTheme.colorScheme.onSurfaceSecondary
 }
