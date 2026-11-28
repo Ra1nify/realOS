@@ -416,6 +416,41 @@
     <string name="launcher_recents_extra_styles_summary">Add extra styles to the recents style picker in launcher settings</string>
     <string name="launcher_color_filter_title">Color Filter for More Icon Packs</string>
     <string name="launcher_color_filter_summary">Enable drawer color filtering for more third-party icon packs</string>
+    <string name="launcher_dock_page_title">Dock Background</string>
+    <string name="launcher_dock_entry_title">Dock background effects</string>
+    <string name="launcher_dock_entry_summary">From realOS</string>
+    <string name="launcher_docker_bg_section_title">Bottom Dock Background</string>
+    <string name="launcher_docker_bg_footer">Changes apply without restarting the launcher.</string>
+    <string name="launcher_docker_bg_title">Dock background layer</string>
+    <string name="launcher_docker_bg_summary">Wrap the bottom icons in a rounded background on all devices</string>
+    <string name="launcher_docker_bg_blur_title">Blur overlay</string>
+    <string name="launcher_docker_bg_blur_summary">Add the ColorOS native blur to the dock background</string>
+    <string name="launcher_docker_bg_radius_title">Dock Radius</string>
+    <string name="launcher_docker_bg_radius_footer">Multiplier of the stock corner radius. Applied to the launcher without a restart.</string>
+    <string name="launcher_docker_bg_radius_slider_title">Radius multiplier</string>
+    <string name="launcher_docker_bg_radius_value">%.2fx</string>
+    <string name="launcher_docker_bg_mask_title">Mask colour</string>
+    <string name="launcher_docker_bg_mask_footer">Tap a swatch to tune the parameters that layer actually uses.</string>
+    <string name="launcher_docker_bg_swatch_light_a">Light first layer</string>
+    <string name="launcher_docker_bg_swatch_light_b">Light second layer</string>
+    <string name="launcher_docker_bg_swatch_dark_a">Dark first layer</string>
+    <string name="launcher_docker_bg_swatch_dark_b">Dark second layer</string>
+    <string name="launcher_docker_bg_luminance_title">Luminance</string>
+    <string name="launcher_docker_bg_contrast_title">Contrast</string>
+    <string name="launcher_docker_bg_strength_title">Strength</string>
+    <string name="launcher_docker_bg_percent_value">%1$d%%</string>
+    <string name="launcher_docker_bg_mask_reset">Reset mask colour</string>
+    <string name="launcher_docker_bg_mask_reset_summary">Restore the stock colours for both modes</string>
+    <string name="launcher_docker_bg_style_title">Blend style</string>
+    <string name="launcher_docker_bg_style_footer">The style applies to both modes; the colours below follow it.</string>
+    <string name="launcher_docker_bg_style_mix">Solid tint</string>
+    <string name="launcher_docker_bg_style_mix_summary">One colour and one strength</string>
+    <string name="launcher_docker_bg_style_stock">Stock material</string>
+    <string name="launcher_docker_bg_style_stock_summary">Luminance plus dodge, the launcher default</string>
+    <string name="launcher_docker_bg_style_mix_overlay">Solid tint with contrast</string>
+    <string name="launcher_docker_bg_style_mix_overlay_summary">Tint plus a bounded contrast layer</string>
+    <string name="launcher_docker_bg_preview_title">Preview</string>
+    <string name="launcher_docker_bg_preview_footer">Illustrative preview; the actual dock appearance is shown on the home screen.</string>
 
     <!-- Process restart actions -->
     <string name="action_restart">Restart</string>
@@ -749,4 +784,3 @@
     <string name="color_picker_hex_title">Hex value</string>
     <string name="color_picker_hex_clear">Clear hex value</string>
 </resources>
-

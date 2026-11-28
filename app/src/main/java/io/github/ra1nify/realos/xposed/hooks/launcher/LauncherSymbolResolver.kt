@@ -2,6 +2,8 @@ package io.github.ra1nify.realos.xposed.hooks.launcher
 
 import android.animation.ValueAnimator
 import android.app.Application
+import android.content.Context
+import android.view.View
 import io.github.ra1nify.realos.util.RealOSLog as Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -54,6 +56,20 @@ object LauncherSymbolResolver {
         "com.oplus.quickstep.locksetting.ui.RecentStyleLayoutPreference"
     private const val RECENTS_VIEW_CLASS = "com.android.quickstep.views.OplusRecentsViewImpl"
 
+    // ── Hotseat background ──
+    private const val HOTSEAT_CLASS = "com.android.launcher3.OplusHotseat"
+    private const val BLUR_FACTORY_CLASS =
+        "com.android.launcher3.uioverrides.states.blurdrawable.BlurBaseFactory"
+    private const val BLUR_PROPERTIES_COMPANION =
+        "com.android.launcher3.uioverrides.states.blurdrawable.OplusBlurProperties\$Companion"
+    private const val BLUR_PROPERTIES_CLASS =
+        "com.android.launcher3.uioverrides.states.blurdrawable.OplusBlurProperties"
+    private const val RENDER_EFFECT_MANAGER_CLASS =
+        "com.android.launcher3.uioverrides.states.blurdrawable.RenderEffectManager"
+    private const val EXPAND_UTILS_CLASS =
+        "com.android.launcher3.hotseat.expand.ExpandUtils"
+
+
     /**
      * Unique anchor of the memory manager: a Settings.Secure key read and written only by the
      * memory manager. A caller relation from the memory panel narrows it to the refresh entry.
@@ -70,7 +86,12 @@ object LauncherSymbolResolver {
      */
     private const val LOCK_SETTING_ANCHOR = "category_display_information_recent_task"
 
-    fun resolve(module: XposedModule, app: Application, classLoader: ClassLoader): LauncherSymbols {
+    fun resolve(
+        module: XposedModule,
+        app: Application,
+        classLoader: ClassLoader,
+        dockerBgEnabled: Boolean
+    ): LauncherSymbols {
         val states = mutableMapOf<String, HookPointState>()
         val apkPath = app.applicationInfo?.sourceDir
 
@@ -239,6 +260,14 @@ object LauncherSymbolResolver {
             }
         }
 
+        // ── Hotseat background: resolved only when the master switch is on ──
+        val dockerBg = if (dockerBgEnabled) {
+            resolveDockerBg(classLoader, states)
+        } else {
+            DOCKER_BG_HOOK_KEYS.forEach { states[it] = HookPointState.DISABLED }
+            null
+        }
+
         logStates(module, states)
 
         return LauncherSymbols(
@@ -263,6 +292,7 @@ object LauncherSymbolResolver {
             recentStyleOnBindViewHolder = recentStyleOnBind?.let { MethodDescriptor.of(it) },
             recentStyleReader = structural.recentStyleReader,
             recentsCurrentDelegate = currentDelegate?.let { MethodDescriptor.of(it) },
+            dockerBg = dockerBg,
             statusMap = states.toMap()
         )
     }
@@ -506,6 +536,110 @@ object LauncherSymbolResolver {
     }
 
     // ── Structure resolution helpers ─────────────────────────────────────────────────────
+
+    /**
+     * Resolves the hotseat background symbols by unobfuscated class/member names.
+     *
+     * Blur-related members are resolved even when the blur sub-switch is off: their absence then
+     * only disables the blur variant and the plain background still installs.
+     */
+    private fun resolveDockerBg(
+        classLoader: ClassLoader,
+        states: MutableMap<String, HookPointState>
+    ): DockerBgSymbols {
+        fun <T : Any> mark(key: String, value: T?): T? {
+            states[key] = if (value != null) HookPointState.FOUND else HookPointState.MISSING
+            return value
+        }
+        fun clazz(key: String, name: String): Class<*>? = mark(key, classOrNull(classLoader, name))
+        fun method(
+            key: String,
+            owner: Class<*>?,
+            name: String,
+            vararg params: Class<*>
+        ): java.lang.reflect.Method? = mark(key, owner.methodOrNull(name, *params))
+        fun field(key: String, owner: Class<*>?, name: String): java.lang.reflect.Field? {
+            var clazz = owner
+            while (clazz != null && clazz != Any::class.java) {
+                val found = runCatching {
+                    clazz.getDeclaredField(name).apply { isAccessible = true }
+                }.getOrNull()
+                if (found != null) {
+                    states[key] = HookPointState.FOUND
+                    return found
+                }
+                clazz = clazz.superclass
+            }
+            states[key] = if (owner == null) HookPointState.MISSING else HookPointState.ERROR
+            return null
+        }
+
+        val hotseat = clazz(KEY_DOCKER_BG_HOTSEAT, HOTSEAT_CLASS)
+        val factory = classOrNull(classLoader, BLUR_FACTORY_CLASS)
+        val companion = classOrNull(classLoader, BLUR_PROPERTIES_COMPANION)
+        val blurProps = classOrNull(classLoader, BLUR_PROPERTIES_CLASS)
+        val renderManager = classOrNull(classLoader, RENDER_EFFECT_MANAGER_CLASS)
+        val utils = classOrNull(classLoader, EXPAND_UTILS_CLASS)
+
+        return DockerBgSymbols(
+            hotseatClass = hotseat?.let { ClassDescriptor(it.name) },
+            onMeasure = method(
+                KEY_DOCKER_BG_ON_MEASURE, hotseat, "onMeasure",
+                Integer.TYPE, Integer.TYPE
+            )?.let { MethodDescriptor.of(it) },
+            setDockerBackground = method(
+                KEY_DOCKER_BG_SET_BACKGROUND, hotseat, "setDockerBackground"
+            )?.let { MethodDescriptor.of(it) },
+            bgDrawableField = field(
+                KEY_DOCKER_BG_DRAWABLE_FIELD, hotseat, "mDockerBackgroundDrawable"
+            )?.let { FieldDescriptor.of(it) },
+            blurPropField = field(KEY_DOCKER_BG_BLUR_PROP_FIELD, hotseat, "mBlurProp")
+                ?.let { FieldDescriptor.of(it) },
+            shortcutsField = field(
+                KEY_DOCKER_BG_SHORTCUTS_FIELD, hotseat, "mShortcutsAndWidgets"
+            )?.let { FieldDescriptor.of(it) },
+            updateBlurParams = method(
+                KEY_DOCKER_BG_UPDATE_BLUR, hotseat, "updateBlurParams", java.lang.Float.TYPE
+            )?.let { MethodDescriptor.of(it) },
+            updateBounds = method(
+                KEY_DOCKER_BG_UPDATE_BOUNDS, hotseat, "updateDockerBackgroundBounds"
+            )?.let { MethodDescriptor.of(it) },
+            prepareBlurBase = method(
+                KEY_DOCKER_BG_PREPARE_BLUR,
+                factory,
+                "prepareBlurBase",
+                View::class.java,
+                Context::class.java,
+                java.lang.Boolean.TYPE,
+                java.lang.Boolean.TYPE,
+                Integer.TYPE,
+                java.lang.Boolean.TYPE
+            )?.let { MethodDescriptor.of(it) },
+            isSupportNewBlur = method(
+                KEY_DOCKER_BG_SUPPORT_BLUR, companion, "isSupportNewBlur", Context::class.java
+            )?.let { MethodDescriptor.of(it) },
+            setBlurParamsProps = method(
+                KEY_DOCKER_BG_SET_BLUR_PARAMS_PROPS, blurProps, "setBlurParams",
+                Integer.TYPE, Integer.TYPE, Integer.TYPE
+            )?.let { MethodDescriptor.of(it) },
+            setBlurParamsRender = method(
+                KEY_DOCKER_BG_SET_BLUR_PARAMS_RENDER, renderManager, "setBlurParams",
+                Integer.TYPE, Integer.TYPE, Integer.TYPE
+            )?.let { MethodDescriptor.of(it) },
+            normalizer = method(
+                KEY_DOCKER_BG_NORMALIZER,
+                utils,
+                "getHotseatNormalBgDrawable",
+                Context::class.java,
+                java.lang.Float.TYPE
+            )?.let { MethodDescriptor.of(it) },
+            radiusFactorField = field(
+                KEY_DOCKER_BG_RADIUS_FACTOR,
+                hotseat,
+                "BACKGROUND_SMOOTH_CORNER_RADIUS_FACTOR"
+            )?.let { FieldDescriptor.of(it) }
+        )
+    }
 
     /**
      * `PreferenceGroup#addPreference(Preference)`.

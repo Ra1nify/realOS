@@ -69,18 +69,22 @@ object LauncherSpec : SpecLoader {
                 val memoryEnabled = LauncherConfig.isMemoryHooksEnabled()
                 val recentsExtraEnabled = LauncherConfig.isRecentsExtraStylesEnabled()
                 val colorFilterEnabled = LauncherConfig.isColorFilterEnabled()
+                val dockerBgEnabled = LauncherConfig.isDockerBgEnabled()
                 module.log(
                     Log.INFO, TAG,
                     "feature install gates: memory=$memoryEnabled, " +
-                        "recentsExtra=$recentsExtraEnabled, colorFilter=$colorFilterEnabled"
+                        "recentsExtra=$recentsExtraEnabled, colorFilter=$colorFilterEnabled, " +
+                        "dockerBg=$dockerBgEnabled"
                 )
-                if (!memoryEnabled && !recentsExtraEnabled && !colorFilterEnabled) {
+                if (!memoryEnabled && !recentsExtraEnabled && !colorFilterEnabled && !dockerBgEnabled) {
                     module.log(Log.INFO, TAG, "all feature gates off; skipping symbol resolution and hook install")
                     return@execute
                 }
 
                 // Layer 1: resolves descriptors (a cache hit performs reflection restore only)
-                val symbols = LauncherSymbolResolver.resolve(module, app, app.classLoader)
+                val symbols = LauncherSymbolResolver.resolve(
+                    module, app, app.classLoader, dockerBgEnabled
+                )
                 module.log(Log.INFO, TAG, "symbols: ${LauncherSymbolResolver.describe(symbols)}")
 
                 // Descriptors to reflection handles; failed hook points are recorded and short-circuited
@@ -109,6 +113,22 @@ object LauncherSpec : SpecLoader {
                     module.log(Log.INFO, TAG, "recents extra styles disabled by config; skipping install")
                 }
 
+                // Hotseat background layer; onMeasure hook calls the host setter directly
+                if (dockerBgEnabled) {
+                    runCatching { LauncherDockerBgHook.install(module, handles) }
+                        .onFailure { module.log(Log.ERROR, TAG, "hotseat background install failed", it) }
+                } else {
+                    module.log(Log.INFO, TAG, "hotseat background disabled by config; skipping install")
+                }
+
+                // Launcher settings entry to the standalone dock background page
+                if (dockerBgEnabled) {
+                    runCatching { LauncherDockSettingsInject.install(module, handles) }
+                        .onFailure { module.log(Log.ERROR, TAG, "dock settings entry install failed", it) }
+                } else {
+                    module.log(Log.INFO, TAG, "docker bg off; skipping dock settings entry")
+                }
+
                 // Drawer "filter by color" compatibility with third-party icon packs
                 if (colorFilterEnabled) {
                     runCatching { ColorFilterCompat.install(module, app.classLoader) }
@@ -133,6 +153,8 @@ object LauncherSpec : SpecLoader {
         RecentsStyleGate.reset()
         RecentsStyleRegistry.clearInstances()
         LauncherMemoryHook.reset()
+        LauncherDockerBgHook.reset()
+        LauncherDockSettingsInject.reset()
     }
 
     override fun onHotReload(module: XposedModule, app: Application) {
@@ -140,6 +162,8 @@ object LauncherSpec : SpecLoader {
         RecentsStyleGate.reset()
         RecentsStyleRegistry.clearInstances()
         LauncherMemoryHook.reset()
+        LauncherDockerBgHook.reset()
+        LauncherDockSettingsInject.reset()
         onAppStart(module, app)
     }
 }

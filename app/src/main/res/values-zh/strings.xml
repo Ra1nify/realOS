@@ -415,6 +415,41 @@
     <string name="launcher_recents_extra_styles_summary">在桌面设置页的最近任务样式中添加额外样式</string>
     <string name="launcher_color_filter_title">按颜色分类支持更多图标包</string>
     <string name="launcher_color_filter_summary">让抽屉按颜色分类兼容更多第三方图标包</string>
+    <string name="launcher_dock_page_title">Dock 背景</string>
+    <string name="launcher_dock_entry_title">Dock 背景效果</string>
+    <string name="launcher_dock_entry_summary">来自 realOS</string>
+    <string name="launcher_docker_bg_section_title">底部 Dock 背景</string>
+    <string name="launcher_docker_bg_footer">修改后无需重启桌面即可生效。</string>
+    <string name="launcher_docker_bg_title">Dock 背景包裹层</string>
+    <string name="launcher_docker_bg_summary">在所有设备上为底栏图标绘制圆角背景层</string>
+    <string name="launcher_docker_bg_blur_title">Blur 遮罩</string>
+    <string name="launcher_docker_bg_blur_summary">为 Dock 背景叠加 ColorOS 原生模糊</string>
+    <string name="launcher_docker_bg_radius_title">圆角半径</string>
+    <string name="launcher_docker_bg_radius_footer">原生圆角半径的倍数，修改后无需重启桌面即可生效。</string>
+    <string name="launcher_docker_bg_radius_slider_title">半径倍数</string>
+    <string name="launcher_docker_bg_radius_value">%.2f 倍</string>
+    <string name="launcher_docker_bg_mask_title">遮罩颜色</string>
+    <string name="launcher_docker_bg_mask_footer">点击色块，只调整该层真正生效的参数。</string>
+    <string name="launcher_docker_bg_swatch_light_a">浅色第一层</string>
+    <string name="launcher_docker_bg_swatch_light_b">浅色第二层</string>
+    <string name="launcher_docker_bg_swatch_dark_a">深色第一层</string>
+    <string name="launcher_docker_bg_swatch_dark_b">深色第二层</string>
+    <string name="launcher_docker_bg_luminance_title">亮度</string>
+    <string name="launcher_docker_bg_contrast_title">对比</string>
+    <string name="launcher_docker_bg_strength_title">不透明度</string>
+    <string name="launcher_docker_bg_percent_value">%1$d%%</string>
+    <string name="launcher_docker_bg_mask_reset">重置遮罩颜色</string>
+    <string name="launcher_docker_bg_mask_reset_summary">恢复两种模式的官方默认颜色</string>
+    <string name="launcher_docker_bg_style_title">混色样式</string>
+    <string name="launcher_docker_bg_style_footer">样式对浅色与深色同时生效，下方颜色随之改变含义。</string>
+    <string name="launcher_docker_bg_style_mix">纯色遮罩</string>
+    <string name="launcher_docker_bg_style_mix_summary">一个颜色加一个浓度</string>
+    <string name="launcher_docker_bg_style_stock">原厂磨砂</string>
+    <string name="launcher_docker_bg_style_stock_summary">明度加减淡，桌面默认效果</string>
+    <string name="launcher_docker_bg_style_mix_overlay">纯色遮罩 + 对比</string>
+    <string name="launcher_docker_bg_style_mix_overlay_summary">纯色叠加一层有界对比</string>
+    <string name="launcher_docker_bg_preview_title">绘制预览</string>
+    <string name="launcher_docker_bg_preview_footer">效果示意，实际外观以桌面显示为准。</string>
 
     <!-- Process restart actions -->
     <string name="action_restart">重启</string>
@@ -747,4 +782,3 @@
     <string name="color_picker_hex_title">十六进制颜色值</string>
     <string name="color_picker_hex_clear">清除颜色值</string>
 </resources>
-

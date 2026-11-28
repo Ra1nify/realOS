@@ -2,6 +2,7 @@ package io.github.ra1nify.realos.ui.screens
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Dashboard
+import androidx.compose.material.icons.outlined.Layers
 import androidx.compose.material.icons.outlined.Memory
 import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.runtime.Composable
@@ -26,8 +27,10 @@ import io.github.ra1nify.realos.ui.components.preference.SwitchPreference
 /**
  * System launcher detail page.
  *
- * The three switches are install gates: they are read once when the launcher
+ * The four switches are install gates: they are read once when the launcher
  * process starts, and off means no hooks are installed for that feature.
+ * Feature-specific tuning lives in its own page: dock background in the page
+ * opened from launcher settings, recents styles in the stock style picker.
  */
 @Composable
 fun LauncherDetailScreen(
@@ -44,6 +47,9 @@ fun LauncherDetailScreen(
     }
     var colorFilterEnabled by remember {
         mutableStateOf(LauncherConfig.isColorFilterEnabledForUi(context))
+    }
+    var dockerBgEnabled by remember {
+        mutableStateOf(LauncherConfig.isDockerBgEnabledForUi(context))
     }
 
     LaunchedEffect(Unit) {
@@ -90,6 +96,17 @@ fun LauncherDetailScreen(
                 onCheckedChange = { enabled ->
                     colorFilterEnabled = enabled
                     LauncherConfig.setColorFilterEnabled(context, enabled)
+                }
+            )
+            HorizontalDivider()
+            SwitchPreference(
+                title = stringResource(R.string.launcher_docker_bg_title),
+                summary = stringResource(R.string.launcher_docker_bg_summary),
+                startAction = { Icon(Icons.Outlined.Layers, null) },
+                checked = dockerBgEnabled,
+                onCheckedChange = { enabled ->
+                    dockerBgEnabled = enabled
+                    LauncherConfig.setDockerBgEnabled(context, enabled)
                 }
             )
         }

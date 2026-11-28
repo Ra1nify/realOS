@@ -5,6 +5,24 @@ import io.github.ra1nify.realos.xposed.symbol.FieldDescriptor
 import io.github.ra1nify.realos.xposed.symbol.HookPointState
 import io.github.ra1nify.realos.xposed.symbol.MethodDescriptor
 
+/** Symbols that create the round background drawn behind the hotseat icons. */
+data class DockerBgSymbols(
+    val hotseatClass: ClassDescriptor? = null,
+    val onMeasure: MethodDescriptor? = null,
+    val setDockerBackground: MethodDescriptor? = null,
+    val bgDrawableField: FieldDescriptor? = null,
+    val blurPropField: FieldDescriptor? = null,
+    val shortcutsField: FieldDescriptor? = null,
+    val updateBlurParams: MethodDescriptor? = null,
+    val updateBounds: MethodDescriptor? = null,
+    val prepareBlurBase: MethodDescriptor? = null,
+    val isSupportNewBlur: MethodDescriptor? = null,
+    val setBlurParamsProps: MethodDescriptor? = null,
+    val setBlurParamsRender: MethodDescriptor? = null,
+    val normalizer: MethodDescriptor? = null,
+    val radiusFactorField: FieldDescriptor? = null
+)
+
 /**
  * Resolved symbol data model for the launcher (descriptor layer).
  *
@@ -115,6 +133,9 @@ data class LauncherSymbols(
      */
     val recentsCurrentDelegate: MethodDescriptor? = null,
 
+    /** Hotseat background symbols; null means the background switch was off at this start */
+    val dockerBg: DockerBgSymbols? = null,
+
     /** Readiness state of each hook point */
     val statusMap: Map<String, HookPointState> = emptyMap()
 ) {
@@ -162,6 +183,38 @@ const val KEY_RECENT_STYLE_PREFERENCE = "recent_style_preference"
 const val KEY_RECENT_STYLE_READER = "recent_style_reader"
 const val KEY_RECENTS_CURRENT_DELEGATE = "recents_current_delegate"
 
+const val KEY_DOCKER_BG_HOTSEAT = "docker_bg_hotseat"
+const val KEY_DOCKER_BG_ON_MEASURE = "docker_bg_on_measure"
+const val KEY_DOCKER_BG_SET_BACKGROUND = "docker_bg_set_background"
+const val KEY_DOCKER_BG_DRAWABLE_FIELD = "docker_bg_drawable_field"
+const val KEY_DOCKER_BG_BLUR_PROP_FIELD = "docker_bg_blur_prop_field"
+const val KEY_DOCKER_BG_SHORTCUTS_FIELD = "docker_bg_shortcuts_field"
+const val KEY_DOCKER_BG_UPDATE_BLUR = "docker_bg_update_blur"
+const val KEY_DOCKER_BG_UPDATE_BOUNDS = "docker_bg_update_bounds"
+const val KEY_DOCKER_BG_PREPARE_BLUR = "docker_bg_prepare_blur"
+const val KEY_DOCKER_BG_SUPPORT_BLUR = "docker_bg_support_blur"
+const val KEY_DOCKER_BG_SET_BLUR_PARAMS_PROPS = "docker_bg_set_blur_params_props"
+const val KEY_DOCKER_BG_SET_BLUR_PARAMS_RENDER = "docker_bg_set_blur_params_render"
+const val KEY_DOCKER_BG_NORMALIZER = "docker_bg_normalizer"
+const val KEY_DOCKER_BG_RADIUS_FACTOR = "docker_bg_radius_factor"
+
+val DOCKER_BG_HOOK_KEYS: List<String> = listOf(
+    KEY_DOCKER_BG_HOTSEAT,
+    KEY_DOCKER_BG_ON_MEASURE,
+    KEY_DOCKER_BG_SET_BACKGROUND,
+    KEY_DOCKER_BG_DRAWABLE_FIELD,
+    KEY_DOCKER_BG_BLUR_PROP_FIELD,
+    KEY_DOCKER_BG_SHORTCUTS_FIELD,
+    KEY_DOCKER_BG_UPDATE_BLUR,
+    KEY_DOCKER_BG_UPDATE_BOUNDS,
+    KEY_DOCKER_BG_PREPARE_BLUR,
+    KEY_DOCKER_BG_SUPPORT_BLUR,
+    KEY_DOCKER_BG_SET_BLUR_PARAMS_PROPS,
+    KEY_DOCKER_BG_SET_BLUR_PARAMS_RENDER,
+    KEY_DOCKER_BG_NORMALIZER,
+    KEY_DOCKER_BG_RADIUS_FACTOR
+)
+
 /** All hook point keys, iterated by log and status summaries */
 val ALL_LAUNCHER_HOOK_KEYS: List<String> = listOf(
     KEY_PANEL_CLASS,
@@ -184,4 +237,4 @@ val ALL_LAUNCHER_HOOK_KEYS: List<String> = listOf(
     KEY_RECENT_STYLE_PREFERENCE,
     KEY_RECENT_STYLE_READER,
     KEY_RECENTS_CURRENT_DELEGATE
-)
+) + DOCKER_BG_HOOK_KEYS

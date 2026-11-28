@@ -18,6 +18,12 @@ object LauncherUiText {
     fun realMemorySummary(context: Context): String =
         ModuleResources.string(context, R.string.launcher_real_memory_summary)
 
+    fun dockEntryTitle(context: Context): String =
+        ModuleResources.string(context, R.string.launcher_dock_entry_title)
+
+    fun dockEntrySummary(context: Context): String =
+        ModuleResources.string(context, R.string.launcher_dock_entry_summary)
+
     /** "available" suffix of the official text (such as `12.3 GB available | 16 GB`) */
     fun availableSuffix(context: Context): String =
         ModuleResources.string(context, R.string.launcher_memory_available_suffix)

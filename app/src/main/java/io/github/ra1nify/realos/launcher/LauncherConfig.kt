@@ -25,7 +25,7 @@ object LauncherConfig {
     private const val TAG = "RealOS-LauncherConfig"
 
     /** Module preferences file name, also the remote preferences group name */
-    private const val MODULE_PREFS_NAME = "launcher_config"
+    const val MODULE_PREFS_NAME = "launcher_config"
 
     /** Preferences file name written inside the host process */
     private const val HOST_PREFS_NAME = "realos_launcher_prefs"
@@ -38,7 +38,76 @@ object LauncherConfig {
     const val KEY_RECENTS_EXTRA_STYLES_ENABLED = "launcher_recents_extra_styles_enabled"
     const val KEY_COLOR_FILTER_ENABLED = "launcher_color_filter_enabled"
 
+    /** Master switch: draw the docker background behind the hotseat icons. */
+    const val KEY_DOCKER_BG_ENABLED = "launcher_docker_bg_enabled"
+    /** Sub switch: use the material blur variant; only effective when the master is on. */
+    const val KEY_DOCKER_BG_BLUR_ENABLED = "launcher_docker_bg_blur_enabled"
+    /** Radius multiplier of the host dock background, 1f keeps the stock radius. */
+    const val KEY_DOCKER_BG_RADIUS = "launcher_docker_bg_radius"
+    /** Bumped on every docker background write so the host can reload without a restart. */
+    const val KEY_DOCKER_BG_REV = "launcher_docker_bg_rev"
+    /** Selects the blur provider; kept as config so a floating-navigation backend can be added later. */
+    const val KEY_DOCKER_BG_BLUR_BACKEND = "launcher_docker_bg_blur_backend"
+    /**
+     * Mask colours passed to `setBlurParams(mode, blend, mix)`.
+     *
+     * Each blend mode owns its own pair of slots: a slot means something different per mode
+     * (MIX reads a full colour, LUMINOSITY only a luminance, OVERLAY a contrast level), so one
+     * shared pair would make a value written under one mode silently change meaning under another.
+     * The legacy unprefixed keys stay as the read fallback for the stock mode only.
+     */
+    const val KEY_DOCKER_BG_LIGHT_BLEND = "launcher_docker_bg_light_blend"
+    const val KEY_DOCKER_BG_LIGHT_MIX = "launcher_docker_bg_light_mix"
+    const val KEY_DOCKER_BG_DARK_BLEND = "launcher_docker_bg_dark_blend"
+    const val KEY_DOCKER_BG_DARK_MIX = "launcher_docker_bg_dark_mix"
+
+    /** Mode-scoped key for one slot: `launcher_docker_bg_m<mode>_<light|dark>_<a|b>`. */
+    fun maskKey(mode: Int, light: Boolean, slotB: Boolean): String =
+        "launcher_docker_bg_m${validBlendMode(mode)}_${if (light) "light" else "dark"}_" +
+            if (slotB) "b" else "a"
+
+    /** Blend mode; the host itself always passes 2, the other two are realOS additions. */
+    const val KEY_DOCKER_BG_BLEND_MODE = "launcher_docker_bg_blend_mode"
+
+    /**
+     * Supported [KEY_DOCKER_BG_BLEND_MODE] values, matching the host shader layer stacks:
+     * 1 = one MIX layer (colour + strength), 2 = LUMINOSITY + DODGE_BG (stock), 4 = MIX + OVERLAY.
+     * Any other value reaches no shader branch and silently applies no blend at all.
+     */
+    const val BLEND_MODE_MIX = 1
+    const val BLEND_MODE_STOCK = 2
+    const val BLEND_MODE_MIX_OVERLAY = 4
+
+    /** Every supported mode, in the order the picker lists them. */
+    val BLEND_MODES = intArrayOf(BLEND_MODE_MIX, BLEND_MODE_STOCK, BLEND_MODE_MIX_OVERLAY)
+
+    /** Largest channel a dodge colour may use: `d / (1 - s)` gains 2x at 128 and diverges above it. */
+    const val DODGE_MAX_CHANNEL = 128
+
     const val DEFAULT_REAL_MEMORY = false
+    const val DEFAULT_DOCKER_BG_ENABLED = false
+    const val DEFAULT_DOCKER_BG_BLUR_ENABLED = false
+    const val DEFAULT_DOCKER_BG_RADIUS = 1.0f
+    const val DEFAULT_DOCKER_BG_BLEND_MODE = BLEND_MODE_MIX
+    const val DEFAULT_DOCKER_BG_BLUR_BACKEND = "none"
+
+    /**
+     * Per-mode defaults, matching what each layer stack can render.
+     *
+     * The stock mode keeps the host's own material colour (`BlurUtils.BlurMaterialColor`:
+     * blend `#66526366`, mix `#FF333333`); the other modes start neutral so switching to them
+     * does not silently apply a colour that was tuned for a different formula.
+     */
+    const val DEFAULT_DOCKER_BG_LIGHT_BLEND = "#66526366"
+    const val DEFAULT_DOCKER_BG_LIGHT_MIX = "#FE333333"
+    const val DEFAULT_DOCKER_BG_DARK_BLEND = "#66526366"
+    const val DEFAULT_DOCKER_BG_DARK_MIX = "#FE333333"
+
+    /** MIX default: a transparent layer, so enabling the mode alone changes nothing. */
+    const val DEFAULT_MASK_MIX = "#00000000"
+
+    /** OVERLAY default: mid grey is the identity of the overlay formula. */
+    const val DEFAULT_MASK_OVERLAY = "#FF808080"
     const val DEFAULT_MEMORY_HOOKS_ENABLED = true
     const val DEFAULT_RECENTS_EXTRA_STYLES_ENABLED = true
     const val DEFAULT_COLOR_FILTER_ENABLED = true
@@ -154,6 +223,175 @@ object LauncherConfig {
     fun setColorFilterEnabled(context: Context, enabled: Boolean) =
         writeFeatureSwitch(context, KEY_COLOR_FILTER_ENABLED, enabled)
 
+    fun isDockerBgEnabled(): Boolean =
+        readRemoteBoolean(KEY_DOCKER_BG_ENABLED, DEFAULT_DOCKER_BG_ENABLED)
+
+    fun isDockerBgEnabledForUi(context: Context): Boolean =
+        readModuleBoolean(context, KEY_DOCKER_BG_ENABLED, DEFAULT_DOCKER_BG_ENABLED)
+
+    fun isDockerBgBlurEnabledForUi(context: Context): Boolean =
+        readModuleBoolean(context, KEY_DOCKER_BG_BLUR_ENABLED, DEFAULT_DOCKER_BG_BLUR_ENABLED)
+
+    fun isDockerBgRadius(): Float =
+        readRemoteFloat(KEY_DOCKER_BG_RADIUS, DEFAULT_DOCKER_BG_RADIUS)
+
+    fun isDockerBgRadiusForUi(context: Context): Float =
+        readModuleFloat(context, KEY_DOCKER_BG_RADIUS, DEFAULT_DOCKER_BG_RADIUS)
+
+    /** Blend mode; a stored value outside the supported set fails closed to the stock mode. */
+    fun dockerBgBlendMode(): Int =
+        validBlendMode(readRemoteInt(KEY_DOCKER_BG_BLEND_MODE, DEFAULT_DOCKER_BG_BLEND_MODE))
+
+    fun dockerBgBlendModeForUi(context: Context): Int =
+        validBlendMode(readModuleInt(context, KEY_DOCKER_BG_BLEND_MODE, DEFAULT_DOCKER_BG_BLEND_MODE))
+
+    /** Only 1, 2 and 4 reach a host shader branch; any other value applies no blend, so use 2. */
+    fun validBlendMode(mode: Int): Int = when (mode) {
+        BLEND_MODE_MIX, BLEND_MODE_STOCK, BLEND_MODE_MIX_OVERLAY -> mode
+        else -> BLEND_MODE_STOCK
+    }
+
+    fun setDockerBgBlendMode(context: Context, mode: Int) {
+        val safe = validBlendMode(mode)
+        writeModuleInt(context, KEY_DOCKER_BG_BLEND_MODE, safe)
+        pushRemoteInt(KEY_DOCKER_BG_BLEND_MODE, safe)
+        bumpDockerBgRevision(context)
+    }
+
+    fun dockerBgBlurBackend(): String {
+        val stored = readRemoteString(KEY_DOCKER_BG_BLUR_BACKEND, "")
+        if (stored.isNotEmpty()) return stored
+        return if (readRemoteBoolean(KEY_DOCKER_BG_BLUR_ENABLED, false)) {
+            "stock"
+        } else {
+            DEFAULT_DOCKER_BG_BLUR_BACKEND
+        }
+    }
+
+    fun dockerBgBlurBackendForUi(context: Context): String {
+        val stored = readModuleString(context, KEY_DOCKER_BG_BLUR_BACKEND, "")
+        if (stored.isNotEmpty()) return stored
+        return if (readModuleBoolean(context, KEY_DOCKER_BG_BLUR_ENABLED, false)) {
+            "stock"
+        } else {
+            DEFAULT_DOCKER_BG_BLUR_BACKEND
+        }
+    }
+
+    fun setDockerBgBlurBackend(context: Context, backend: String) {
+        writeModuleString(context, KEY_DOCKER_BG_BLUR_BACKEND, backend)
+        pushRemoteString(KEY_DOCKER_BG_BLUR_BACKEND, backend)
+        bumpDockerBgRevision(context)
+    }
+
+    /**
+     * Default for one mode-scoped slot.
+     *
+     * The stock mode keeps the host material colour, so an untouched install still matches the
+     * launcher; the other modes start at their own neutral value.
+     */
+    fun maskDefault(mode: Int, light: Boolean, slotB: Boolean): String = when (validBlendMode(mode)) {
+        BLEND_MODE_MIX -> DEFAULT_MASK_MIX
+        BLEND_MODE_MIX_OVERLAY -> if (slotB) DEFAULT_MASK_OVERLAY else DEFAULT_MASK_MIX
+        else -> when {
+            light && !slotB -> DEFAULT_DOCKER_BG_LIGHT_BLEND
+            light -> DEFAULT_DOCKER_BG_LIGHT_MIX
+            !slotB -> DEFAULT_DOCKER_BG_DARK_BLEND
+            else -> DEFAULT_DOCKER_BG_DARK_MIX
+        }
+    }
+
+    /** Host-side read of one mode-scoped slot; the stock mode falls back to the legacy key. */
+    fun dockerBgMask(mode: Int, light: Boolean, slotB: Boolean): String {
+        val scoped = readRemoteString(maskKey(mode, light, slotB), "")
+        if (scoped.isNotEmpty()) return scoped
+        return readRemoteString(legacyMaskKey(light, slotB), maskDefault(mode, light, slotB))
+    }
+
+    /** App-side read of one mode-scoped slot, same legacy fallback as the host side. */
+    fun dockerBgMaskForUi(context: Context, mode: Int, light: Boolean, slotB: Boolean): String {
+        val scoped = readModuleString(context, maskKey(mode, light, slotB), "")
+        if (scoped.isNotEmpty()) return scoped
+        return readModuleString(
+            context,
+            legacyMaskKey(light, slotB),
+            maskDefault(mode, light, slotB),
+        )
+    }
+
+    /** Pre-mode keys, kept only so an existing install keeps its tuned stock colour. */
+    private fun legacyMaskKey(light: Boolean, slotB: Boolean): String = when {
+        light && !slotB -> KEY_DOCKER_BG_LIGHT_BLEND
+        light -> KEY_DOCKER_BG_LIGHT_MIX
+        !slotB -> KEY_DOCKER_BG_DARK_BLEND
+        else -> KEY_DOCKER_BG_DARK_MIX
+    }
+
+    /** Writes one mode-scoped slot through the same path a user pick takes. */
+    fun setDockerBgMask(
+        context: Context,
+        mode: Int,
+        light: Boolean,
+        slotB: Boolean,
+        value: String,
+        dodge: Boolean = false,
+    ) {
+        setDockerBgMask(context, maskKey(mode, light, slotB), value, dodge)
+    }
+
+    fun setDockerBgMask(context: Context, key: String, value: String, dodge: Boolean = false) {
+        val safe = clampMaskChannels(value, dodge)
+        writeModuleString(context, key, safe)
+        pushRemoteString(key, safe)
+        bumpDockerBgRevision(context)
+    }
+
+    /**
+     * Snaps a #AARRGGBB / #RRGGBB hex colour to what the active blend mode can render.
+     *
+     * The dodge layer divides by (1 - channel), so a channel at full scale diverges; a dodge colour
+     * is capped at [DODGE_MAX_CHANNEL] (2x gain). Mix and overlay use bounded formulas and keep the
+     * full 0..255 range.
+     */
+    fun clampMaskChannels(value: String, dodge: Boolean = false): String {
+        val argb = runCatching { android.graphics.Color.parseColor(value) }.getOrNull()
+            ?: return value
+        return formatArgb(clampArgb(argb, dodge))
+    }
+
+    /** Caps the channels of an ARGB int; shared by the UI write path and the host read path. */
+    fun clampArgb(argb: Int, dodge: Boolean): Int {
+        if (!dodge) return argb
+        val max = DODGE_MAX_CHANNEL
+        return android.graphics.Color.argb(
+            android.graphics.Color.alpha(argb),
+            android.graphics.Color.red(argb).coerceAtMost(max),
+            android.graphics.Color.green(argb).coerceAtMost(max),
+            android.graphics.Color.blue(argb).coerceAtMost(max),
+        )
+    }
+
+    /** `#AARRGGBB` for an ARGB int. */
+    fun formatArgb(argb: Int): String = String.format(
+        "#%02X%02X%02X%02X",
+        android.graphics.Color.alpha(argb),
+        android.graphics.Color.red(argb),
+        android.graphics.Color.green(argb),
+        android.graphics.Color.blue(argb),
+    )
+
+    fun setDockerBgEnabled(context: Context, enabled: Boolean) {
+        writeFeatureSwitch(context, KEY_DOCKER_BG_ENABLED, enabled)
+        if (!enabled) writeFeatureSwitch(context, KEY_DOCKER_BG_BLUR_ENABLED, false)
+        bumpDockerBgRevision(context)
+    }
+
+    fun setDockerBgRadius(context: Context, value: Float) {
+        writeModuleFloat(context, KEY_DOCKER_BG_RADIUS, value)
+        pushRemoteFloat(KEY_DOCKER_BG_RADIUS, value)
+        bumpDockerBgRevision(context)
+    }
+
     /** Pushes existing local values into remote preferences (page entry / migration). */
     fun syncToRemote(context: Context) {
         pushRemoteBoolean(KEY_MEMORY_HOOKS_ENABLED, isMemoryHooksEnabledForUi(context))
@@ -162,6 +400,40 @@ object LauncherConfig {
             isRecentsExtraStylesEnabledForUi(context)
         )
         pushRemoteBoolean(KEY_COLOR_FILTER_ENABLED, isColorFilterEnabledForUi(context))
+        pushRemoteBoolean(KEY_DOCKER_BG_ENABLED, isDockerBgEnabledForUi(context))
+        pushRemoteBoolean(KEY_DOCKER_BG_BLUR_ENABLED, isDockerBgBlurEnabledForUi(context))
+        pushRemoteFloat(KEY_DOCKER_BG_RADIUS, isDockerBgRadiusForUi(context))
+        pushRemoteInt(KEY_DOCKER_BG_BLEND_MODE, dockerBgBlendModeForUi(context))
+        // Every mode owns its own slots, so all of them are pushed; the host reads the set that
+        // belongs to the active mode.
+        for (mode in BLEND_MODES) {
+            for (light in booleanArrayOf(true, false)) {
+                for (slotB in booleanArrayOf(false, true)) {
+                    pushRemoteString(
+                        maskKey(mode, light, slotB),
+                        dockerBgMaskForUi(context, mode, light, slotB),
+                    )
+                }
+            }
+        }
+        bumpDockerBgRevision(context)
+    }
+
+    /** Monotonic revision so the host can reload on change without a launcher restart. */
+    private fun bumpDockerBgRevision(context: Context) {
+        val current = runCatching {
+            modulePrefs(context).getLong(KEY_DOCKER_BG_REV, 0L)
+        }.getOrDefault(0L)
+        val next = current + 1
+        runCatching {
+            modulePrefs(context).edit().putLong(KEY_DOCKER_BG_REV, next).apply()
+        }.onFailure { Log.w(TAG, "Failed to write local docker bg revision", it) }
+        runCatching {
+            XposedServiceManager.getRemotePreferences(MODULE_PREFS_NAME)
+                ?.edit()
+                ?.putLong(KEY_DOCKER_BG_REV, next)
+                ?.commit()
+        }.onFailure { Log.w(TAG, "Failed to push docker bg revision", it) }
     }
 
     // ── zram stats: realOS(root) → provider → host ──
@@ -278,16 +550,64 @@ object LauncherConfig {
         return runCatching { p.getBoolean(key, defaultVal) }.getOrDefault(defaultVal)
     }
 
+    private fun readRemoteFloat(key: String, defaultVal: Float): Float {
+        val p = remotePrefs ?: return defaultVal
+        return runCatching { p.getFloat(key, defaultVal) }.getOrDefault(defaultVal)
+    }
+
+    private fun readRemoteInt(key: String, defaultVal: Int): Int {
+        val p = remotePrefs ?: return defaultVal
+        return runCatching { p.getInt(key, defaultVal) }.getOrDefault(defaultVal)
+    }
+
+    private fun readRemoteString(key: String, defaultVal: String): String {
+        val p = remotePrefs ?: return defaultVal
+        return runCatching { p.getString(key, defaultVal) ?: defaultVal }.getOrDefault(defaultVal)
+    }
+
     /** Module-side read for the realOS UI; never throws. */
     private fun readModuleBoolean(context: Context?, key: String, defaultVal: Boolean): Boolean {
         val ctx = context?.applicationContext ?: context ?: return defaultVal
         return runCatching { modulePrefs(ctx).getBoolean(key, defaultVal) }.getOrDefault(defaultVal)
     }
 
+    private fun readModuleFloat(context: Context, key: String, defaultVal: Float): Float =
+        runCatching {
+            modulePrefs(context.applicationContext ?: context).getFloat(key, defaultVal)
+        }.getOrDefault(defaultVal)
+
+    private fun readModuleString(context: Context, key: String, defaultVal: String): String =
+        runCatching {
+            modulePrefs(context.applicationContext ?: context).getString(key, defaultVal) ?: defaultVal
+        }.getOrDefault(defaultVal)
+
+    private fun readModuleInt(context: Context, key: String, defaultVal: Int): Int =
+        runCatching {
+            modulePrefs(context.applicationContext ?: context).getInt(key, defaultVal)
+        }.getOrDefault(defaultVal)
+
+    private fun writeModuleInt(context: Context, key: String, value: Int) {
+        runCatching {
+            modulePrefs(context).edit().putInt(key, value).apply()
+        }.onFailure { Log.w(TAG, "Failed to write $key", it) }
+    }
+
     /** Module-side write for the realOS UI; a failed write is logged once per call. */
     private fun writeModuleBoolean(context: Context, key: String, enabled: Boolean) {
         runCatching {
             modulePrefs(context).edit().putBoolean(key, enabled).apply()
+        }.onFailure { Log.w(TAG, "Failed to write $key", it) }
+    }
+
+    private fun writeModuleFloat(context: Context, key: String, value: Float) {
+        runCatching {
+            modulePrefs(context).edit().putFloat(key, value).apply()
+        }.onFailure { Log.w(TAG, "Failed to write $key", it) }
+    }
+
+    private fun writeModuleString(context: Context, key: String, value: String) {
+        runCatching {
+            modulePrefs(context).edit().putString(key, value).apply()
         }.onFailure { Log.w(TAG, "Failed to write $key", it) }
     }
 
@@ -305,7 +625,34 @@ object LauncherConfig {
             XposedServiceManager.getRemotePreferences(MODULE_PREFS_NAME)
                 ?.edit()
                 ?.putBoolean(key, enabled)
-                ?.apply()
+                ?.commit()
+        }.onFailure { Log.w(TAG, "Failed to push $key to remote preferences", it) }
+    }
+
+    private fun pushRemoteFloat(key: String, value: Float) {
+        runCatching {
+            XposedServiceManager.getRemotePreferences(MODULE_PREFS_NAME)
+                ?.edit()
+                ?.putFloat(key, value)
+                ?.commit()
+        }.onFailure { Log.w(TAG, "Failed to push $key to remote preferences", it) }
+    }
+
+    private fun pushRemoteString(key: String, value: String) {
+        runCatching {
+            XposedServiceManager.getRemotePreferences(MODULE_PREFS_NAME)
+                ?.edit()
+                ?.putString(key, value)
+                ?.commit()
+        }.onFailure { Log.w(TAG, "Failed to push $key to remote preferences", it) }
+    }
+
+    private fun pushRemoteInt(key: String, value: Int) {
+        runCatching {
+            XposedServiceManager.getRemotePreferences(MODULE_PREFS_NAME)
+                ?.edit()
+                ?.putInt(key, value)
+                ?.commit()
         }.onFailure { Log.w(TAG, "Failed to push $key to remote preferences", it) }
     }
 

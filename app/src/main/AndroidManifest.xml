@@ -36,6 +36,13 @@
             android:excludeFromRecents="true"
             android:label="@string/system_font_title" />
 
+        <!-- Launcher settings -> effects -> dock background page. -->
+        <activity
+            android:name=".launcher.LauncherDockPageActivity"
+            android:exported="true"
+            android:excludeFromRecents="true"
+            android:label="@string/launcher_dock_page_title" />
+
     <!-- Selectable app icons: one alias per icon, switched at runtime with
          setComponentEnabledSetting. To add an icon, add an alias here (icon and roundIcon are
          required, enabled=false, no label so the app name is inherited) and one AppIcon enum

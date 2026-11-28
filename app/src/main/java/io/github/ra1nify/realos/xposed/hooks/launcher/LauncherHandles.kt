@@ -1,7 +1,27 @@
 package io.github.ra1nify.realos.xposed.hooks.launcher
 
+import io.github.ra1nify.realos.xposed.symbol.FieldDescriptor
+import io.github.ra1nify.realos.xposed.symbol.MethodDescriptor
 import java.lang.reflect.Field
 import java.lang.reflect.Method
+
+/** Reflection handles for the hotseat background layer. */
+data class DockerBgHandles(
+    val hotseatClass: Class<*>? = null,
+    val onMeasureMethod: Method? = null,
+    val setDockerBackgroundMethod: Method? = null,
+    val bgDrawableField: Field? = null,
+    val blurPropField: Field? = null,
+    val shortcutsField: Field? = null,
+    val updateBlurParamsMethod: Method? = null,
+    val updateBoundsMethod: Method? = null,
+    val prepareBlurBaseMethod: Method? = null,
+    val isSupportNewBlurMethod: Method? = null,
+    val setBlurParamsPropsMethod: Method? = null,
+    val setBlurParamsRenderMethod: Method? = null,
+    val normalizerMethod: Method? = null,
+    val radiusFactorField: Field? = null
+)
 
 /**
  * Reflection handles restored from [LauncherSymbols].
@@ -52,6 +72,9 @@ data class LauncherHandles(
 
     /** `OplusRecentsViewImpl#currentDelegate()` */
     val recentsCurrentDelegateMethod: Method? = null,
+
+    /** Hotseat background; null means the master switch was off at this start */
+    val dockerBg: DockerBgHandles? = null,
 
     /** Hook point keys whose restore failed (state is ERROR in [LauncherSymbols.statusMap]) */
     val failedKeys: Set<String> = emptySet()
@@ -162,7 +185,61 @@ data class LauncherHandles(
                     track(KEY_RECENTS_CURRENT_DELEGATE, symbols.recentsCurrentDelegate) {
                         it.restore(classLoader)
                     },
+                dockerBg = symbols.dockerBg?.let { restoreDockerBg(it, classLoader, failed) },
                 failedKeys = failed
+            )
+        }
+
+        /** Restores each hotseat background handle; a missing member only drops its own hook point. */
+        private fun restoreDockerBg(
+            symbols: DockerBgSymbols,
+            classLoader: ClassLoader,
+            failed: MutableSet<String>
+        ): DockerBgHandles {
+            fun <D : Any, T : Any> restore(
+                key: String,
+                descriptor: D?,
+                resolve: (D) -> T?
+            ): T? {
+                if (descriptor == null) return null
+                val value = runCatching { resolve(descriptor) }.getOrNull()
+                if (value == null) failed += key
+                return value
+            }
+            fun method(key: String, descriptor: MethodDescriptor?): Method? =
+                restore(key, descriptor) { it.restore(classLoader) }
+            fun field(key: String, descriptor: FieldDescriptor?): Field? =
+                restore(key, descriptor) { it.restore(classLoader) }
+
+            return DockerBgHandles(
+                hotseatClass = restore(KEY_DOCKER_BG_HOTSEAT, symbols.hotseatClass) {
+                    it.restore(classLoader)
+                },
+                onMeasureMethod = method(KEY_DOCKER_BG_ON_MEASURE, symbols.onMeasure),
+                setDockerBackgroundMethod = method(
+                    KEY_DOCKER_BG_SET_BACKGROUND,
+                    symbols.setDockerBackground
+                ),
+                bgDrawableField = field(KEY_DOCKER_BG_DRAWABLE_FIELD, symbols.bgDrawableField),
+                blurPropField = field(KEY_DOCKER_BG_BLUR_PROP_FIELD, symbols.blurPropField),
+                shortcutsField = field(KEY_DOCKER_BG_SHORTCUTS_FIELD, symbols.shortcutsField),
+                updateBlurParamsMethod = method(KEY_DOCKER_BG_UPDATE_BLUR, symbols.updateBlurParams),
+                updateBoundsMethod = method(KEY_DOCKER_BG_UPDATE_BOUNDS, symbols.updateBounds),
+                prepareBlurBaseMethod = method(KEY_DOCKER_BG_PREPARE_BLUR, symbols.prepareBlurBase),
+                isSupportNewBlurMethod = method(
+                    KEY_DOCKER_BG_SUPPORT_BLUR,
+                    symbols.isSupportNewBlur
+                ),
+                setBlurParamsPropsMethod = method(
+                    KEY_DOCKER_BG_SET_BLUR_PARAMS_PROPS,
+                    symbols.setBlurParamsProps
+                ),
+                setBlurParamsRenderMethod = method(
+                    KEY_DOCKER_BG_SET_BLUR_PARAMS_RENDER,
+                    symbols.setBlurParamsRender
+                ),
+                normalizerMethod = method(KEY_DOCKER_BG_NORMALIZER, symbols.normalizer),
+                radiusFactorField = field(KEY_DOCKER_BG_RADIUS_FACTOR, symbols.radiusFactorField)
             )
         }
 
